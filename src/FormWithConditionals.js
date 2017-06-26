@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
-import { actionToFields } from "./Conditionals";
-import Actions from './Actions';
+import { fieldToActions } from "./Conditionals";
+import executors from "./Actions";
 import deepcopy from "deepcopy";
 
 export class FormWithConditionals extends Component {
@@ -21,28 +21,19 @@ export class FormWithConditionals extends Component {
 
   updateSchema = (formData = {}) => {
     let rules = this.props.rules;
-    let schema = deepcopy(this.props.schema);
-    let uiSchema = deepcopy(this.props.uiSchema);
+    let actions = fieldToActions(rules, formData);
+    let initialValue = {
+      schema: deepcopy(this.props.schema),
+      uiSchema: deepcopy(this.props.uiSchema)
+    };
 
-    Object.keys(rules).map((action) => {
-      switch (action) {
-        case "remove": {
-          let actions = actionToFields(rules[action], formData)
-          Object.keys(actions).filter((key) => actions[key]).forEach((key) => {
-            delete properties[key];
-            delete uiSchema[key];
-          })
-        }
-        case "red": {
-          let actions = actionToFields(rules[action], formData)
-          Object.keys(actions).filter((key) => actions[key]).forEach((key) => {
-            if (uiSchema[key] === undefined) uiSchema[key] = {};
-            if (uiSchema[key]["classNames"] === undefined) uiSchema[key]["classNames"] = "";
-            uiSchema[key]["classNames"] = uiSchema[key]["classNames"] + " red";
-          })
-        }
-      }
-    });
+    let { schema, uiSchema } = Object.keys(actions).reduce(({ schema, uiSchema }, field) => {
+      let fieldActions = actions[field];
+      return fieldActions.reduce(({ schema, uiSchema }, action) => {
+        let executor = executors[action];
+        return executor(field, schema, uiSchema);
+      }, { schema, uiSchema });
+    }, initialValue);
 
     return { schema, uiSchema, formData: Object.assign({}, formData) };
   };
@@ -63,12 +54,12 @@ export class FormWithConditionals extends Component {
 
     return (
       <div>
-          <Form {...configs}
-                schema={this.state.schema}
-                uiSchema={this.state.uiSchema}
-                formData={this.state.formData}
-                onChange={this.ruleTracker}
-          />
+        <Form {...configs}
+              schema={this.state.schema}
+              uiSchema={this.state.uiSchema}
+              formData={this.state.formData}
+              onChange={this.ruleTracker}
+        />
       </div>
     )
   }

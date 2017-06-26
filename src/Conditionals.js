@@ -63,7 +63,7 @@ export function check(
   }
 }
 
-export function isRuleApplicable(
+export function applyWhen(
   rule,
   formData,
   condition = Array.prototype.every
@@ -73,9 +73,9 @@ export function isRuleApplicable(
   }
   return condition.call(Object.keys(rule), ref => {
     if (ref === "or") {
-      return isRuleApplicable(rule[ref], formData, Array.prototype.some);
+      return applyWhen(rule[ref], formData, Array.prototype.some);
     } else if (ref === "and") {
-      return isRuleApplicable(rule[ref], formData, Array.prototype.every);
+      return applyWhen(rule[ref], formData, Array.prototype.every);
     } else {
       let refVal = formData[ref];
       let refFieldRule = rule[ref];
@@ -84,11 +84,25 @@ export function isRuleApplicable(
   });
 }
 
-export function actionToFields(rules = {}, formData = {}) {
-  let actions = Object.keys(rules).map(field => {
-    let applicable = isRuleApplicable(rules[field], formData);
-    return { [field]: applicable };
-  });
+function toActions(fieldRules, formData) {
+  if (Array.isArray(fieldRules)) {
+    return fieldRules.filter((rule) => applyWhen(rule.when, formData)).map(rule => rule.action);
+  } else {
+    if (applyWhen(fieldRules.when, formData)) {
+      return [fieldRules.action];
+    } else {
+      return [];
+    }
+  }
+}
 
-  return Object.assign.apply(this, actions);
+export function fieldToActions(rules = {}, formData = {}) {
+  let agg = {};
+  Object.keys(rules).forEach(field => {
+    let actions = toActions(rules[field], formData);
+    if (actions.length !== 0) {
+      agg[field] = actions;
+    }
+  });
+  return agg;
 }

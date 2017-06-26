@@ -1,16 +1,16 @@
 const assert = require("assert");
-const { isRuleApplicable } = require("../../src/Conditionals");
+const { applyWhen } = require("../../src/Conditionals");
 
-describe("isRuleApplicable", function() {
+describe("applyWhen", function() {
   describe("sanity check", function() {
     it("requires rule to be an object", function() {
       assert.throws(function() {
-        isRuleApplicable("empty", {});
+        applyWhen("empty", {});
       }, ReferenceError);
     });
     it("requires formData to be an object", function() {
       assert.throws(function() {
-        isRuleApplicable({}, 0);
+        applyWhen({}, 0);
       }, ReferenceError);
     });
   });
@@ -19,11 +19,11 @@ describe("isRuleApplicable", function() {
       firstName: "empty",
     };
     it("empty check", function() {
-      assert.equal(isRuleApplicable(singleLine, {}), true);
-      assert.equal(isRuleApplicable(singleLine, { firstName: "some" }), false);
-      assert.equal(isRuleApplicable(singleLine, { firstName: "" }), true);
+      assert.equal(applyWhen(singleLine, {}), true);
+      assert.equal(applyWhen(singleLine, { firstName: "some" }), false);
+      assert.equal(applyWhen(singleLine, { firstName: "" }), true);
       assert.equal(
-        isRuleApplicable(singleLine, { firstName: undefined }),
+        applyWhen(singleLine, { firstName: undefined }),
         true
       );
     });
@@ -38,10 +38,10 @@ describe("isRuleApplicable", function() {
       },
     };
     it("match only, when both match", function() {
-      assert.equal(isRuleApplicable(rule, { firstName: "Will" }), false);
-      assert.equal(isRuleApplicable(rule, { lastName: "Smith" }), false);
+      assert.equal(applyWhen(rule, { firstName: "Will" }), false);
+      assert.equal(applyWhen(rule, { lastName: "Smith" }), false);
       assert.equal(
-        isRuleApplicable(rule, { firstName: "Will", lastName: "Smith" }),
+        applyWhen(rule, { firstName: "Will", lastName: "Smith" }),
         true
       );
     });
