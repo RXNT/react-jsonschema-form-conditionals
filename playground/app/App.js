@@ -76,14 +76,9 @@ const rules = {
     when: { "firstName": "empty" },
   },
   telephone: {
-    action: "remove",
+    action: "require",
     when: {
-      age: {
-        or: [
-          { greater: 70 },
-          { less: 10 },
-        ]
-      }
+      age: { greater: 10 }
     }
   }
 };
