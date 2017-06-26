@@ -17,7 +17,11 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: [".js", ".jsx", ".css"]
+      modules: [
+        "node_modules",
+        path.resolve(__dirname, "app")
+      ],
+      extensions: [".js", ".jsx", ".css"],
     },
     module: {
         loaders: [
@@ -34,7 +38,6 @@ module.exports = {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract("css-loader"),
                 include: [
-                    path.join(__dirname, "css"),
                     path.join(__dirname, "playground"),
                     path.join(__dirname, "node_modules"),
                 ],

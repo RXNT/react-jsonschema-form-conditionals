@@ -1,5 +1,5 @@
 import React from "react";
-import FormWithRules from "../../src/FormWithConditionals";
+import { FormWithConditionals } from "../../src/FormWithConditionals";
 
 const schema = {
   "title": "A registration form",
@@ -71,23 +71,18 @@ const uiSchema = {
 };
 
 const rules = {
-  "hide": {
-    "password": {
-      "firstName": "empty",
-    },
-    "telephone": {
-      "age": {
-        "or": {
-          "greater": 70,
-          "less": 10,
-        }
-      }
-    }
+  password: {
+    action: "remove",
+    when: { "firstName": "empty" },
   },
-  "red": {
-    "password": {
-      "firstName": {
-        "is": "admin"
+  telephone: {
+    action: "remove",
+    when: {
+      age: {
+        or: [
+          { greater: 70 },
+          { less: 10 },
+        ]
       }
     }
   }
@@ -99,20 +94,18 @@ const formData = {
   age: 20
 };
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <div className="container">
-        <FormWithRules
-          rules={rules}
-          liveValidate={false}
-          safeRenderCompletion={true}
-          noHtml5Validate={true}
-          formData={formData}
-          schema={schema}
-          uiSchema={uiSchema}
-        />
-      </div>
-    );
-  }
+export function App() {
+  return (
+    <div className="container">
+      <FormWithConditionals
+        rules={rules}
+        liveValidate={false}
+        safeRenderCompletion={true}
+        noHtml5Validate={true}
+        formData={formData}
+        schema={schema}
+        uiSchema={uiSchema}
+      />
+    </div>
+  );
 }

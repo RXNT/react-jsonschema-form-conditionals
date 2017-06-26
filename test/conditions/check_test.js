@@ -38,7 +38,7 @@ describe("Check", function() {
     });
   });
   describe("or", function() {
-    let rule = { or: [ { less: 5 }, { greater: 12 } ]};
+    let rule = { or: [ { less: 5 }, { greater: 12 } ] };
     it("< 5 || > 12", function() {
       assert.equal(check(1, rule), true);
       assert.equal(check(8, rule), false);

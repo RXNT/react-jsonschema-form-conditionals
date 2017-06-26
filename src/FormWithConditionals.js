@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
 import { actionToFields } from "./Conditionals";
+import Actions from './Actions';
 import deepcopy from "deepcopy";
 
-export default class FormWithRules extends Component {
+export class FormWithConditionals extends Component {
 
   constructor(props) {
     super(props);
@@ -25,7 +26,7 @@ export default class FormWithRules extends Component {
 
     Object.keys(rules).map((action) => {
       switch (action) {
-        case "hide": {
+        case "remove": {
           let actions = actionToFields(rules[action], formData)
           Object.keys(actions).filter((key) => actions[key]).forEach((key) => {
             delete properties[key];
@@ -74,7 +75,7 @@ export default class FormWithRules extends Component {
 }
 
 if (process.env.NODE_ENV !== "production") {
-  FormWithRules.propTypes = {
+  FormWithConditionals.propTypes = {
     rules: PropTypes.object.isRequired
   };
 }

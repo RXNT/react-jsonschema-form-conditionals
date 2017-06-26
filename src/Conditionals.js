@@ -3,7 +3,7 @@ import predicate from "predicate";
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
 
-export function isObject(obj) {
+function isObject(obj) {
   return typeof obj === "object" && obj !== null;
 }
 
@@ -33,8 +33,7 @@ export function check(
               check(fieldVal, condition, predicator, Array.prototype.every)
             );
           } else {
-            let message = `OR must be an array`;
-            return toError(message);
+            return toError(`OR must be an array`);
           }
         } else if (p === "not") {
           let oppositePredicator = predicator === NEGATIVE_PREDICATE
@@ -70,8 +69,7 @@ export function isRuleApplicable(
   condition = Array.prototype.every
 ) {
   if (!isObject(rule) || !isObject(formData)) {
-    let message = `Rule ${rule} with ${formData} can't be processed`;
-    return toError(message);
+    return toError(`Rule ${rule} with ${formData} can't be processed`);
   }
   return condition.call(Object.keys(rule), ref => {
     if (ref === "or") {
@@ -93,4 +91,4 @@ export function actionToFields(rules = {}, formData = {}) {
   });
 
   return Object.assign.apply(this, actions);
-};
+}
