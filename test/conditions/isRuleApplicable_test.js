@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { isRuleApplicable } = require("../../src/conditions");
+const { isRuleApplicable } = require("../../src/Conditionals");
 
 describe("isRuleApplicable", function() {
   describe("sanity check", function() {

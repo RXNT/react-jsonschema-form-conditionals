@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
-import { actionToFields } from "./conditions";
+import { actionToFields } from "./Conditionals";
 import deepcopy from "deepcopy";
 
 export default class FormWithRules extends Component {

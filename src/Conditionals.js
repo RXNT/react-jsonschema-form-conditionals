@@ -7,6 +7,15 @@ export function isObject(obj) {
   return typeof obj === "object" && obj !== null;
 }
 
+function toError(message) {
+  if (process.env.NODE_ENV !== "production") {
+    throw new ReferenceError(message);
+  } else {
+    console.error(message);
+  }
+  return false;
+}
+
 export function check(
   fieldVal,
   rule,
@@ -24,12 +33,8 @@ export function check(
               check(fieldVal, condition, predicator, Array.prototype.every)
             );
           } else {
-            return check(
-              fieldVal,
-              comparable,
-              predicator,
-              Array.prototype.some
-            );
+            let message = `OR must be an array`;
+            return toError(message);
           }
         } else if (p === "not") {
           let oppositePredicator = predicator === NEGATIVE_PREDICATE
@@ -66,12 +71,7 @@ export function isRuleApplicable(
 ) {
   if (!isObject(rule) || !isObject(formData)) {
     let message = `Rule ${rule} with ${formData} can't be processed`;
-    if (process.env.NODE_ENV !== "production") {
-      throw new ReferenceError(message);
-    } else {
-      console.error(message);
-    }
-    return false;
+    return toError(message);
   }
   return condition.call(Object.keys(rule), ref => {
     if (ref === "or") {
@@ -86,7 +86,7 @@ export function isRuleApplicable(
   });
 }
 
-export const actionToFields = (rules = {}, formData = {}) => {
+export function actionToFields(rules = {}, formData = {}) {
   let actions = Object.keys(rules).map(field => {
     let applicable = isRuleApplicable(rules[field], formData);
     return { [field]: applicable };

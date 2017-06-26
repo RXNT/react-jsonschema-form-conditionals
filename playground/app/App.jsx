@@ -1,5 +1,5 @@
 import React from "react";
-import FormWithRules from "../../src/FormWithRules";
+import FormWithRules from "../../src/FormWithConditionals";
 
 const schema = {
   "title": "A registration form",
