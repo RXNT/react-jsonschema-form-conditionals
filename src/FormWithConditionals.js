@@ -27,13 +27,14 @@ export class FormWithConditionals extends Component {
       uiSchema: deepcopy(this.props.uiSchema)
     };
 
-    let { schema, uiSchema } = Object.keys(actions).reduce(({ schema, uiSchema }, field) => {
-      let fieldActions = actions[field];
-      return fieldActions.reduce(({ schema, uiSchema }, action) => {
-        let executor = executors[action];
-        return executor(field, schema, uiSchema);
-      }, { schema, uiSchema });
-    }, initialValue);
+    let { schema, uiSchema } = Object.keys(actions).
+      reduce(({ schema, uiSchema }, field) => {
+        let fieldActions = actions[field];
+        return fieldActions.reduce(({ schema, uiSchema }, { action, conf }) => {
+          let executor = executors[action];
+          return executor(field, schema, uiSchema, conf);
+        }, { schema, uiSchema });
+      }, initialValue);
 
     return { schema, uiSchema, formData: Object.assign({}, formData) };
   };
@@ -41,7 +42,9 @@ export class FormWithConditionals extends Component {
   ruleTracker = (state) => {
     let { formData } = state;
     this.setState(this.updateSchema(formData));
-    if (this.props.onChange) this.props.onChange(state);
+    if (this.props.onChange) {
+      this.props.onChange(state);
+    }
   };
 
   render() {
@@ -53,15 +56,13 @@ export class FormWithConditionals extends Component {
     delete configs.uiSchema;
 
     return (
-      <div>
-        <Form {...configs}
-              schema={this.state.schema}
-              uiSchema={this.state.uiSchema}
-              formData={this.state.formData}
-              onChange={this.ruleTracker}
-        />
-      </div>
-    )
+      <Form {...configs}
+            schema={this.state.schema}
+            uiSchema={this.state.uiSchema}
+            formData={this.state.formData}
+            onChange={this.ruleTracker}
+      />
+    );
   }
 }
 

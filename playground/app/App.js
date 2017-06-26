@@ -36,34 +36,34 @@ const schema = {
 };
 
 const uiSchema = {
-  "firstName": {
-    "classNames": "col-md-4 col-xs-4",
+  firstName: {
+    classNames: "col-md-4 col-xs-4 success",
     "ui:autofocus": true,
     "ui:emptyValue": ""
   },
   "lastName": {
-    "classNames": "col-md-4 col-xs-4"
+    classNames: "col-md-4 col-xs-4"
   },
   "age": {
-    "classNames": "col-md-4 col-xs-4",
+    classNames: "col-md-4 col-xs-4",
     "ui:widget": "updown",
     "ui:title": "Age of person"
   },
-  "bio": {
+  bio: {
     "ui:widget": "textarea",
     "classNames": "col-md-12"
   },
-  "password": {
+  password: {
     "classNames": "col-md-6 col-xs-6",
     "ui:widget": "password",
     "ui:help": "Hint: Make it strong!"
   },
-  "date": {
-    "classNames": "col-md-6 col-xs-6",
+  date: {
+    classNames: "col-md-6 col-xs-6",
     "ui:widget": "alt-datetime"
   },
-  "telephone": {
-    "classNames": "col-md-6 col-xs-6",
+  telephone: {
+    classNames: "col-md-6 col-xs-6",
     "ui:options": {
       "inputType": "tel"
     }
@@ -75,12 +75,20 @@ const rules = {
     action: "remove",
     when: { "firstName": "empty" },
   },
-  telephone: {
-    action: "require",
-    when: {
-      age: { greater: 10 }
+  telephone: [
+    {
+      action: "require",
+      when: { age: { greater: 10 } }
+    },
+    {
+      action: "ui:replace",
+      when: { age: { greater: 20 } },
+      conf: {
+        classNames: "col-md-12 col-xs-12",
+        "ui:help": "Look how big I am"
+      }
     }
-  }
+  ]
 };
 
 const formData = {
@@ -91,7 +99,7 @@ const formData = {
 
 export function App() {
   return (
-    <div className="container">
+
       <FormWithConditionals
         rules={rules}
         liveValidate={false}
@@ -101,6 +109,5 @@ export function App() {
         schema={schema}
         uiSchema={uiSchema}
       />
-    </div>
   );
 }

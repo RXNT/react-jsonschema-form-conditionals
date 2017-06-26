@@ -86,10 +86,13 @@ export function applyWhen(
 
 function toActions(fieldRules, formData) {
   if (Array.isArray(fieldRules)) {
-    return fieldRules.filter((rule) => applyWhen(rule.when, formData)).map(rule => rule.action);
+    let applicableRules = fieldRules.filter((rule) => applyWhen(rule.when, formData));
+    let applicableActions = applicableRules.map(({ action, conf }) => { return { action, conf }; });
+    return applicableActions;
   } else {
     if (applyWhen(fieldRules.when, formData)) {
-      return [fieldRules.action];
+      let { action, conf } = fieldRules;
+      return [{ action, conf }];
     } else {
       return [];
     }
@@ -99,7 +102,8 @@ function toActions(fieldRules, formData) {
 export function fieldToActions(rules = {}, formData = {}) {
   let agg = {};
   Object.keys(rules).forEach(field => {
-    let actions = toActions(rules[field], formData);
+    let fieldRules = rules[field];
+    let actions = toActions(fieldRules, formData);
     if (actions.length !== 0) {
       agg[field] = actions;
     }
