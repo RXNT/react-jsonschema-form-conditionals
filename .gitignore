@@ -36,3 +36,5 @@ node_modules/
 public/
 .idea/
 json-schema-playing.iml
+
+*.iml

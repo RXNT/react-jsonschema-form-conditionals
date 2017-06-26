@@ -1,4 +1,4 @@
-const predicate = require("is-predicate");
+const predicate = require("predicate");
 const assert = require("assert");
 
 describe("equal", function() {

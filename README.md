@@ -1,4 +1,4 @@
-# FormWithPredicates
+# FormWithConditionals
 
 This project extends [[https://github.com/mozilla-services/react-jsonschema-form]] with conditional action logic. This is primerely useful for complicated schemas with conditional logic, which should be manageable and changeable without modifying running application.
 
@@ -42,7 +42,7 @@ Features
 --------
 
 - Declarative conditional logic
-- Extendible action engine
+- Extensible action engine
 
 Having declarative conditional logic allows to change form behavior with configuration management, with no coding involved.
 
@@ -52,6 +52,12 @@ Installation
 Install form-with-rules by running:
 
     npm install --s form-with-rules
+
+Conditional logic
+------------
+
+
+
 
 Contribute
 ----------

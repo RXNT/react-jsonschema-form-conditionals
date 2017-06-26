@@ -1,4 +1,4 @@
-import predicate from "is-predicate";
+import predicate from "predicate";
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
