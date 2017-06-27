@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
 import { rulesToActions, checkPredicates, checkFields, checkActions } from "./Conditionals";
-import { toError } from "./Utils";
+import { toError, rulesIterator } from "./Utils";
 import executors from "./Actions";
 import deepcopy from "deepcopy";
 
@@ -25,6 +25,13 @@ export class FormWithConditionals extends Component {
     if (invalidActions.length !== 0) {
       toError(`Rule contains invalid action ${invalidActions}`);
     }
+
+    let invalidRules = rulesIterator(this.props.rules).
+      filter(({ action, when }) => action === undefined || when === undefined);
+    if (invalidRules.length !== 0) {
+      toError(`Invalid rules ${invalidRules}`);
+    }
+
 
     let { formData } = this.props;
     this.state = this.updateSchema(formData);

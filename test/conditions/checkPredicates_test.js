@@ -1,4 +1,3 @@
-const assert = require("assert");
 const { expect } = require("chai");
 const { checkPredicates } = require("../../src/Conditionals");
 

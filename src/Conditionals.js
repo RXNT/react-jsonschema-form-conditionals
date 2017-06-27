@@ -114,5 +114,5 @@ export function checkFields(rules = {}, schema = {}) {
 export function checkActions(rules = {}, actions = {}) {
   let ruleActions = listAllActions(rules);
   Object.keys(actions).forEach((a) => ruleActions.delete(a));
-  return Array.from(ruleActions)
+  return Array.from(ruleActions);
 }

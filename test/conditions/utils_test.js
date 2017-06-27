@@ -1,5 +1,4 @@
-const assert = require("assert");
-const { expect } = require("chai")
+const { expect } = require("chai");
 const { listAllPredicates, listAllFields, listAllActions } = require("../../src/Utils");
 
 describe("Two field rule ", function () {
@@ -32,7 +31,8 @@ describe("Two field rule ", function () {
 
   it("reads all actions", function () {
     let actions = listAllActions(rules);
-    expect(actions).eql(new Set(["remove", "require", "hide"]));
+    let expected = new Set(["remove", "require", "hide"]);
+    expect(actions).eql(expected);
   });
 });
 
@@ -68,7 +68,8 @@ describe("3 field rule ", function () {
 
   it("returns unique list of actions", function () {
     let actions = listAllActions(rules);
-    expect(actions).eql(new Set(["remove", "require", "hide", undefined]));
-  })
+    let expected = new Set(["remove", "require", "hide", undefined]);
+    expect(actions).eql(expected);
+  });
 
 });

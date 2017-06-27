@@ -77,7 +77,7 @@ export function listAllActions(rules = {}) {
   return new Set(allActions);
 }
 
-function rulesIterator(rules = {}) {
+export function rulesIterator(rules = {}) {
   return flatMap(Object.keys(rules), (field) => {
     let fieldRule = rules[field];
     if (Array.isArray(fieldRule)) {
