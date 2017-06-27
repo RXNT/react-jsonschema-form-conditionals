@@ -11,6 +11,16 @@ export class FormWithConditionals extends Component {
   constructor(props) {
     super(props);
 
+    let actionMissing = rulesIterator(this.props.rules).filter(({ action }) => action === undefined);
+    if (actionMissing.length !== 0) {
+      toError(`Rule action is missing in ${JSON.stringify(actionMissing)}`);
+    }
+
+    let whenMissing = rulesIterator(this.props.rules).filter(({ when }) => when === undefined);
+    if (whenMissing.length !== 0) {
+      toError(`Rule when is missing in ${JSON.stringify(whenMissing)}`);
+    }
+
     let invalidPredicates = checkPredicates(this.props.rules);
     if (invalidPredicates.length !== 0) {
       toError(`Rule contains invalid predicates ${invalidPredicates}`);
@@ -25,13 +35,6 @@ export class FormWithConditionals extends Component {
     if (invalidActions.length !== 0) {
       toError(`Rule contains invalid action ${invalidActions}`);
     }
-
-    let invalidRules = rulesIterator(this.props.rules).
-      filter(({ action, when }) => action === undefined || when === undefined);
-    if (invalidRules.length !== 0) {
-      toError(`Invalid rules ${invalidRules}`);
-    }
-
 
     let { formData } = this.props;
     this.state = this.updateSchema(formData);
