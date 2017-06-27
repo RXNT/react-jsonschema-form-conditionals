@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
-import { fieldToActions } from "./Conditionals";
+import { fieldToActions, checkPredicates } from "./Conditionals";
+import { toError } from "./Utils";
 import executors from "./Actions";
 import deepcopy from "deepcopy";
 
@@ -9,6 +10,11 @@ export class FormWithConditionals extends Component {
 
   constructor(props) {
     super(props);
+
+    let invalidPredicates = checkPredicates(this.props.rules);
+    if (invalidPredicates.length !== 0) {
+      toError(`Rule contains invalid predicates ${invalidPredicates}`);
+    }
 
     let { formData } = this.props;
     this.state = this.updateSchema(formData);

@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { isObject, toError } from './Utils';
+import { isObject, toError, toPredicateList } from './Utils';
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
@@ -97,4 +97,10 @@ export function fieldToActions(rules = {}, formData = {}) {
     }
   });
   return agg;
+}
+
+export function checkPredicates(rules = {}) {
+  let rulePredicates = toPredicateList(rules);
+  Object.keys(predicate).forEach((p) => rulePredicates.delete(p));
+  return Array.from(rulePredicates);
 }
