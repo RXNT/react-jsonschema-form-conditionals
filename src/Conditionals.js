@@ -1,20 +1,8 @@
 import predicate from "predicate";
+import { isObject, toError } from './Utils';
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
-
-function isObject(obj) {
-  return typeof obj === "object" && obj !== null;
-}
-
-function toError(message) {
-  if (process.env.NODE_ENV !== "production") {
-    throw new ReferenceError(message);
-  } else {
-    console.error(message);
-  }
-  return false;
-}
 
 export function check(
   fieldVal,

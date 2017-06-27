@@ -50,56 +50,55 @@ npm install --s react-jsonschema-form-conditionals
 To show case uses for this library we'll be using simple registration schema example 
 
 ```jsx
-...
 
 import FormWithConditionals from "react-jsonschema-form-conditionals";
 
 let schema = {
-  "title": "A registration form",
-  "description": "A simple form example.",
-  "type": "object",
-  "required": [
+  title: "A registration form",
+  description: "A simple form example.",
+  type: "object",
+  required: [
     "firstName",
     "lastName"
   ],
-  "properties": {
-    "firstName": {
-      "type": "string",
-      "title": "First name"
+  properties: {
+    firstName: {
+      type: "string",
+      title: "First name"
     },
-    "lastName": {
-      "type": "string",
-      "title": "Last name"
+    lastName: {
+      type: "string",
+      title: "Last name"
     },
-    "age": {
-      "type": "integer",
-      "title": "Age"
+    age: {
+      type: "integer",
+      title: "Age",
     },
-    "bio": {
-      "type": "string",
-      "title": "Bio"
+    bio: {
+      type: "string",
+      title: "Bio",
     },
-    "country": {
-      "type": "string",
-      "title": "Country" 
+    country: {
+      type: "string",
+      title: "Country" 
     },
-    "state": {
-      "type": "string",
-      "title": "State" 
+    state: {
+      type: "string",
+      title: "State" 
     },
-    "zip": {
-      "type": "string",
-      "title": "ZIP" 
+    zip: {
+      type: "string",
+      title: "ZIP" 
     },
-    "password": {
-      "type": "string",
-      "title": "Password",
-      "minLength": 3
+    password: {
+      type: "string",
+      title: "Password",
+      minLength: 3
     },
-    "telephone": {
-      "type": "string",
-      "title": "Telephone",
-      "minLength": 10
+    telephone: {
+      type: "string",
+      title: "Telephone",
+      minLength: 10
     }
   }
 }

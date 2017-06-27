@@ -73,7 +73,7 @@ const uiSchema = {
 const rules = {
   password: {
     action: "remove",
-    when: { "firstName": "empty" },
+    when: { firstName: "empty" },
   },
   telephone: [
     {
