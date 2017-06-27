@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { isObject, toError, toPredicateList } from './Utils';
+import { isObject, toError, toPredicateList, toFieldList } from './Utils';
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
@@ -103,4 +103,10 @@ export function checkPredicates(rules = {}) {
   let rulePredicates = toPredicateList(rules);
   Object.keys(predicate).forEach((p) => rulePredicates.delete(p));
   return Array.from(rulePredicates);
+}
+
+export function checkFields(rules = {}, schema = {}) {
+  let ruleFields = toFieldList(rules);
+  Object.keys(schema.properties).forEach((f) => ruleFields.delete(f));
+  return Array.from(ruleFields);
 }

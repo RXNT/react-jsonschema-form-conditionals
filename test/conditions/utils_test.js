@@ -1,9 +1,8 @@
 const assert = require("assert");
 const { expect } = require("chai")
-const { toPredicateList } = require("../../src/Utils");
+const { toPredicateList, toFieldList } = require("../../src/Utils");
 
-describe("List all predicates", function () {
-
+describe("List predicates and fields", function () {
 
   it("reads all predicates", function () {
     const rules = {
@@ -16,6 +15,9 @@ describe("List all predicates", function () {
 
     let predicates = toPredicateList(rules);
     expect(predicates).eql(new Set(["empty", "greater", "less"]));
+
+    let fields = toFieldList(rules);
+    expect(fields).eql(new Set(["password", "age", "telephone", "firstName"]));
   });
 
   it("returns unique list", function () {
@@ -30,6 +32,9 @@ describe("List all predicates", function () {
 
     let predicates = toPredicateList(rules);
     expect(predicates).eql(new Set(["empty", "greater", "less"]));
+
+    let fields = toFieldList(rules);
+    expect(fields).eql(new Set(["password", "age", "telephone", "firstName", "lastName"]));
   })
 
 });

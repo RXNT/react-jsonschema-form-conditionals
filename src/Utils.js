@@ -36,12 +36,10 @@ function collectPredicatesFromRule(rule, agg = new Set()) {
   }
 }
 
-function collectPredicatesFromWhen(when, agg) {
+function collectPredicatesFromWhen(when, agg = new Set()) {
   Object.keys(when).forEach(ref => {
-    if (ref === "or") {
-      collectPredicatesFromRule(when[ref], agg);
-    } else if (ref === "and") {
-      collectPredicatesFromRule(when[ref], agg);
+    if (ref === "or" || ref === "and") {
+      when[ref].forEach(w => collectPredicatesFromRule(w, agg));
     } else {
       collectPredicatesFromRule(when[ref], agg);
     }
@@ -59,4 +57,32 @@ export function toPredicateList(rules = {}) {
     }
   });
   return allPredicates;
+}
+
+function collectFieldsFromWhen(when, agg = new Set()) {
+  Object.
+    keys(when).
+    forEach(ref => {
+      if (ref === "or" || ref === "and") {
+        when[ref].forEach((w) => collectFieldsFromWhen(w, agg));
+      } else {
+        agg.add(ref);
+      }
+    });
+}
+
+export function toFieldList(rules = {}) {
+  let allFields = new Set([]);
+  Object.
+    keys(rules).
+    forEach((field) => {
+      allFields.add(field);
+      let fieldRule = rules[field];
+      if (Array.isArray(fieldRule)) {
+        fieldRule.forEach(rule => collectFieldsFromWhen(rule.when, allFields));
+      } else {
+        collectFieldsFromWhen(fieldRule.when, allFields)
+      }
+    });
+  return allFields;
 }

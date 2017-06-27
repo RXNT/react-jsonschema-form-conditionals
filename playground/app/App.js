@@ -22,7 +22,7 @@ const schema = {
       "type": "string",
       "title": "Bio"
     },
-    "password": {
+    password: {
       "type": "string",
       "title": "Password",
       "minLength": 3
@@ -99,7 +99,6 @@ const formData = {
 
 export function App() {
   return (
-
       <FormWithConditionals
         rules={rules}
         liveValidate={false}
