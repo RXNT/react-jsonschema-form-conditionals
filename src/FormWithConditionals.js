@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
-import { fieldToActions, checkPredicates, checkFields } from "./Conditionals";
+import { rulesToActions, checkPredicates, checkFields, checkActions } from "./Conditionals";
 import { toError } from "./Utils";
 import executors from "./Actions";
 import deepcopy from "deepcopy";
@@ -21,6 +21,11 @@ export class FormWithConditionals extends Component {
       toError(`Rule contains invalid fields ${invalidFields}`);
     }
 
+    let invalidActions = checkActions(this.props.rules, executors);
+    if (invalidActions.length !== 0) {
+      toError(`Rule contains invalid action ${invalidActions}`);
+    }
+
     let { formData } = this.props;
     this.state = this.updateSchema(formData);
   }
@@ -32,7 +37,7 @@ export class FormWithConditionals extends Component {
 
   updateSchema = (formData = {}) => {
     let rules = this.props.rules;
-    let actions = fieldToActions(rules, formData);
+    let actions = rulesToActions(rules, formData);
     let initialValue = {
       schema: deepcopy(this.props.schema),
       uiSchema: deepcopy(this.props.uiSchema)

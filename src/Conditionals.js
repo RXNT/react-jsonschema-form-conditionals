@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { isObject, toError, toPredicateList, toFieldList } from './Utils';
+import { isObject, toError, listAllPredicates, listAllFields, listAllActions } from './Utils';
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
@@ -72,7 +72,7 @@ export function applyWhen(
   });
 }
 
-function toActions(fieldRules, formData) {
+function fieldToActions(fieldRules, formData) {
   if (Array.isArray(fieldRules)) {
     let applicableRules = fieldRules.filter((rule) => applyWhen(rule.when, formData));
     let applicableActions = applicableRules.map(({ action, conf }) => { return { action, conf }; });
@@ -87,11 +87,11 @@ function toActions(fieldRules, formData) {
   }
 }
 
-export function fieldToActions(rules = {}, formData = {}) {
+export function rulesToActions(rules = {}, formData = {}) {
   let agg = {};
   Object.keys(rules).forEach(field => {
     let fieldRules = rules[field];
-    let actions = toActions(fieldRules, formData);
+    let actions = fieldToActions(fieldRules, formData);
     if (actions.length !== 0) {
       agg[field] = actions;
     }
@@ -100,13 +100,19 @@ export function fieldToActions(rules = {}, formData = {}) {
 }
 
 export function checkPredicates(rules = {}) {
-  let rulePredicates = toPredicateList(rules);
+  let rulePredicates = listAllPredicates(rules);
   Object.keys(predicate).forEach((p) => rulePredicates.delete(p));
   return Array.from(rulePredicates);
 }
 
 export function checkFields(rules = {}, schema = {}) {
-  let ruleFields = toFieldList(rules);
+  let ruleFields = listAllFields(rules);
   Object.keys(schema.properties).forEach((f) => ruleFields.delete(f));
   return Array.from(ruleFields);
+}
+
+export function checkActions(rules = {}, actions = {}) {
+  let ruleActions = listAllActions(rules);
+  Object.keys(actions).forEach((a) => ruleActions.delete(a));
+  return Array.from(ruleActions)
 }

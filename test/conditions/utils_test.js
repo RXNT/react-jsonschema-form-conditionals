@@ -1,40 +1,74 @@
 const assert = require("assert");
 const { expect } = require("chai")
-const { toPredicateList, toFieldList } = require("../../src/Utils");
+const { listAllPredicates, listAllFields, listAllActions } = require("../../src/Utils");
 
-describe("List predicates and fields", function () {
+describe("Two field rule ", function () {
+  const rules = {
+    password: {
+      when: { firstName: "empty" },
+      action: "remove"
+    },
+    telephone: [
+      {
+        when: { age: { greater: 10 } },
+        action: "require"
+      },
+      {
+        when: { age: { less: 20 } },
+        action: "hide"
+      }
+    ]
+  };
 
   it("reads all predicates", function () {
-    const rules = {
-      password: { when: { firstName: "empty" }, },
-      telephone: [
-        { when: { age: { greater: 10 } } },
-        { when: { age: { less: 20 } } }
-      ]
-    };
-
-    let predicates = toPredicateList(rules);
+    let predicates = listAllPredicates(rules);
     expect(predicates).eql(new Set(["empty", "greater", "less"]));
+  });
 
-    let fields = toFieldList(rules);
+  it("reads all fields", function () {
+    let fields = listAllFields(rules);
     expect(fields).eql(new Set(["password", "age", "telephone", "firstName"]));
   });
 
-  it("returns unique list", function () {
+  it("reads all actions", function () {
+    let actions = listAllActions(rules);
+    expect(actions).eql(new Set(["remove", "require", "hide"]));
+  });
+});
+
+describe("3 field rule ", function () {
+
     const rules = {
-      password: { when: { firstName: "empty" }, },
+      password: {
+        when: { firstName: "empty" },
+        action: "remove",
+      },
       telephone: [
-        { when: { age: { greater: 10 } } },
+        {
+          when: { age: { greater: 10 } },
+          action: "require",
+        },
         { when: { age: { less: 20 } } }
       ],
-      lastName: { when: { firstName: "empty" } }
+      lastName: {
+        when: { firstName: "empty" },
+        action: "hide",
+      }
     };
 
-    let predicates = toPredicateList(rules);
+  it("returns unique list of predicates", function () {
+    let predicates = listAllPredicates(rules);
     expect(predicates).eql(new Set(["empty", "greater", "less"]));
+  });
 
-    let fields = toFieldList(rules);
+  it("returns unique list of fields", function () {
+    let fields = listAllFields(rules);
     expect(fields).eql(new Set(["password", "age", "telephone", "firstName", "lastName"]));
+  });
+
+  it("returns unique list of actions", function () {
+    let actions = listAllActions(rules);
+    expect(actions).eql(new Set(["remove", "require", "hide", undefined]));
   })
 
 });

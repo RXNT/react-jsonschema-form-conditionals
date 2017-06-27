@@ -11,78 +11,85 @@ export function toError(message) {
   return false;
 }
 
-function collectPredicatesFromRule(rule, agg = new Set()) {
+function predicatesFromRule(rule, agg = new Set()) {
   if (isObject(rule)) {
-    Object.
-      keys(rule).
-      forEach((p) => {
-        let comparable = rule[p];
-        if (isObject(comparable) || p === "not") {
-          if (p === "or") {
-            if (Array.isArray(comparable)) {
-              comparable.some(condition => collectPredicatesFromRule(condition, agg));
-            } else {
-              return toError(`OR must be an array`);
-            }
+    Object.keys(rule).forEach((p) => {
+      let comparable = rule[p];
+      if (isObject(comparable) || p === "not") {
+        if (p === "or") {
+          if (Array.isArray(comparable)) {
+            comparable.some(condition => predicatesFromRule(condition, agg));
           } else {
-            collectPredicatesFromRule(comparable, agg);
+            return toError(`OR must be an array`);
           }
         } else {
-          agg.add(p);
+          predicatesFromRule(comparable, agg);
         }
-      });
+      } else {
+        agg.add(p);
+      }
+    });
   } else {
     agg.add(rule);
   }
 }
 
-function collectPredicatesFromWhen(when, agg = new Set()) {
+function predicatesFromWhen(when, agg = new Set()) {
   Object.keys(when).forEach(ref => {
     if (ref === "or" || ref === "and") {
-      when[ref].forEach(w => collectPredicatesFromRule(w, agg));
+      when[ref].forEach(w => predicatesFromRule(w, agg));
     } else {
-      collectPredicatesFromRule(when[ref], agg);
+      predicatesFromRule(when[ref], agg);
     }
   });
 }
 
-export function toPredicateList(rules = {}) {
+export function listAllPredicates(rules = {}) {
   let allPredicates = new Set([]);
   Object.keys(rules).forEach((field) => {
     let fieldRule = rules[field];
     if (Array.isArray(fieldRule)) {
-      fieldRule.forEach(rule => collectPredicatesFromWhen(rule.when, allPredicates));
+      fieldRule.forEach(rule => predicatesFromWhen(rule.when, allPredicates));
     } else {
-      collectPredicatesFromWhen(fieldRule.when, allPredicates)
+      predicatesFromWhen(fieldRule.when, allPredicates)
     }
   });
   return allPredicates;
 }
 
-function collectFieldsFromWhen(when, agg = new Set()) {
-  Object.
-    keys(when).
-    forEach(ref => {
-      if (ref === "or" || ref === "and") {
-        when[ref].forEach((w) => collectFieldsFromWhen(w, agg));
-      } else {
-        agg.add(ref);
-      }
-    });
+function fieldsFromWhen(when, agg = new Set()) {
+  Object.keys(when).forEach(ref => {
+    if (ref === "or" || ref === "and") {
+      when[ref].forEach((w) => fieldsFromWhen(w, agg));
+    } else {
+      agg.add(ref);
+    }
+  });
 }
 
-export function toFieldList(rules = {}) {
-  let allFields = new Set([]);
-  Object.
-    keys(rules).
-    forEach((field) => {
-      allFields.add(field);
-      let fieldRule = rules[field];
-      if (Array.isArray(fieldRule)) {
-        fieldRule.forEach(rule => collectFieldsFromWhen(rule.when, allFields));
-      } else {
-        collectFieldsFromWhen(fieldRule.when, allFields)
-      }
-    });
+export function listAllFields(rules = {}) {
+  let allFields = new Set();
+  Object.keys(rules).forEach((field) => {
+    allFields.add(field);
+    let fieldRule = rules[field];
+    if (Array.isArray(fieldRule)) {
+      fieldRule.forEach(rule => fieldsFromWhen(rule.when, allFields));
+    } else {
+      fieldsFromWhen(fieldRule.when, allFields)
+    }
+  });
   return allFields;
+}
+
+export function listAllActions(rules = {}) {
+  let allActions = new Set();
+  Object.keys(rules).forEach(field => {
+    let fieldRule = rules[field];
+    if (Array.isArray(fieldRule)) {
+      fieldRule.forEach(rule => allActions.add(rule.action));
+    } else {
+      allActions.add(fieldRule.action);
+    }
+  });
+  return allActions;
 }
