@@ -164,9 +164,9 @@ when `age` is `less` than 5.
 [Less](https://landau.github.io/predicate/#less) keyword translates to [less in predicate](https://landau.github.io/predicate/#less) and required 
 action will be performed only when `predicate.empty(registration.age, 5)` is `true`. 
 
-### Boolean logic on a field level
+### Boolean operations on a single field
 
-#### AND logic
+#### AND
 
 For the field AND is a default behavior.
 
@@ -190,7 +190,7 @@ let rules = {
 By default action will be applied only when both field conditions are true.
 In this case, when age is `greater` than 5 and `less` than 70.
  
-#### NOT logic
+#### NOT
 
 Let's say we want to change the logic to opposite, and remove telephone when 
 age is greater, `less`er then `5` or `greater` than `70`, 
@@ -213,7 +213,7 @@ let rules = {
 
 This does it, since the final result will be opposite of the previous result.
  
-#### OR logic
+#### OR
 
 The previous example works, but it's a bit hard to understand, luckily we can express it in more natural way
 with `or` conditional.
@@ -233,7 +233,80 @@ let rules = {
 }
 ```
 
-This is the same as NOT, but easier to grasp.
+This is the same as `NOT`, but easier to grasp.
+
+### Boolean operations on multi fields
+
+To support cases, when action depends on more, than one field meeting criteria we introduced
+multi fields boolean operations.
+
+#### Default AND operation
+
+Let's say we want to `require` `bio`, when `age` is less than 70 and `country` is `USA`
+
+```js
+let rules = {
+  bio: {
+      action: "require",
+      when: {
+        age: { less : 70 },
+        country: { is: "USA" }
+      }
+  }
+}
+```
+
+This is the way we can express this. By default each field is treated as a 
+separate condition and all conditions must be meet.
+
+#### OR
+
+In addition to previous rule we need bio, if `state` is `NY`.
+
+```js
+let rules = {
+  bio: {
+      action: "require",
+      when: {
+        or: [
+          {
+            age: { less : 70 },
+            country: { is: "USA" }
+          },
+          {
+            state: { is: "NY"}
+          }
+        ]
+      }
+  }
+}
+```
+
+#### NOT
+
+When we don't require `bio` we need `zip` code.
+
+```js
+let rules = {
+  zip: {
+    action: "require",
+    when: {
+      not: {
+        or: [
+          {
+            age: { less : 70 },
+            country: { is: "USA" }
+          },
+          {
+            state: { is: "NY"}
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
 
 
 ## Contribute
