@@ -1,5 +1,6 @@
 import React from "react";
-import { FormWithConditionals } from "../../src/FormWithConditionals";
+import applyRules  from "../../src/index";
+import Form from 'react-jsonschema-form';
 
 const schema = {
   "title": "A registration form",
@@ -96,6 +97,8 @@ const formData = {
   firstName: "",
   age: 20
 };
+
+let FormWithConditionals = applyRules(Form);
 
 export function App() {
   return (
