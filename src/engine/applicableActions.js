@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { isObject, toError } from "../utils/Utils";
+import { isObject, toError } from "../utils";
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;

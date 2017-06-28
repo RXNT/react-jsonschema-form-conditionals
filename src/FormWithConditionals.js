@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
-import RulesExecutors from "./RulesExecutors";
-import RulesEngine from "./engine";
+import Actions from "./actions";
+import Engine from "./engine";
 
 export class FormWithConditionals extends Component {
 
   constructor(props) {
     super(props);
 
-    this.rulesEngine = new RulesEngine(this.props.rules, this.props.schema, this.props.uiSchema);
-    this.rulesExecutor = new RulesExecutors(this.props.rules, this.props.schema, this.props.uiSchema);
+    this.rulesEngine = new Engine(this.props.rules, this.props.schema, this.props.uiSchema);
+    this.rulesExecutor = new Actions(this.props.rules, this.props.schema, this.props.uiSchema);
 
     let { formData } = this.props;
     this.rulesEngine.run(formData).
@@ -24,10 +24,6 @@ export class FormWithConditionals extends Component {
     let { schema, formData, uiSchema } = nextProps;
     this.setState({ schema, formData, uiSchema });
   }
-
-  updateSchema = (formData = {}) => {
-    return this.rulesEngine.run(formData).then(this.rulesExecutor.run);
-  };
 
   ruleTracker = (state) => {
     let { formData } = state;

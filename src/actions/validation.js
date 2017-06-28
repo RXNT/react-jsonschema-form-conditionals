@@ -1,4 +1,4 @@
-import { rulesIterator, toError } from "../utils/Utils";
+import { rulesIterator, toError } from "../utils";
 
 export function listAllActions(rules = {}) {
   let allActions = rulesIterator(rules).map((rule) => rule.action);

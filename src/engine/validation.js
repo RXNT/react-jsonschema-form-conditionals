@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { flatMap, isObject, rulesIterator, toError } from "../utils/Utils";
+import { flatMap, isObject, rulesIterator, toError } from "../utils";
 
 export function predicatesFromRule(rule) {
   if (isObject(rule)) {
@@ -72,7 +72,7 @@ export function listInvalidFields(rules, schema) {
 }
 
 export function listRulesWithoutWhen(rules) {
-  return rulesIterator(rules).filter(({ when }) => when === undefined)
+  return rulesIterator(rules).filter(({ when }) => when === undefined);
 }
 
 export default function validate(rules, schema) {
