@@ -1,43 +1,23 @@
 import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
-import { rulesToActions, checkPredicates, checkFields, checkActions } from "./Conditionals";
-import { toError, rulesIterator } from "./Utils";
-import executors from "./Actions";
-import deepcopy from "deepcopy";
+import RulesExecutors from "./RulesExecutors";
+import RulesEngine from "./RulesEngine";
 
 export class FormWithConditionals extends Component {
 
   constructor(props) {
     super(props);
 
-    let actionMissing = rulesIterator(this.props.rules).filter(({ action }) => action === undefined);
-    if (actionMissing.length !== 0) {
-      toError(`Rule action is missing in ${JSON.stringify(actionMissing)}`);
-    }
-
-    let whenMissing = rulesIterator(this.props.rules).filter(({ when }) => when === undefined);
-    if (whenMissing.length !== 0) {
-      toError(`Rule when is missing in ${JSON.stringify(whenMissing)}`);
-    }
-
-    let invalidPredicates = checkPredicates(this.props.rules);
-    if (invalidPredicates.length !== 0) {
-      toError(`Rule contains invalid predicates ${invalidPredicates}`);
-    }
-
-    let invalidFields = checkFields(this.props.rules, this.props.schema);
-    if (invalidFields.length !== 0) {
-      toError(`Rule contains invalid fields ${invalidFields}`);
-    }
-
-    let invalidActions = checkActions(this.props.rules, executors);
-    if (invalidActions.length !== 0) {
-      toError(`Rule contains invalid action ${invalidActions}`);
-    }
+    this.rulesEngine = new RulesEngine(this.props.rules, this.props.schema, this.props.uiSchema);
+    this.rulesExecutor = new RulesExecutors(this.props.rules, this.props.schema, this.props.uiSchema);
 
     let { formData } = this.props;
-    this.state = this.updateSchema(formData);
+    this.rulesEngine.run(formData).
+      then(this.rulesExecutor.run).
+      then((newState) => {
+        this.setState(newState);
+      });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,31 +26,20 @@ export class FormWithConditionals extends Component {
   }
 
   updateSchema = (formData = {}) => {
-    let rules = this.props.rules;
-    let actions = rulesToActions(rules, formData);
-    let initialValue = {
-      schema: deepcopy(this.props.schema),
-      uiSchema: deepcopy(this.props.uiSchema)
-    };
-
-    let { schema, uiSchema } = Object.keys(actions).
-      reduce(({ schema, uiSchema }, field) => {
-        let fieldActions = actions[field];
-        return fieldActions.reduce(({ schema, uiSchema }, { action, conf }) => {
-          let executor = executors[action];
-          return executor(field, schema, uiSchema, conf);
-        }, { schema, uiSchema });
-      }, initialValue);
-
-    return { schema, uiSchema, formData: Object.assign({}, formData) };
+    return this.rulesEngine.run(formData).then(this.rulesExecutor.run);
   };
 
   ruleTracker = (state) => {
     let { formData } = state;
-    this.setState(this.updateSchema(formData));
-    if (this.props.onChange) {
-      this.props.onChange(state);
-    }
+    this.rulesEngine.
+      run(formData).
+      then(this.rulesExecutor.run).
+      then((newState) => {
+        this.setState(newState);
+        if (this.props.onChange) {
+          this.props.onChange(Object.assign({}, state, newState));
+        }
+      });
   };
 
   render() {

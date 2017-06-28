@@ -1,5 +1,6 @@
 const assert = require("assert");
-const { applyWhen } = require("../../src/Conditionals");
+const { applyWhen } = require("../../src/RulesEngine");
+
 
 describe("applyWhen", function() {
   describe("sanity check", function() {

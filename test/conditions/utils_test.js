@@ -1,5 +1,6 @@
 const { expect } = require("chai");
-const { listAllPredicates, listAllFields, listAllActions } = require("../../src/Utils");
+const { listAllPredicates, listAllFields } = require("../../src/engine/validation");
+const { listAllActions } = require("../../src/actions/validation");
 
 describe("Two field rule ", function () {
   const rules = {

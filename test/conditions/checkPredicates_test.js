@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { checkPredicates } = require("../../src/Conditionals");
+const { listInvalidPredicates } = require("../../src/engine/validation");
 
 describe("Check predicates", function () {
 
@@ -12,7 +12,7 @@ describe("Check predicates", function () {
       ]
     };
 
-    let predicates = checkPredicates(rules);
+    let predicates = listInvalidPredicates(rules);
     expect(predicates).eql(["epty"]);
   });
 

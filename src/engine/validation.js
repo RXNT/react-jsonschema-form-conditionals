@@ -1,20 +1,7 @@
-export function isObject(obj) {
-  return typeof obj === "object" && obj !== null;
-}
+import predicate from "predicate";
+import { flatMap, isObject, rulesIterator, toError } from "../utils/Utils";
 
-export function toError(message) {
-  if (process.env.NODE_ENV !== "production") {
-    throw new ReferenceError(message);
-  } else {
-    console.error(message);
-  }
-  return false;
-}
-
-const concat = (x, y) => x.concat(y);
-const flatMap = (xs, f) => xs.map(f).reduce(concat, []);
-
-function predicatesFromRule(rule) {
+export function predicatesFromRule(rule) {
   if (isObject(rule)) {
     return flatMap(Object.keys(rule), (p) => {
       let comparable = rule[p];
@@ -37,7 +24,7 @@ function predicatesFromRule(rule) {
   }
 }
 
-function predicatesFromWhen(when) {
+export function predicatesFromWhen(when) {
   return flatMap(
     Object.keys(when),
     (ref) => {
@@ -57,7 +44,13 @@ export function listAllPredicates(rules = {}) {
   return new Set(allPredicates);
 }
 
-function fieldsFromWhen(when) {
+export function listInvalidPredicates(rules = {}) {
+  let rulePredicates = listAllPredicates(rules);
+  Object.keys(predicate).forEach((p) => rulePredicates.delete(p));
+  return Array.from(rulePredicates);
+}
+
+export function fieldsFromWhen(when) {
   return flatMap(Object.keys(when), (ref) => {
     if (ref === "or" || ref === "and") {
       return flatMap(when[ref], (w) => fieldsFromWhen(w));
@@ -72,18 +65,25 @@ export function listAllFields(rules = {}) {
   return new Set(allFields.concat(Object.keys(rules)));
 }
 
-export function listAllActions(rules = {}) {
-  let allActions = rulesIterator(rules).map((rule) => rule.action);
-  return new Set(allActions);
+export function listInvalidFields(rules, schema) {
+  let ruleFields = listAllFields(rules);
+  Object.keys(schema.properties).forEach((f) => ruleFields.delete(f));
+  return Array.from(ruleFields);
 }
 
-export function rulesIterator(rules = {}) {
-  return flatMap(Object.keys(rules), (field) => {
-    let fieldRule = rules[field];
-    if (Array.isArray(fieldRule)) {
-      return fieldRule;
-    } else {
-      return [fieldRule];
-    }
-  });
+export function validate(rules, schema) {
+  let invalidPredicates = listInvalidPredicates(rules);
+  if (invalidPredicates.length !== 0) {
+    toError(`Rule contains invalid predicates ${invalidPredicates}`);
+  }
+
+  let invalidFields = listInvalidFields(rules, schema);
+  if (invalidFields.length !== 0) {
+    toError(`Rule contains invalid fields ${invalidFields}`);
+  }
+
+  let whenMissing = rulesIterator(rules).filter(({ when }) => when === undefined);
+  if (whenMissing.length !== 0) {
+    toError(`Rule when is missing in ${JSON.stringify(whenMissing)}`);
+  }
 }

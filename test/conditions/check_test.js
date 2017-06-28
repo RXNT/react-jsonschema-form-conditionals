@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { check } = require("../../src/Conditionals");
+const { check } = require("../../src/RulesEngine");
 
 describe("Check", function() {
   describe("singleLine", function() {

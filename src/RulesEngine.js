@@ -1,15 +1,11 @@
 import predicate from "predicate";
-import { isObject, toError, listAllPredicates, listAllFields, listAllActions } from './Utils';
+import { isObject, toError } from "./utils/Utils";
+import validate from './engine/validation';
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
 
-export function check(
-  fieldVal,
-  rule,
-  predicator = predicate,
-  condition = Array.prototype.every
-) {
+export function check(fieldVal, rule, predicator = predicate, condition = Array.prototype.every) {
   if (isObject(rule)) {
     // Complicated rule - like { greater then 10 }
     return condition.call(Object.keys(rule), p => {
@@ -17,9 +13,7 @@ export function check(
       if (isObject(comparable) || p === "not") {
         if (p === "or") {
           if (Array.isArray(comparable)) {
-            return comparable.some(condition =>
-              check(fieldVal, condition, predicator, Array.prototype.every)
-            );
+            return comparable.some(condition => check(fieldVal, condition, predicator, Array.prototype.every));
           } else {
             return toError(`OR must be an array`);
           }
@@ -51,11 +45,7 @@ export function check(
   }
 }
 
-export function applyWhen(
-  rule,
-  formData,
-  condition = Array.prototype.every
-) {
+export function applyWhen(rule, formData, condition = Array.prototype.every) {
   if (!isObject(rule) || !isObject(formData)) {
     return toError(`Rule ${rule} with ${formData} can't be processed`);
   }
@@ -72,10 +62,12 @@ export function applyWhen(
   });
 }
 
-function fieldToActions(fieldRules, formData) {
+export function fieldToActions(fieldRules, formData) {
   if (Array.isArray(fieldRules)) {
     let applicableRules = fieldRules.filter((rule) => applyWhen(rule.when, formData));
-    let applicableActions = applicableRules.map(({ action, conf }) => { return { action, conf }; });
+    let applicableActions = applicableRules.map(({ action, conf }) => {
+      return { action, conf };
+    });
     return applicableActions;
   } else {
     if (applyWhen(fieldRules.when, formData)) {
@@ -99,20 +91,26 @@ export function rulesToActions(rules = {}, formData = {}) {
   return agg;
 }
 
-export function checkPredicates(rules = {}) {
-  let rulePredicates = listAllPredicates(rules);
-  Object.keys(predicate).forEach((p) => rulePredicates.delete(p));
-  return Array.from(rulePredicates);
-}
+export default class RulesEngine {
+  constructor(rules, schema, uiSchema) {
+    this.schema = schema;
+    this.uiSchema = uiSchema;
+    this.rules = rules;
 
-export function checkFields(rules = {}, schema = {}) {
-  let ruleFields = listAllFields(rules);
-  Object.keys(schema.properties).forEach((f) => ruleFields.delete(f));
-  return Array.from(ruleFields);
-}
+    if (process.env.NODE_ENV !== "production") {
+      validate(rules, schema);
+    }
+  }
 
-export function checkActions(rules = {}, actions = {}) {
-  let ruleActions = listAllActions(rules);
-  Object.keys(actions).forEach((a) => ruleActions.delete(a));
-  return Array.from(ruleActions);
+  run = (formData) => {
+    let self = this;
+    return new Promise(function (resolve, reject) {
+      try {
+        resolve(rulesToActions(self.rules, formData));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
 }
