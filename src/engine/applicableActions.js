@@ -1,6 +1,5 @@
 import predicate from "predicate";
-import { isObject, toError } from "./utils/Utils";
-import validate from './engine/validation';
+import { isObject, toError } from "../utils/Utils";
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
@@ -79,7 +78,7 @@ export function fieldToActions(fieldRules, formData) {
   }
 }
 
-export function rulesToActions(rules = {}, formData = {}) {
+export default function applicableActions(rules = {}, formData = {}) {
   let agg = {};
   Object.keys(rules).forEach(field => {
     let fieldRules = rules[field];
@@ -89,28 +88,4 @@ export function rulesToActions(rules = {}, formData = {}) {
     }
   });
   return agg;
-}
-
-export default class RulesEngine {
-  constructor(rules, schema, uiSchema) {
-    this.schema = schema;
-    this.uiSchema = uiSchema;
-    this.rules = rules;
-
-    if (process.env.NODE_ENV !== "production") {
-      validate(rules, schema);
-    }
-  }
-
-  run = (formData) => {
-    let self = this;
-    return new Promise(function (resolve, reject) {
-      try {
-        resolve(rulesToActions(self.rules, formData));
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-
 }

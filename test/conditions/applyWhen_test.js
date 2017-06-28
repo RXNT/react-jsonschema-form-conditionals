@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { applyWhen } = require("../../src/RulesEngine");
+const { applyWhen } = require("../../src/engine/applicableActions");
 
 
 describe("applyWhen", function() {

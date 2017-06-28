@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import PropTypes from "prop-types";
 import RulesExecutors from "./RulesExecutors";
-import RulesEngine from "./RulesEngine";
+import RulesEngine from "./engine";
 
 export class FormWithConditionals extends Component {
 

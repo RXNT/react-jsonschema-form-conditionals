@@ -71,7 +71,11 @@ export function listInvalidFields(rules, schema) {
   return Array.from(ruleFields);
 }
 
-export function validate(rules, schema) {
+export function listRulesWithoutWhen(rules) {
+  return rulesIterator(rules).filter(({ when }) => when === undefined)
+}
+
+export default function validate(rules, schema) {
   let invalidPredicates = listInvalidPredicates(rules);
   if (invalidPredicates.length !== 0) {
     toError(`Rule contains invalid predicates ${invalidPredicates}`);
@@ -82,7 +86,7 @@ export function validate(rules, schema) {
     toError(`Rule contains invalid fields ${invalidFields}`);
   }
 
-  let whenMissing = rulesIterator(rules).filter(({ when }) => when === undefined);
+  let whenMissing = listRulesWithoutWhen(rules);
   if (whenMissing.length !== 0) {
     toError(`Rule when is missing in ${JSON.stringify(whenMissing)}`);
   }
