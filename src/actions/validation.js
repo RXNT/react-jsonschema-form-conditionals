@@ -6,12 +6,12 @@ export function listAllActions(rules = {}) {
 }
 
 export function listInvalidActions(rules = {}, actions = {}) {
-  let ruleActions = this.listAllActions(rules);
+  let ruleActions = listAllActions(rules);
   Object.keys(actions).forEach((a) => ruleActions.delete(a));
   return Array.from(ruleActions);
 }
 
-export function validate(rules, actions) {
+export default function validate(rules, actions) {
   let actionMissing = rulesIterator(rules).filter(({ action }) => action === undefined);
   if (actionMissing.length !== 0) {
     toError(`Rule action is missing in ${JSON.stringify(actionMissing)}`);

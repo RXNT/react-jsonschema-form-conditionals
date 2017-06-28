@@ -81,7 +81,7 @@ const rules = {
       when: { age: { greater: 10 } }
     },
     {
-      action: "ui:replace",
+      action: "replaceUi",
       when: { age: { greater: 20 } },
       conf: {
         classNames: "col-md-12 col-xs-12",

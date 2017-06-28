@@ -14,11 +14,11 @@ export default class Actions {
     this.allActions = Object.assign({}, { remove, require, replaceUi }, extraActions);
 
     if (process.env.NODE_ENV !== "production") {
-      validate(rules, this);
+      validate(rules, this.allActions);
     }
   }
 
-  run(actions) {
+  run = (actions) => {
     let initialValue = {
       schema: deepcopy(this.schema),
       uiSchema: deepcopy(this.uiSchema)

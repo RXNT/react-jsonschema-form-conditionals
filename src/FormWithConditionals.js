@@ -5,18 +5,20 @@ import Actions from "./actions";
 import Engine from "./engine";
 
 export class FormWithConditionals extends Component {
-
   constructor(props) {
     super(props);
 
     this.rulesEngine = new Engine(this.props.rules, this.props.schema, this.props.uiSchema);
     this.rulesExecutor = new Actions(this.props.rules, this.props.schema, this.props.uiSchema);
 
-    let { formData } = this.props;
+    let { schema, uiSchema, formData } = this.props;
+    this.state = { schema, uiSchema, formData };
+
+    let self = this;
     this.rulesEngine.run(formData).
       then(this.rulesExecutor.run).
       then((newState) => {
-        this.setState(newState);
+        self.setState(newState);
       });
   }
 
@@ -31,7 +33,7 @@ export class FormWithConditionals extends Component {
       run(formData).
       then(this.rulesExecutor.run).
       then((newState) => {
-        this.setState(newState);
+        this.setState(Object.assign(newState, { formData }));
         if (this.props.onChange) {
           this.props.onChange(Object.assign({}, state, newState));
         }
