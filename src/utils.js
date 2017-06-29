@@ -15,7 +15,7 @@ const concat = (x, y) => x.concat(y);
 export const flatMap = (xs, f) => xs.map(f).reduce(concat, []);
 
 export function rulesIterator(rules = {}) {
-  return flatMap(Object.keys(rules), (field) => {
+  return flatMap(Object.keys(rules), field => {
     let fieldRule = rules[field];
     if (Array.isArray(fieldRule)) {
       return fieldRule;

@@ -4,7 +4,12 @@ import { isObject, toError } from "../utils";
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
 
-export function check(fieldVal, rule, predicator = predicate, condition = Array.prototype.every) {
+export function check(
+  fieldVal,
+  rule,
+  predicator = predicate,
+  condition = Array.prototype.every
+) {
   if (isObject(rule)) {
     // Complicated rule - like { greater then 10 }
     return condition.call(Object.keys(rule), p => {
@@ -12,14 +17,17 @@ export function check(fieldVal, rule, predicator = predicate, condition = Array.
       if (isObject(comparable) || p === "not") {
         if (p === "or") {
           if (Array.isArray(comparable)) {
-            return comparable.some(condition => check(fieldVal, condition, predicator, Array.prototype.every));
+            return comparable.some(condition =>
+              check(fieldVal, condition, predicator, Array.prototype.every)
+            );
           } else {
             return toError(`OR must be an array`);
           }
         } else if (p === "not") {
-          let oppositePredicator = predicator === NEGATIVE_PREDICATE
-            ? POSITIVE_PREDICATE
-            : NEGATIVE_PREDICATE;
+          let oppositePredicator =
+            predicator === NEGATIVE_PREDICATE
+              ? POSITIVE_PREDICATE
+              : NEGATIVE_PREDICATE;
           return check(
             fieldVal,
             comparable,
@@ -63,7 +71,9 @@ export function applyWhen(rule, formData, condition = Array.prototype.every) {
 
 export function fieldToActions(fieldRules, formData) {
   if (Array.isArray(fieldRules)) {
-    let applicableRules = fieldRules.filter((rule) => applyWhen(rule.when, formData));
+    let applicableRules = fieldRules.filter(rule =>
+      applyWhen(rule.when, formData)
+    );
     let applicableActions = applicableRules.map(({ action, conf }) => {
       return { action, conf };
     });

@@ -1,4 +1,4 @@
-import validate from './validation';
+import validate from "./validation";
 import applicableActions from "./applicableActions";
 
 export default class RulesEngine {
@@ -12,15 +12,14 @@ export default class RulesEngine {
     }
   }
 
-  run = (formData) => {
+  run = formData => {
     let self = this;
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       try {
         resolve(applicableActions(self.rules, formData));
       } catch (err) {
         reject(err);
       }
     });
-  }
-
+  };
 }

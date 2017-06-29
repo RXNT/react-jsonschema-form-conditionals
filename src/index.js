@@ -8,16 +8,27 @@ export default function applyRules(FormComponent) {
     constructor(props) {
       super(props);
 
-      this.rulesEngine = new Engine(this.props.rules, this.props.schema, this.props.uiSchema);
-      this.rulesExecutor = new Actions(this.props.rules, this.props.schema, this.props.uiSchema);
+      this.rulesEngine = new Engine(
+        this.props.rules,
+        this.props.schema,
+        this.props.uiSchema
+      );
+      this.rulesExecutor = new Actions(
+        this.props.rules,
+        this.props.schema,
+        this.props.uiSchema
+      );
 
       let { schema, uiSchema, formData } = this.props;
       this.state = { schema, uiSchema, formData };
 
       let self = this;
-      this.rulesEngine.run(formData).then(this.rulesExecutor.run).then((newState) => {
-        self.setState(newState);
-      });
+      this.rulesEngine
+        .run(formData)
+        .then(this.rulesExecutor.run)
+        .then(newState => {
+          self.setState(newState);
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -25,15 +36,18 @@ export default function applyRules(FormComponent) {
       this.setState({ schema, formData, uiSchema });
     }
 
-    ruleTracker = (state) => {
+    ruleTracker = state => {
       let { formData } = state;
-      this.rulesEngine.run(formData).then(this.rulesExecutor.run).then((newState) => {
-        this.setState(Object.assign(newState, { formData }));
-        if (this.props.onChange) {
-          this.props.onChange(Object.assign({}, state, newState));
-        }
-      });
-    }
+      this.rulesEngine
+        .run(formData)
+        .then(this.rulesExecutor.run)
+        .then(newState => {
+          this.setState(Object.assign(newState, { formData }));
+          if (this.props.onChange) {
+            this.props.onChange(Object.assign({}, state, newState));
+          }
+        });
+    };
 
     render() {
       let configs = Object.assign({}, this.props);
@@ -44,11 +58,12 @@ export default function applyRules(FormComponent) {
       delete configs.uiSchema;
 
       return (
-        <FormComponent {...configs}
-              schema={this.state.schema}
-              uiSchema={this.state.uiSchema}
-              formData={this.state.formData}
-              onChange={this.ruleTracker}
+        <FormComponent
+          {...configs}
+          schema={this.state.schema}
+          uiSchema={this.state.uiSchema}
+          formData={this.state.formData}
+          onChange={this.ruleTracker}
         />
       );
     }
@@ -56,10 +71,9 @@ export default function applyRules(FormComponent) {
 
   if (process.env.NODE_ENV !== "production") {
     FormWithConditionals.propTypes = {
-      rules: PropTypes.object.isRequired
+      rules: PropTypes.object.isRequired,
     };
   }
 
   return FormWithConditionals;
 }
-
