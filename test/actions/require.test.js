@@ -1,9 +1,9 @@
-import deepcopy from 'deepcopy';
-import require from "./require";
+import deepcopy from "deepcopy";
+import require from "../../src/actions/require";
 
 let origUiSchema = {
   title: {},
-  firstName: {}
+  firstName: {},
 };
 
 test("default values", () => {
@@ -16,17 +16,19 @@ test("add required section", () => {
   let origSchema = {
     properties: {
       title: { type: "string" },
-      firstName: { type: "string" }
-    }
+      firstName: { type: "string" },
+    },
   };
 
-  let { schema, uiSchema } = require("title", deepcopy(origSchema), deepcopy(origUiSchema));
+  let { schema, uiSchema } = require("title", deepcopy(origSchema), deepcopy(
+    origUiSchema
+  ));
   let schemaWithTitleReq = {
-    required: [ "title" ],
+    required: ["title"],
     properties: {
       title: { type: "string" },
-      firstName: { type : "string" }
-    }
+      firstName: { type: "string" },
+    },
   };
   expect(schema).toEqual(schemaWithTitleReq);
   expect(uiSchema).toEqual(origUiSchema);
@@ -34,13 +36,15 @@ test("add required section", () => {
 
 test("ignores already required field", () => {
   let origSchema = {
-    required: [ "title" ],
+    required: ["title"],
     properties: {
       title: { type: "string" },
-      firstName: { type: "string" }
-    }
+      firstName: { type: "string" },
+    },
   };
-  let { schema, uiSchema } = require("title", deepcopy(origSchema), deepcopy(origUiSchema));
+  let { schema, uiSchema } = require("title", deepcopy(origSchema), deepcopy(
+    origUiSchema
+  ));
   expect(schema).toEqual(origSchema);
   expect(uiSchema).toEqual(origUiSchema);
 });

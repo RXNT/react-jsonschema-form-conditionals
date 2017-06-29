@@ -1,4 +1,7 @@
-import validate, { listAllActions, listInvalidActions } from './validation';
+import validate, {
+  listAllActions,
+  listInvalidActions,
+} from "../../src/actions/validation";
 
 test("empty", () => {
   let emptyRules = {};
@@ -11,20 +14,19 @@ test("empty", () => {
 test("rules with no actions", () => {
   let invalidRules = {
     password: {
-      where: {}
-    }
+      where: {},
+    },
   };
 
   expect(() => validate(invalidRules, {})).toThrow();
 });
 
-
 test("rules with invalid actions", () => {
   let invalidRules = {
     password: {
       where: {},
-      action: "swim"
-    }
+      action: "swim",
+    },
   };
 
   expect(listAllActions(invalidRules)).toEqual(new Set(["swim"]));
@@ -37,18 +39,18 @@ test("extracts all actions", () => {
   let rules = {
     password: {
       when: { firstName: "empty" },
-      action: "remove"
+      action: "remove",
     },
     telephone: [
       {
         when: { age: { greater: 10 } },
-        action: "require"
+        action: "require",
       },
       {
         when: { age: { less: 20 } },
-        action: "hide"
-      }
-    ]
+        action: "hide",
+      },
+    ],
   };
 
   let expected = new Set(["remove", "require", "hide"]);

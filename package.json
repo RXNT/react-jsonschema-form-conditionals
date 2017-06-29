@@ -112,7 +112,8 @@
     "react",
     "form",
     "json-schema",
-    "conditional"
+    "conditional",
+    "predicate"
   ],
   "license": "Apache-2.0",
   "homepage": "https://github.com/RxNT/react-jsonschema-form-conditionals#readme"

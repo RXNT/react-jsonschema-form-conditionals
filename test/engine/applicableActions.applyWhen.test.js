@@ -1,7 +1,6 @@
 const assert = require("assert");
 const { applyWhen } = require("../../src/engine/applicableActions");
 
-
 describe("applyWhen", function() {
   describe("sanity check", function() {
     it("requires rule to be an object", function() {
@@ -23,10 +22,7 @@ describe("applyWhen", function() {
       assert.equal(applyWhen(singleLine, {}), true);
       assert.equal(applyWhen(singleLine, { firstName: "some" }), false);
       assert.equal(applyWhen(singleLine, { firstName: "" }), true);
-      assert.equal(
-        applyWhen(singleLine, { firstName: undefined }),
-        true
-      );
+      assert.equal(applyWhen(singleLine, { firstName: undefined }), true);
     });
   });
   describe("default use and", function() {
