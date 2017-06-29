@@ -1,11 +1,11 @@
 import { rulesIterator, toError } from "../utils";
 
-export function listAllActions(rules = {}) {
+export function listAllActions(rules) {
   let allActions = rulesIterator(rules).map((rule) => rule.action);
   return new Set(allActions);
 }
 
-export function listInvalidActions(rules = {}, actions = {}) {
+export function listInvalidActions(rules, actions) {
   let ruleActions = listAllActions(rules);
   Object.keys(actions).forEach((a) => ruleActions.delete(a));
   return Array.from(ruleActions);

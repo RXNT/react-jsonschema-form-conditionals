@@ -16,12 +16,17 @@
     }],
     "no-console": [0],
     "object-curly-spacing": [2, "always"],
-    "keyword-spacing": ["error"]
+    "keyword-spacing": ["error"],
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/valid-expect": "error"
   },
   "env": {
     "es6": true,
     "browser": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
@@ -32,6 +37,7 @@
     }
   },
   "plugins": [
-    "react"
+    "react",
+    "jest"
   ]
 }
