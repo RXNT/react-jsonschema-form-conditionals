@@ -1,3 +1,4 @@
+import { isDevelopment } from "../utils";
 import deepcopy from "deepcopy";
 import validate from "./validation";
 
@@ -17,7 +18,7 @@ export default class Executor {
       extraActions
     );
 
-    if (process.env.NODE_ENV !== "production") {
+    if (isDevelopment()) {
       validate(rules, this.allActions);
     }
   }

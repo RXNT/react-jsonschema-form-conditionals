@@ -21,7 +21,8 @@ export function check(
               check(fieldVal, condition, predicator, Array.prototype.every)
             );
           } else {
-            return toError(`OR must be an array`);
+            toError(`OR must be an array`);
+            return false;
           }
         } else if (p === "not") {
           let oppositePredicator =
@@ -54,7 +55,7 @@ export function check(
 
 export function applyWhen(rule, formData, condition = Array.prototype.every) {
   if (!isObject(rule) || !isObject(formData)) {
-    return toError(`Rule ${rule} with ${formData} can't be processed`);
+    toError(`Rule ${rule} with ${formData} can't be processed`);
   }
   return condition.call(Object.keys(rule), ref => {
     if (ref === "or") {

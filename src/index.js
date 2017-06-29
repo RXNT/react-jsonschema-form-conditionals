@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Actions from "./actions";
 import Engine from "./engine";
+import { isDevelopment } from "./utils";
 
 export default function applyRules(FormComponent) {
   class FormWithConditionals extends Component {
@@ -69,7 +70,7 @@ export default function applyRules(FormComponent) {
     }
   }
 
-  if (process.env.NODE_ENV !== "production") {
+  if (isDevelopment()) {
     FormWithConditionals.propTypes = {
       rules: PropTypes.object.isRequired,
     };

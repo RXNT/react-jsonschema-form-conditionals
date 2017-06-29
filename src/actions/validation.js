@@ -15,6 +15,7 @@ export default function validate(rules, actions) {
   let actionMissing = rulesIterator(rules).filter(
     ({ action }) => action === undefined
   );
+
   if (actionMissing.length !== 0) {
     toError(`Rule action is missing in ${JSON.stringify(actionMissing)}`);
   }

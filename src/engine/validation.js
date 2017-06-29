@@ -12,7 +12,8 @@ export function predicatesFromRule(rule) {
               predicatesFromRule(condition)
             );
           } else {
-            return toError(`OR must be an array`);
+            toError(`OR must be an array`);
+            return [];
           }
         } else {
           return predicatesFromRule(comparable);

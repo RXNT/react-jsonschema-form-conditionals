@@ -1,5 +1,6 @@
 import validate from "./validation";
 import applicableActions from "./applicableActions";
+import { isDevelopment } from "../utils";
 
 export default class RulesEngine {
   constructor(rules, schema, uiSchema) {
@@ -7,7 +8,7 @@ export default class RulesEngine {
     this.uiSchema = uiSchema;
     this.rules = rules;
 
-    if (process.env.NODE_ENV !== "production") {
+    if (isDevelopment()) {
       validate(rules, schema);
     }
   }

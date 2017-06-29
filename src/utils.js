@@ -2,13 +2,16 @@ export function isObject(obj) {
   return typeof obj === "object" && obj !== null;
 }
 
+export function isDevelopment() {
+  return process.env.NODE_ENV !== "production";
+}
+
 export function toError(message) {
-  if (process.env.NODE_ENV !== "production") {
+  if (isDevelopment()) {
     throw new ReferenceError(message);
   } else {
     console.error(message);
   }
-  return false;
 }
 
 const concat = (x, y) => x.concat(y);
