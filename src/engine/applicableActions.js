@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { isObject, toError } from "../utils";
+import { isObject, toError, flatMap } from "../utils";
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
@@ -16,14 +16,9 @@ export function checkField(
       let comparable = rule[p];
       if (isObject(comparable) || p === "not") {
         if (p === "or") {
-          if (Array.isArray(comparable)) {
-            return comparable.some(condition =>
-              checkField(fieldVal, condition, predicator, Array.prototype.every)
-            );
-          } else {
-            toError(`OR must be an array`);
-            return false;
-          }
+          return comparable.some(condition =>
+            checkField(fieldVal, condition, predicator, Array.prototype.every)
+          );
         } else if (p === "not") {
           let oppositePredicator =
             predicator === NEGATIVE_PREDICATE
@@ -35,15 +30,8 @@ export function checkField(
             oppositePredicator,
             Array.prototype.every
           );
-        } else if (predicator[p] === undefined) {
-          return false;
         } else {
-          return checkField(
-            fieldVal,
-            comparable,
-            predicator[p],
-            Array.prototype.every
-          );
+          return false;
         }
       } else {
         return predicator[p](fieldVal, comparable);
@@ -55,15 +43,15 @@ export function checkField(
   }
 }
 
-export function applyWhen(rule, formData, condition = Array.prototype.every) {
+export function applyWhen(rule, formData) {
   if (!isObject(rule) || !isObject(formData)) {
     toError(`Rule ${rule} with ${formData} can't be processed`);
   }
-  return condition.call(Object.keys(rule), ref => {
+  return Object.keys(rule).every(ref => {
     if (ref === "or") {
-      return applyWhen(rule[ref], formData, Array.prototype.some);
+      return rule[ref].some(subRule => applyWhen(subRule, formData));
     } else if (ref === "and") {
-      return applyWhen(rule[ref], formData, Array.prototype.every);
+      return rule[ref].every(subRule => applyWhen(subRule, formData));
     } else {
       let refVal = formData[ref];
       let refFieldRule = rule[ref];
@@ -74,13 +62,7 @@ export function applyWhen(rule, formData, condition = Array.prototype.every) {
 
 export function fieldToActions(fieldRules, formData) {
   if (Array.isArray(fieldRules)) {
-    let applicableRules = fieldRules.filter(rule =>
-      applyWhen(rule.when, formData)
-    );
-    let applicableActions = applicableRules.map(({ action, conf }) => {
-      return { action, conf };
-    });
-    return applicableActions;
+    return flatMap(fieldRules, r => fieldToActions(r, formData));
   } else {
     if (applyWhen(fieldRules.when, formData)) {
       let { action, conf } = fieldRules;
@@ -91,7 +73,7 @@ export function fieldToActions(fieldRules, formData) {
   }
 }
 
-export default function applicableActions(rules = {}, formData = {}) {
+export default function applicableActions(rules, formData) {
   let agg = {};
   Object.keys(rules).forEach(field => {
     let fieldRules = rules[field];
