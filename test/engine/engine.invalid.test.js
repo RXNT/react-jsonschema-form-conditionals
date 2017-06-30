@@ -1,4 +1,5 @@
 import RuleEngine from "../../src/engine/engine";
+import { testInProd } from "../utils.test";
 
 let invalidRules = {
   telephone: {
@@ -21,6 +22,9 @@ let schema = {
   },
 };
 
-test("age greater 5", () => {
+test("initialize with invalid rules", () => {
   expect(() => new RuleEngine(invalidRules, schema, {})).toThrow();
+  expect(
+    testInProd(() => new RuleEngine(invalidRules, schema, {}))
+  ).not.toBeUndefined();
 });
