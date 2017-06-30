@@ -1,26 +1,3 @@
-import validate from "./validation";
-import applicableActions from "./applicableActions";
-import { isDevelopment } from "../utils";
+import RuleEngine from "./engine";
 
-export default class RulesEngine {
-  constructor(rules, schema, uiSchema) {
-    this.schema = schema;
-    this.uiSchema = uiSchema;
-    this.rules = rules;
-
-    if (isDevelopment()) {
-      validate(rules, schema);
-    }
-  }
-
-  run = formData => {
-    let self = this;
-    return new Promise(function(resolve, reject) {
-      try {
-        resolve(applicableActions(self.rules, formData));
-      } catch (err) {
-        reject(err);
-      }
-    });
-  };
-}
+export default RuleEngine;

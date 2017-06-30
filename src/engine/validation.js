@@ -16,7 +16,9 @@ export function predicatesFromRule(rule) {
             return [];
           }
         } else {
-          return predicatesFromRule(comparable);
+          let predicates = predicatesFromRule(comparable);
+          predicates.push(p);
+          return predicates;
         }
       } else {
         return predicatesFromRule(p);

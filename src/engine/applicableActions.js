@@ -4,7 +4,7 @@ import { isObject, toError } from "../utils";
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
 
-export function check(
+export function checkField(
   fieldVal,
   rule,
   predicator = predicate,
@@ -18,7 +18,7 @@ export function check(
         if (p === "or") {
           if (Array.isArray(comparable)) {
             return comparable.some(condition =>
-              check(fieldVal, condition, predicator, Array.prototype.every)
+              checkField(fieldVal, condition, predicator, Array.prototype.every)
             );
           } else {
             toError(`OR must be an array`);
@@ -29,14 +29,16 @@ export function check(
             predicator === NEGATIVE_PREDICATE
               ? POSITIVE_PREDICATE
               : NEGATIVE_PREDICATE;
-          return check(
+          return checkField(
             fieldVal,
             comparable,
             oppositePredicator,
             Array.prototype.every
           );
+        } else if (predicator[p] === undefined) {
+          return false;
         } else {
-          return check(
+          return checkField(
             fieldVal,
             comparable,
             predicator[p],
@@ -65,7 +67,7 @@ export function applyWhen(rule, formData, condition = Array.prototype.every) {
     } else {
       let refVal = formData[ref];
       let refFieldRule = rule[ref];
-      return check(refVal, refFieldRule);
+      return checkField(refVal, refFieldRule);
     }
   });
 }

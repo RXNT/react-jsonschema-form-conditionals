@@ -71,3 +71,23 @@ test("3 field rule ", () => {
     new Set(["firstName", "age", "password", "telephone", "lastName"])
   );
 });
+
+test("list all predicates", () => {
+  let invalidRules = {
+    telephone: {
+      action: "remove",
+      when: {
+        age: {
+          and: {
+            greater: 5,
+            less: 70,
+          },
+        },
+      },
+    },
+  };
+
+  expect(listAllPredicates(invalidRules)).toEqual(
+    new Set(["greater", "less", "and"])
+  );
+});

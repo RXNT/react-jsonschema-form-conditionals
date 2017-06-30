@@ -10,3 +10,7 @@ test("work with empty", function() {
   expect(predicate.empty(undefined)).toBeTruthy();
   expect(predicate.empty(null)).toBeTruthy();
 });
+
+test("and is not predicate", () => {
+  expect(predicate.and).toBeUndefined();
+});

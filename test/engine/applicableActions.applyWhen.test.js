@@ -1,6 +1,6 @@
 const { applyWhen } = require("../../src/engine/applicableActions");
 
-test("sanity check", function() {
+test("sanity checkField", function() {
   expect(() => applyWhen("empty", {})).toThrow();
   expect(() => applyWhen({}, 0)).toThrow();
 });
