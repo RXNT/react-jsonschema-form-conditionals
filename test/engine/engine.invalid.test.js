@@ -27,9 +27,11 @@ let schema = {
   },
 };
 
+let engine = new RuleEngine();
+
 test("initialize with invalid rules", () => {
-  expect(() => new RuleEngine(invalidRules, schema, {})).toThrow();
+  expect(() => engine.run({}, invalidRules, schema)).toThrow();
   expect(
-    testInProd(() => new RuleEngine(invalidRules, schema, {}))
+    testInProd(() => engine.run({}, invalidRules, schema))
   ).not.toBeUndefined();
 });

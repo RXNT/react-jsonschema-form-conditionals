@@ -1,4 +1,4 @@
-import RuleEngine from "../../src/engine/engine";
+import PredicatesRuleEngine from "../../src/engine/engine";
 
 let rules = [
   {
@@ -22,11 +22,11 @@ let schema = {
   },
 };
 
-let engine = new RuleEngine(rules, schema, {});
+let engine = new PredicatesRuleEngine();
 
 test("age greater 5", () => {
   return engine
-    .run({ age: 10 })
+    .run({ age: 10 }, rules, schema)
     .then(actions =>
       expect(actions).toEqual([
         { type: "remove", params: { fields: ["telephone"] } },
@@ -35,12 +35,14 @@ test("age greater 5", () => {
 });
 
 test("age less 5", () => {
-  return engine.run({ age: 4 }).then(actions => expect(actions).toEqual([]));
+  return engine
+    .run({ age: 4 }, rules, schema)
+    .then(actions => expect(actions).toEqual([]));
 });
 
 test("age less 70 ", () => {
   return engine
-    .run({ age: 69 })
+    .run({ age: 69 }, rules, schema)
     .then(actions =>
       expect(actions).toEqual([
         { type: "remove", params: { fields: ["telephone"] } },
@@ -49,5 +51,7 @@ test("age less 70 ", () => {
 });
 
 test("age greater 70 ", () => {
-  return engine.run({ age: 71 }).then(actions => expect(actions).toEqual([]));
+  return engine
+    .run({ age: 71 }, rules, schema)
+    .then(actions => expect(actions).toEqual([]));
 });

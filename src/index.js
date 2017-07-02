@@ -10,11 +10,7 @@ export default function applyRules(FormComponent) {
     constructor(props) {
       super(props);
 
-      this.rulesEngine = new Engine(
-        this.props.rules,
-        this.props.schema,
-        this.props.uiSchema
-      );
+      this.rulesEngine = new Engine();
       this.rulesExecutor = new Actions(
         this.props.rules,
         this.props.schema,
@@ -52,7 +48,7 @@ export default function applyRules(FormComponent) {
     ruleTracker = state => {
       let { formData } = state;
       this.rulesEngine
-        .run(formData)
+        .run(formData, this.props.rules, this.props.schema)
         .then(this.rulesExecutor.run)
         .then(newSchemaConf => {
           this.notifySchemaUpdate(newSchemaConf, this.state);
