@@ -24,23 +24,13 @@ export default class Executor {
   }
 
   run = actions => {
-    let initialValue = {
-      schema: deepcopy(this.schema),
-      uiSchema: deepcopy(this.uiSchema),
-    };
+    let schema = deepcopy(this.schema);
+    let uiSchema = deepcopy(this.uiSchema);
 
-    let { schema, uiSchema } = Object.keys(
-      actions
-    ).reduce(({ schema, uiSchema }, field) => {
-      let fieldActions = actions[field];
-      return fieldActions.reduce(
-        ({ schema, uiSchema }, { action, conf }) => {
-          let executor = this.allActions[action];
-          return executor(field, schema, uiSchema, conf);
-        },
-        { schema, uiSchema }
-      );
-    }, initialValue);
+    actions.forEach(({ type, params }) => {
+      let executor = this.allActions[type];
+      executor(params, schema, uiSchema);
+    });
 
     return new Promise(function(resolve) {
       resolve({ schema, uiSchema });

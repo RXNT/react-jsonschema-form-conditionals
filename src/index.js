@@ -99,8 +99,16 @@ export default function applyRules(FormComponent) {
 
   if (isDevelopment()) {
     FormWithConditionals.propTypes = {
-      rules: PropTypes.object.isRequired,
+      rules: PropTypes.arrayOf(
+        PropTypes.shape({
+          conditions: PropTypes.object.isRequired,
+          event: PropTypes.shape({
+            type: PropTypes.string.isRequired,
+          }),
+        })
+      ).isRequired,
       onSchemaConfChange: PropTypes.func,
+      extraActions: PropTypes.object,
     };
   }
 

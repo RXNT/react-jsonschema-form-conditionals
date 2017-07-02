@@ -1,18 +1,18 @@
-const { applyWhen } = require("../../src/engine/applicableActions");
+const { conditionsMeet } = require("../../src/engine/applicableActions");
 
 test("sanity checkField", function() {
-  expect(() => applyWhen("empty", {})).toThrow();
-  expect(() => applyWhen({}, 0)).toThrow();
+  expect(() => conditionsMeet("empty", {})).toThrow();
+  expect(() => conditionsMeet({}, 0)).toThrow();
 });
 
 test("single line", () => {
   let singleLine = {
     firstName: "empty",
   };
-  expect(applyWhen(singleLine, {})).toBeTruthy();
-  expect(applyWhen(singleLine, { firstName: "some" })).toBeFalsy();
-  expect(applyWhen(singleLine, { firstName: "" })).toBeTruthy();
-  expect(applyWhen(singleLine, { firstName: undefined })).toBeTruthy();
+  expect(conditionsMeet(singleLine, {})).toBeTruthy();
+  expect(conditionsMeet(singleLine, { firstName: "some" })).toBeFalsy();
+  expect(conditionsMeet(singleLine, { firstName: "" })).toBeTruthy();
+  expect(conditionsMeet(singleLine, { firstName: undefined })).toBeTruthy();
 });
 
 test("default use and", () => {
@@ -24,9 +24,9 @@ test("default use and", () => {
       equal: "Smith",
     },
   };
-  expect(applyWhen(rule, { firstName: "Will" })).toBeFalsy();
-  expect(applyWhen(rule, { lastName: "Smith" })).toBeFalsy();
+  expect(conditionsMeet(rule, { firstName: "Will" })).toBeFalsy();
+  expect(conditionsMeet(rule, { lastName: "Smith" })).toBeFalsy();
   expect(
-    applyWhen(rule, { firstName: "Will", lastName: "Smith" })
+    conditionsMeet(rule, { firstName: "Will", lastName: "Smith" })
   ).toBeTruthy();
 });

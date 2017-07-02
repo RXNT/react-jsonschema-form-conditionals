@@ -71,22 +71,22 @@ const uiSchema = {
   },
 };
 
-const rules = {
-  password: {
-    action: "remove",
-    when: { firstName: "empty" },
+const rules = [
+  {
+    conditions: { firstName: "empty" },
+    event: {
+      type: "remove",
+      params: { fields: ["password"] },
+    },
   },
-  telephone: [
-    {
-      action: "require",
-      when: { age: { greater: 10 } },
+  {
+    conditions: { age: { greater: 20 } },
+    event: {
+      type: "require",
+      params: { fields: ["telephone"] },
     },
-    {
-      action: "enlarge",
-      when: { age: { greater: 20 } },
-    },
-  ],
-};
+  },
+];
 
 const formData = {
   lastName: "",

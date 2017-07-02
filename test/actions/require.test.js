@@ -6,12 +6,6 @@ let origUiSchema = {
   firstName: {},
 };
 
-test("default values", () => {
-  let { schema, uiSchema } = require("title");
-  expect(schema).toEqual({ required: ["title"], properties: {} });
-  expect(uiSchema).toEqual({});
-});
-
 test("add required section", () => {
   let origSchema = {
     properties: {
@@ -20,9 +14,10 @@ test("add required section", () => {
     },
   };
 
-  let { schema, uiSchema } = require("title", deepcopy(origSchema), deepcopy(
-    origUiSchema
-  ));
+  let schema = deepcopy(origSchema);
+  let uiSchema = deepcopy(origUiSchema);
+
+  require({ fields: ["title"] }, schema, uiSchema);
   let schemaWithTitleReq = {
     required: ["title"],
     properties: {
@@ -42,9 +37,9 @@ test("ignores already required field", () => {
       firstName: { type: "string" },
     },
   };
-  let { schema, uiSchema } = require("title", deepcopy(origSchema), deepcopy(
-    origUiSchema
-  ));
+  let schema = deepcopy(origSchema);
+  let uiSchema = deepcopy(origUiSchema);
+  require({ fields: ["title"] }, schema, uiSchema);
   expect(schema).toEqual(origSchema);
   expect(uiSchema).toEqual(origUiSchema);
 });

@@ -1,10 +1,9 @@
 import RuleEngine from "../../src/engine/engine";
-import { testInProd } from "../utils.test";
+import { testInProd } from "../utils";
 
-let invalidRules = {
-  telephone: {
-    action: "remove",
-    when: {
+let invalidRules = [
+  {
+    conditions: {
       age: {
         and: {
           greater: 5,
@@ -12,8 +11,14 @@ let invalidRules = {
         },
       },
     },
+    event: {
+      type: "remove",
+      params: {
+        fields: ["telephone"],
+      },
+    },
   },
-};
+];
 
 let schema = {
   properties: {

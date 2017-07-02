@@ -2,7 +2,7 @@ import validate from "./validation";
 import applicableActions from "./applicableActions";
 import { isDevelopment } from "../utils";
 
-export default class RulesEngine {
+export default class PredicatesEngine {
   constructor(rules, schema, uiSchema) {
     this.schema = schema;
     this.uiSchema = uiSchema;

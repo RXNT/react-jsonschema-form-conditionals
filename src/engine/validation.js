@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { flatMap, isObject, rulesIterator, toError } from "../utils";
+import { flatMap, isObject, toError } from "../utils";
 
 export function predicatesFromRule(rule) {
   if (isObject(rule)) {
@@ -40,8 +40,8 @@ export function predicatesFromWhen(when) {
 }
 
 export function listAllPredicates(rules) {
-  let allPredicates = flatMap(rulesIterator(rules), rule =>
-    predicatesFromWhen(rule.when, allPredicates)
+  let allPredicates = flatMap(rules, rule =>
+    predicatesFromWhen(rule.conditions)
   );
   return new Set(allPredicates);
 }
@@ -63,10 +63,8 @@ export function fieldsFromWhen(when) {
 }
 
 export function listAllFields(rules) {
-  let allFields = flatMap(rulesIterator(rules), rule =>
-    fieldsFromWhen(rule.when, allFields)
-  );
-  return new Set(allFields.concat(Object.keys(rules)));
+  let allFields = flatMap(rules, rule => fieldsFromWhen(rule.conditions));
+  return new Set(allFields);
 }
 
 export function listInvalidFields(rules, schema) {
@@ -75,16 +73,7 @@ export function listInvalidFields(rules, schema) {
   return Array.from(ruleFields);
 }
 
-export function listRulesWithoutWhen(rules) {
-  return rulesIterator(rules).filter(({ when }) => when === undefined);
-}
-
 export default function validate(rules, schema) {
-  let whenMissing = listRulesWithoutWhen(rules);
-  if (whenMissing.length !== 0) {
-    toError(`Rule when is missing in ${JSON.stringify(whenMissing)}`);
-  }
-
   let invalidFields = listInvalidFields(rules, schema);
   if (invalidFields.length !== 0) {
     toError(`Rule contains invalid fields ${invalidFields}`);

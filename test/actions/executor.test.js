@@ -8,13 +8,19 @@ let schema = {
   },
 };
 
-let executor = new Executor({}, schema);
+let executor = new Executor([], schema);
 
 test("executes single action", () => {
-  let singleAction = {
-    firstName: [{ action: "remove" }],
-    name: [{ action: "require" }],
-  };
+  let singleAction = [
+    {
+      type: "remove",
+      params: { fields: ["firstName"] },
+    },
+    {
+      type: "require",
+      params: { fields: ["name"] },
+    },
+  ];
 
   return executor.run(singleAction).then(({ schema }) => {
     let expectedSchema = {
@@ -29,16 +35,20 @@ test("executes single action", () => {
 });
 
 test("executes multiple actions", () => {
-  let multiAction = {
-    firstName: [{ action: "remove" }],
-    name: [
-      { action: "require" },
-      {
-        action: "replaceUi",
-        conf: { classNames: "col-md-5" },
-      },
-    ],
-  };
+  let multiAction = [
+    {
+      type: "remove",
+      params: { fields: ["firstName"] },
+    },
+    {
+      type: "require",
+      params: { fields: ["name"] },
+    },
+    {
+      type: "replaceUi",
+      params: { fields: ["name"], conf: { classNames: "col-md-5" } },
+    },
+  ];
 
   return executor.run(multiAction).then(({ schema, uiSchema }) => {
     let expectedSchema = {

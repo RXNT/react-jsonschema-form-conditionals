@@ -1,5 +1,5 @@
 import Executor from "../../src/actions/executor";
-import { testInProd } from "../utils.test";
+import { testInProd } from "../utils";
 
 let schema = {
   properties: {

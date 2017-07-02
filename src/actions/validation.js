@@ -1,7 +1,7 @@
-import { rulesIterator, toError } from "../utils";
+import { toError } from "../utils";
 
 export function listAllActions(rules) {
-  let allActions = rulesIterator(rules).map(rule => rule.action);
+  let allActions = rules.map(({ event: { type } }) => type);
   return new Set(allActions);
 }
 
@@ -12,14 +12,6 @@ export function listInvalidActions(rules, actions) {
 }
 
 export default function validate(rules, actions) {
-  let actionMissing = rulesIterator(rules).filter(
-    ({ action }) => action === undefined
-  );
-
-  if (actionMissing.length !== 0) {
-    toError(`Rule action is missing in "${JSON.stringify(actionMissing)}"`);
-  }
-
   let invalidActions = listInvalidActions(rules, actions);
   if (invalidActions.length !== 0) {
     toError(`Rule contains invalid action "${invalidActions}"`);

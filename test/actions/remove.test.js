@@ -12,18 +12,10 @@ let origUiSchema = {
   firstName: {},
 };
 
-test("default values", () => {
-  let { schema, uiSchema } = remove("title");
-  expect(schema).toEqual({ properties: {} });
-  expect(uiSchema).toEqual({});
-});
-
 test("removes field", () => {
-  let { schema, uiSchema } = remove(
-    "title",
-    deepcopy(origSchema),
-    deepcopy(origUiSchema)
-  );
+  let schema = deepcopy(origSchema);
+  let uiSchema = deepcopy(origUiSchema);
+  remove({ fields: ["title"] }, schema, uiSchema);
 
   let schemaWithoutTitle = {
     properties: {
@@ -39,11 +31,9 @@ test("removes field", () => {
 });
 
 test("ignores invalid field", () => {
-  let { schema, uiSchema } = remove(
-    "lastName",
-    deepcopy(origSchema),
-    deepcopy(origUiSchema)
-  );
+  let schema = deepcopy(origSchema);
+  let uiSchema = deepcopy(origUiSchema);
+  remove({ fields: ["lastName"] }, schema, uiSchema);
   expect(schema).toEqual(origSchema);
   expect(uiSchema).toEqual(origUiSchema);
 });
@@ -57,11 +47,10 @@ test("remove required", () => {
     },
   };
 
-  let { schema, uiSchema } = remove(
-    "title",
-    deepcopy(origSchema),
-    deepcopy(origUiSchema)
-  );
+  let schema = deepcopy(origSchema);
+  let uiSchema = deepcopy(origUiSchema);
+
+  remove({ fields: ["title"] }, schema, uiSchema);
 
   let schemaWithoutTitle = {
     required: [],

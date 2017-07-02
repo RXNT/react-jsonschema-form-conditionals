@@ -43,15 +43,15 @@ export function checkField(
   }
 }
 
-export function applyWhen(rule, formData) {
+export function conditionsMeet(rule, formData) {
   if (!isObject(rule) || !isObject(formData)) {
     toError(`Rule ${rule} with ${formData} can't be processed`);
   }
   return Object.keys(rule).every(ref => {
     if (ref === "or") {
-      return rule[ref].some(subRule => applyWhen(subRule, formData));
+      return rule[ref].some(subRule => conditionsMeet(subRule, formData));
     } else if (ref === "and") {
-      return rule[ref].every(subRule => applyWhen(subRule, formData));
+      return rule[ref].every(subRule => conditionsMeet(subRule, formData));
     } else {
       let refVal = formData[ref];
       let refFieldRule = rule[ref];
@@ -60,27 +60,12 @@ export function applyWhen(rule, formData) {
   });
 }
 
-export function fieldToActions(fieldRules, formData) {
-  if (Array.isArray(fieldRules)) {
-    return flatMap(fieldRules, r => fieldToActions(r, formData));
-  } else {
-    if (applyWhen(fieldRules.when, formData)) {
-      let { action, conf } = fieldRules;
-      return [{ action, conf }];
+export default function applicableActions(rules, formData) {
+  return flatMap(rules, ({ conditions, event }) => {
+    if (conditionsMeet(conditions, formData)) {
+      return [event];
     } else {
       return [];
     }
-  }
-}
-
-export default function applicableActions(rules, formData) {
-  let agg = {};
-  Object.keys(rules).forEach(field => {
-    let fieldRules = rules[field];
-    let actions = fieldToActions(fieldRules, formData);
-    if (actions.length !== 0) {
-      agg[field] = actions;
-    }
   });
-  return agg;
 }
