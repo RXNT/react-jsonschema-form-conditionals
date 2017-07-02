@@ -82,12 +82,8 @@ const rules = {
       when: { age: { greater: 10 } },
     },
     {
-      action: "replaceUi",
+      action: "enlarge",
       when: { age: { greater: 20 } },
-      conf: {
-        classNames: "col-md-12 col-xs-12",
-        "ui:help": "Look how big I am",
-      },
     },
   ],
 };
@@ -98,6 +94,13 @@ const formData = {
   age: 20,
 };
 
+let extraActions = {
+  enlarge: function(field, schema, uiSchema) {
+    uiSchema[field].classNames = "col-md-8";
+    return { schema, uiSchema };
+  },
+};
+
 let FormWithConditionals = applyRules(Form);
 
 export function App() {
@@ -106,6 +109,7 @@ export function App() {
       onSchemaConfChange={nextSchemaConf =>
         console.log(`Conf changed ${JSON.stringify(nextSchemaConf.schema)}`)}
       rules={rules}
+      extraActions={extraActions}
       liveValidate={false}
       safeRenderCompletion={true}
       noHtml5Validate={true}

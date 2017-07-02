@@ -17,11 +17,11 @@ export default function validate(rules, actions) {
   );
 
   if (actionMissing.length !== 0) {
-    toError(`Rule action is missing in ${JSON.stringify(actionMissing)}`);
+    toError(`Rule action is missing in "${JSON.stringify(actionMissing)}"`);
   }
 
   let invalidActions = listInvalidActions(rules, actions);
   if (invalidActions.length !== 0) {
-    toError(`Rule contains invalid action ${invalidActions}`);
+    toError(`Rule contains invalid action "${invalidActions}"`);
   }
 }

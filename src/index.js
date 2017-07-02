@@ -18,7 +18,8 @@ export default function applyRules(FormComponent) {
       this.rulesExecutor = new Actions(
         this.props.rules,
         this.props.schema,
-        this.props.uiSchema
+        this.props.uiSchema,
+        this.props.extraActions
       );
 
       let { schema, uiSchema, formData } = this.props;
