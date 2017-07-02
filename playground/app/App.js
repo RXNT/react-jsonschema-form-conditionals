@@ -103,6 +103,8 @@ let FormWithConditionals = applyRules(Form);
 export function App() {
   return (
     <FormWithConditionals
+      onSchemaConfChange={nextSchemaConf =>
+        console.log(`Conf changed ${JSON.stringify(nextSchemaConf.schema)}`)}
       rules={rules}
       liveValidate={false}
       safeRenderCompletion={true}

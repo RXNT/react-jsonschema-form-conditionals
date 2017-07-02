@@ -53,12 +53,27 @@ export default function applyRules(FormComponent) {
       this.rulesEngine
         .run(formData)
         .then(this.rulesExecutor.run)
-        .then(newState => {
-          this.setState(Object.assign(newState, { formData }));
+        .then(newSchemaConf => {
+          this.notifySchemaUpdate(newSchemaConf, this.state);
+          this.setState(Object.assign(newSchemaConf, { formData }));
           if (this.props.onChange) {
-            this.props.onChange(Object.assign({}, state, newState));
+            this.props.onChange(Object.assign({}, state, newSchemaConf));
           }
         });
+    };
+
+    notifySchemaUpdate = (nextSchemaConf, schemaConf) => {
+      if (this.props.onSchemaConfChange === undefined) {
+        return;
+      }
+
+      let schemaChanged =
+        !deepEqual(nextSchemaConf.schema, schemaConf.schema) ||
+        !deepEqual(nextSchemaConf.uiSchema, schemaConf.uiSchema);
+
+      if (schemaChanged) {
+        this.props.onSchemaConfChange(nextSchemaConf, schemaConf);
+      }
     };
 
     render() {
@@ -84,6 +99,7 @@ export default function applyRules(FormComponent) {
   if (isDevelopment()) {
     FormWithConditionals.propTypes = {
       rules: PropTypes.object.isRequired,
+      onSchemaConfChange: PropTypes.func,
     };
   }
 
