@@ -29,19 +29,19 @@ export function predicatesFromRule(rule) {
   }
 }
 
-export function predicatesFromWhen(when) {
-  return flatMap(Object.keys(when), ref => {
+export function predicatesFromCondition(condition) {
+  return flatMap(Object.keys(condition), ref => {
     if (ref === "or" || ref === "and") {
-      return flatMap(when[ref], w => predicatesFromRule(w));
+      return flatMap(condition[ref], w => predicatesFromRule(w));
     } else {
-      return predicatesFromRule(when[ref]);
+      return predicatesFromRule(condition[ref]);
     }
   });
 }
 
-export function listAllPredicates(rules) {
-  let allPredicates = flatMap(rules, rule =>
-    predicatesFromWhen(rule.conditions)
+export function listAllPredicates(conditions) {
+  let allPredicates = flatMap(conditions, condition =>
+    predicatesFromCondition(condition)
   );
   return new Set(allPredicates);
 }
@@ -52,34 +52,36 @@ export function listInvalidPredicates(rules) {
   return Array.from(rulePredicates);
 }
 
-export function fieldsFromWhen(when) {
-  return flatMap(Object.keys(when), ref => {
+export function fieldsFromCondition(condition) {
+  return flatMap(Object.keys(condition), ref => {
     if (ref === "or" || ref === "and") {
-      return flatMap(when[ref], w => fieldsFromWhen(w));
+      return flatMap(condition[ref], w => fieldsFromCondition(w));
     } else {
       return [ref];
     }
   });
 }
 
-export function listAllFields(rules) {
-  let allFields = flatMap(rules, rule => fieldsFromWhen(rule.conditions));
+export function listAllFields(conditions) {
+  let allFields = flatMap(conditions, condition =>
+    fieldsFromCondition(condition)
+  );
   return new Set(allFields);
 }
 
-export function listInvalidFields(rules, schema) {
-  let ruleFields = listAllFields(rules);
+export function listInvalidFields(conditions, schema) {
+  let ruleFields = listAllFields(conditions);
   Object.keys(schema.properties).forEach(f => ruleFields.delete(f));
   return Array.from(ruleFields);
 }
 
-export default function validate(rules, schema) {
-  let invalidFields = listInvalidFields(rules, schema);
+export default function validateConditions(conditions, schema) {
+  let invalidFields = listInvalidFields(conditions, schema);
   if (invalidFields.length !== 0) {
     toError(`Rule contains invalid fields ${invalidFields}`);
   }
 
-  let invalidPredicates = listInvalidPredicates(rules);
+  let invalidPredicates = listInvalidPredicates(conditions);
   if (invalidPredicates.length !== 0) {
     toError(`Rule contains invalid predicates ${invalidPredicates}`);
   }

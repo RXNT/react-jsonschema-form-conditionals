@@ -9,7 +9,7 @@ export default class PredicatesEngine {
     this.rules = rules;
 
     if (isDevelopment()) {
-      validate(rules, schema);
+      validate(rules.map(({ conditions }) => conditions), schema);
     }
   }
 
