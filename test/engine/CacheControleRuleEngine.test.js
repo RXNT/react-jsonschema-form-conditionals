@@ -1,12 +1,20 @@
-import PredicatesRuleEngine from "../../src/engine/PredicatesRuleEngine";
+import CacheControlRulesEngine from "../../src/engine/CacheControlRulesEngine";
 
 let rules = [
   {
     conditions: {
-      age: {
-        greater: 5,
-        less: 70,
-      },
+      all: [
+        {
+          fact: "age",
+          operator: "greaterThan",
+          value: 5,
+        },
+        {
+          fact: "age",
+          operator: "lessThan",
+          value: 70,
+        },
+      ],
     },
     event: {
       type: "remove",
@@ -22,7 +30,7 @@ let schema = {
   },
 };
 
-let engine = new PredicatesRuleEngine();
+let engine = new CacheControlRulesEngine();
 
 test("age greater 5", () => {
   return engine

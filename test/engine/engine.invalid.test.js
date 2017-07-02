@@ -1,4 +1,4 @@
-import RuleEngine from "../../src/engine/engine";
+import RuleEngine from "../../src/engine/PredicatesRuleEngine";
 import { testInProd } from "../utils";
 
 let invalidRules = [
