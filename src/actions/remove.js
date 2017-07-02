@@ -6,11 +6,7 @@
  * @param uiSchema
  * @returns {{schema: *, uiSchema: *}}
  */
-export default function remove(
-  { fields },
-  schema = { properties: {} },
-  uiSchema = {}
-) {
+export default function remove({ fields }, schema, uiSchema) {
   fields.forEach(field => {
     let requiredIndex = schema.required ? schema.required.indexOf(field) : -1;
     if (requiredIndex !== -1) {

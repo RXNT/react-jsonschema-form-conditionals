@@ -7,7 +7,7 @@
  * @param conf
  * @returns {{schema: *, uiSchema: *}}
  */
-export default function replaceUi({ fields, conf }, schema, uiSchema = {}) {
+export default function replaceUi({ fields, conf }, schema, uiSchema) {
   fields.forEach(field => {
     uiSchema[field] = conf;
   });
