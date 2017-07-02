@@ -30,7 +30,7 @@ let schema = {
   },
 };
 
-let engine = new CacheControlRulesEngine();
+let engine = CacheControlRulesEngine;
 
 test("age greater 5", () => {
   return engine

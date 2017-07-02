@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Actions from "./actions";
-import Engine from "./engine";
+import PredicatesRuleEngine from "./engine/PredicatesRuleEngine";
 import deepEqual from "deep-equal";
 import { isDevelopment } from "./utils";
 
@@ -10,20 +10,14 @@ export default function applyRules(FormComponent) {
     constructor(props) {
       super(props);
 
-      this.rulesEngine = new Engine();
-      this.rulesExecutor = new Actions(
-        this.props.rules,
-        this.props.schema,
-        this.props.uiSchema,
-        this.props.extraActions
-      );
+      let { schema, rules, uiSchema, formData, extraActions } = this.props;
 
-      let { schema, uiSchema, formData } = this.props;
+      this.rulesExecutor = new Actions(rules, schema, uiSchema, extraActions);
       this.state = { schema, uiSchema, formData };
 
       let self = this;
-      this.rulesEngine
-        .run(formData)
+      this.props.rulesEngine
+        .run(formData, rules, schema)
         .then(this.rulesExecutor.run)
         .then(newState => {
           self.setState(newState);
@@ -47,7 +41,7 @@ export default function applyRules(FormComponent) {
 
     ruleTracker = state => {
       let { formData } = state;
-      this.rulesEngine
+      this.props.rulesEngine
         .run(formData, this.props.rules, this.props.schema)
         .then(this.rulesExecutor.run)
         .then(newSchemaConf => {
@@ -92,6 +86,10 @@ export default function applyRules(FormComponent) {
       );
     }
   }
+
+  FormWithConditionals.defaultProps = {
+    rulesEngine: PredicatesRuleEngine,
+  };
 
   if (isDevelopment()) {
     FormWithConditionals.propTypes = {

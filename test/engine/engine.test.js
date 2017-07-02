@@ -22,7 +22,7 @@ let schema = {
   },
 };
 
-let engine = new PredicatesRuleEngine();
+let engine = PredicatesRuleEngine;
 
 test("age greater 5", () => {
   return engine

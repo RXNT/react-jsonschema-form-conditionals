@@ -18,9 +18,11 @@ class EngineFactory {
 
 const factory = new EngineFactory();
 
-export default class RulesEngine {
-  run = (formData, rules) => {
+const engine = {
+  run: (formData, rules) => {
     let engine = factory.getEngine(rules);
     return engine.run(formData);
-  };
-}
+  },
+};
+
+export default engine;

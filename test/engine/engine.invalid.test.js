@@ -1,4 +1,4 @@
-import RuleEngine from "../../src/engine/PredicatesRuleEngine";
+import PredicatesRuleEngine from "../../src/engine/PredicatesRuleEngine";
 import { testInProd } from "../utils";
 
 let invalidRules = [
@@ -27,7 +27,7 @@ let schema = {
   },
 };
 
-let engine = new RuleEngine();
+let engine = PredicatesRuleEngine;
 
 test("initialize with invalid rules", () => {
   expect(() => engine.run({}, invalidRules, schema)).toThrow();
