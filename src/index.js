@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Actions from "./actions";
 import Engine from "./engine";
+import deepEqual from "deep-equal";
 import { isDevelopment } from "./utils";
 
 export default function applyRules(FormComponent) {
@@ -35,6 +36,16 @@ export default function applyRules(FormComponent) {
     componentWillReceiveProps(nextProps) {
       let { schema, formData, uiSchema } = nextProps;
       this.setState({ schema, formData, uiSchema });
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+      if (!deepEqual(nextState.schema, this.state.schema)) {
+        return true;
+      }
+      if (!deepEqual(nextState.uiSchema, this.state.uiSchema)) {
+        return true;
+      }
+      return !deepEqual(nextProps, this.props);
     }
 
     ruleTracker = state => {

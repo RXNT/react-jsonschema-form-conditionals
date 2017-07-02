@@ -45,6 +45,7 @@
     "react": "^15.0.0"
   },
   "dependencies": {
+    "deep-equal": "^1.0.1",
     "deepcopy": "^0.6.3",
     "predicate": "^1.0.0",
     "prop-types": "^15.5.10",
