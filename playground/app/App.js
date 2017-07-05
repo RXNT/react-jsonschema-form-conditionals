@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import applyRules from "../../src/index";
 import Form from "react-jsonschema-form";
-import Editor from "./Editor";
+import { JsonEditor, JSEditor, Viewer } from "./Editor";
 import Selector from "./Selector";
 import samples from "./samples";
 
@@ -34,7 +34,13 @@ export class App extends Component {
 
   onFormDataEdited = formData => this.setState({ formData });
 
+  onFormDataChange = ({ formData }) => this.setState({ formData });
+
   onSchemaConfChange = conf => this.setState({ conf });
+
+  onExtraActionsChange = extraActions => this.setState({ extraActions });
+
+  setLiveValidate = ({ formData }) => this.setState({ liveValidate: formData });
 
   load = data => {
     this.setState({ form: false }, _ => this.setState({ ...data, form: true }));
@@ -73,6 +79,7 @@ export class App extends Component {
           <div className="col-md-6">
             <FormWithConditionals
               onSchemaConfChange={this.onSchemaConfChange}
+              onChange={this.onFormDataChange}
               rules={rules}
               extraActions={extraActions}
               liveValidate={liveValidate}
@@ -85,21 +92,23 @@ export class App extends Component {
             </FormWithConditionals>
           </div>
           <div className="col-md-3">
-            <h2>Conditionals schema</h2>
-            <pre>
-              {toJson(conf.schema)}
-            </pre>
+            <Viewer
+              title="Conditionals schema"
+              theme="default"
+              code={toJson(conf.schema)}
+            />
           </div>
           <div className="col-md-3">
-            <h2>Conditionals uiSchema</h2>
-            <pre className="panel-body">
-              {toJson(conf.uiSchema)}
-            </pre>
+            <Viewer
+              title="Conditionals uiSchema"
+              theme="default"
+              code={toJson(conf.uiSchema)}
+            />
           </div>
         </div>
         <div className="row">
           <div className="col-sm-6">
-            <Editor
+            <JsonEditor
               title="JSONSchema"
               theme="default"
               code={toJson(schema)}
@@ -107,7 +116,7 @@ export class App extends Component {
             />
           </div>
           <div className="col-sm-6">
-            <Editor
+            <JsonEditor
               title="Rules"
               theme="default"
               code={toJson(rules)}
@@ -116,7 +125,7 @@ export class App extends Component {
           </div>
           <div className="row">
             <div className="col-sm-6">
-              <Editor
+              <JsonEditor
                 title="UISchema"
                 theme="default"
                 code={toJson(uiSchema)}
@@ -124,11 +133,21 @@ export class App extends Component {
               />
             </div>
             <div className="col-sm-6">
-              <Editor
+              <JsonEditor
                 title="formData"
                 theme="default"
                 code={toJson(formData)}
                 onChange={this.onFormDataEdited}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-12">
+              <JSEditor
+                title="Extra Actions"
+                theme="default"
+                code={extraActions}
+                onChange={this.onExtraActionsChange}
               />
             </div>
           </div>

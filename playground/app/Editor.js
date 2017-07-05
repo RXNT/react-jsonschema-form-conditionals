@@ -35,7 +35,7 @@ Codemirror.prototype.componentWillReceiveProps = function(nextProps) {
 
 const fromJson = json => JSON.parse(json);
 
-const cmOptions = {
+const jsonOptions = {
   theme: "default",
   height: "auto",
   viewportMargin: Infinity,
@@ -50,7 +50,7 @@ const cmOptions = {
   tabSize: 2,
 };
 
-export default class Editor extends Component {
+export class JsonEditor extends Component {
   constructor(props) {
     super(props);
     this.state = { valid: true, code: props.code };
@@ -88,7 +88,112 @@ export default class Editor extends Component {
         <Codemirror
           value={this.state.code}
           onChange={this.onCodeChange}
-          options={Object.assign({}, cmOptions, { theme })}
+          options={Object.assign({}, jsonOptions, { theme })}
+        />
+      </div>
+    );
+  }
+}
+
+const viewOptions = {
+  theme: "default",
+  height: "auto",
+  viewportMargin: Infinity,
+  mode: {
+    name: "javascript",
+    json: true,
+    statementIndent: 2,
+  },
+  lineNumbers: false,
+  lineWrapping: true,
+  indentWithTabs: false,
+  readOnly: true,
+  tabSize: 2,
+};
+
+export class Viewer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { code: props.code };
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({ code: props.code });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
+  }
+
+  render() {
+    const { title, theme } = this.props;
+    return (
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          {title}
+        </div>
+        <Codemirror
+          value={this.state.code}
+          options={Object.assign({}, viewOptions, { theme })}
+        />
+      </div>
+    );
+  }
+}
+
+const jsOptions = {
+  theme: "default",
+  height: "auto",
+  viewportMargin: Infinity,
+  mode: {
+    name: "javascript",
+    statementIndent: 2,
+  },
+  lineNumbers: true,
+  lineWrapping: true,
+  indentWithTabs: false,
+  tabSize: 2,
+};
+
+export class JSEditor extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { valid: true, code: props.code };
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({ valid: true, code: props.code });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
+  }
+
+  onCodeChange = code => {
+    this.setState({ valid: true, code });
+    setImmediate(() => {
+      try {
+        this.props.onChange(this.state.code);
+      } catch (err) {
+        this.setState({ valid: false, code });
+      }
+    });
+  };
+
+  render() {
+    const { title, theme } = this.props;
+    const icon = this.state.valid ? "ok" : "remove";
+    const cls = this.state.valid ? "valid" : "invalid";
+    return (
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          <span className={`${cls} glyphicon glyphicon-${icon}`} />
+          {" " + title}
+        </div>
+        <Codemirror
+          value={this.state.code}
+          onChange={this.onCodeChange}
+          options={Object.assign({}, jsOptions, { theme })}
         />
       </div>
     );

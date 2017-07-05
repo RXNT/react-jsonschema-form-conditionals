@@ -60,7 +60,6 @@ module.exports = {
   formData: {
     lastName: "Norris",
     bio: "Roundhouse kicking asses since 1940",
-    password: "noneed",
   },
   rules: [
     {
