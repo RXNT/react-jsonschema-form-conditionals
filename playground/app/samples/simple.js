@@ -1,6 +1,5 @@
 module.exports = {
   schema: {
-    title: "A registration form",
     type: "object",
     required: ["firstName", "lastName"],
     properties: {
@@ -34,33 +33,25 @@ module.exports = {
   },
   uiSchema: {
     firstName: {
-      classNames: "col-md-4 col-xs-4 success",
+      classNames: "success",
       "ui:autofocus": true,
       "ui:emptyValue": "",
     },
-    lastName: {
-      classNames: "col-md-4 col-xs-4",
-    },
     age: {
-      classNames: "col-md-4 col-xs-4",
       "ui:widget": "updown",
       "ui:title": "Age of person",
     },
     bio: {
       "ui:widget": "textarea",
-      classNames: "col-md-12",
     },
     password: {
-      classNames: "col-md-6 col-xs-6",
       "ui:widget": "password",
       "ui:help": "Hint: Make it strong!",
     },
     date: {
-      classNames: "col-md-6 col-xs-6",
       "ui:widget": "alt-datetime",
     },
     telephone: {
-      classNames: "col-md-6 col-xs-6",
       "ui:options": {
         inputType: "tel",
       },
@@ -87,4 +78,9 @@ module.exports = {
       },
     },
   ],
+  extraActions: {
+    enlarge: function(field, schema, uiSchema) {
+      uiSchema[field].classNames = "col-md-8";
+    },
+  },
 };
