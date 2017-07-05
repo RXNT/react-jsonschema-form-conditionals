@@ -1,23 +1,48 @@
 # Form with conditionals
 
-This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with conditional schema / uiSchema changes.
-This is primarily useful for complicated schemas with conditional logic,
-which should/can be manageable and changeable without modifying running application.
+This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with 
+conditional logic, which allow to have more complicated logic expressed and controlled with JSON schema.
+This is primarily useful for complicated schemas with extended business logic,
+which are suspect to changes and need to be manageable and changeable without modifying running application.
 
-If you need simple rule logic, that does not change a lot, you can use original mozilla project,
-by following examples like: https://jsfiddle.net/69z2wepo/68259/
+If you need simple rule logic, that does not change a lot, you can use original [mozilla project](https://github.com/mozilla-services/react-jsonschema-form),
+by following examples like https://jsfiddle.net/69z2wepo/68259/
 
-The project is done to be fully compatible with existing/future mozilla Form releases.
-All it does is decorating original Form with additional `rules` configuration.
+The project is done to be fully compatible with mozilla, 
+without imposing additional limitations.
+
+## Features
+
+- Declarative conditional logic with [Predicates](https://github.com/landau/predicate)
+- Support for [Json Rules Engine](https://github.com/CacheControl/json-rules-engine)
+- Extensible action mechanism
+- Configuration over coding
+- Lightweight and extensible
+
+## Installation
+
+Install `react-jsonschema-form-conditionals` by running:
+
+```bash
+npm install --s react-jsonschema-form-conditionals
+```
+
+## Usage
+
+The simplest example of using `react-jsonschema-form-conditionals`
 
 ```jsx
-import FormWithConditionals from 'react-jsonschema-form-conditionals';
+import applyRules from 'react-jsonschema-form-conditionals';
+import Form from "react-jsonschema-form";
+let FormWithConditionals = applyRules(Form);
 
-# ...
+...
 
 const rules = {
     ...
 };
+
+let FormWithConditionals = applyRules(Form);
 
 ReactDOM.render(
   <FormWithConditionals
@@ -29,29 +54,13 @@ ReactDOM.render(
 );
 ```
 
-## Features
-
-- Declarative conditional logic
-- Extensible action engine
-- Ability to change rules, with simple reconfiguration
-
-Having declarative conditional logic allows to change form behavior with configuration management, with no coding involved.
-
-## Installation
-
-Install form-with-rules by running:
-
-```bash
-npm install --s react-jsonschema-form-conditionals
-```
-
-## Usage
-
 To show case uses for this library we'll be using simple registration schema example 
 
 ```jsx
 
-import FormWithConditionals from "react-jsonschema-form-conditionals";
+import applyRules from 'react-jsonschema-form-conditionals';
+import Form from "react-jsonschema-form";
+let FormWithConditionals = applyRules(Form);
 
 let schema = {
   title: "A registration form",

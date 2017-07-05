@@ -1,6 +1,7 @@
 import React from "react";
 import applyRules from "../../src/index";
 import Form from "react-jsonschema-form";
+import Editor from "./Editor";
 
 const schema = {
   title: "A registration form",
@@ -102,20 +103,59 @@ let extraActions = {
 };
 
 let FormWithConditionals = applyRules(Form);
+const toJson = val => JSON.stringify(val, null, 2);
 
 export function App() {
   return (
-    <FormWithConditionals
-      onSchemaConfChange={nextSchemaConf =>
-        console.log(`Conf changed ${JSON.stringify(nextSchemaConf.schema)}`)}
-      rules={rules}
-      extraActions={extraActions}
-      liveValidate={false}
-      safeRenderCompletion={true}
-      noHtml5Validate={true}
-      formData={formData}
-      schema={schema}
-      uiSchema={uiSchema}
-    />
+    <div className="container">
+      <div className="col-sm-5">
+        <FormWithConditionals
+          onSchemaConfChange={nextSchemaConf =>
+            console.log(
+              `Conf changed ${JSON.stringify(nextSchemaConf.schema)}`
+            )}
+          rules={rules}
+          extraActions={extraActions}
+          liveValidate={false}
+          safeRenderCompletion={true}
+          noHtml5Validate={true}
+          formData={formData}
+          schema={schema}
+          uiSchema={uiSchema}
+        />
+      </div>
+      <div className="col-sm-7">
+        <Editor
+          title="JSONSchema"
+          theme="default"
+          code={toJson(schema)}
+          // onChange={this.onSchemaEdited}
+        />
+        <Editor
+          title="Rules"
+          theme="default"
+          code={toJson(rules)}
+          // onChange={this.onSchemaEdited}
+        />
+        <div className="row">
+          <div className="col-sm-6">
+            <Editor
+              title="UISchema"
+              theme="default"
+              code={toJson(uiSchema)}
+              // onChange={this.onUISchemaEdited}
+            />
+          </div>
+          <div className="col-sm-6">
+            <Editor
+              title="formData"
+              theme="default"
+              code={toJson(formData)}
+              // onChange={this.onFormDataEdited}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

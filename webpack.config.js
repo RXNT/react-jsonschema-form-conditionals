@@ -28,6 +28,18 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         }
+      },
+      {
+        test: /\.css$/,
+        include: [
+          path.join(__dirname, "css"),
+          path.join(__dirname, "playground"),
+          path.join(__dirname, "node_modules"),
+        ],
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" }
+        ]
       }
     ]
   },
