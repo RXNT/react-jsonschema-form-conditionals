@@ -1,99 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import applyRules from "../../src/index";
 import Form from "react-jsonschema-form";
 import Editor from "./Editor";
-
-const schema = {
-  title: "A registration form",
-  type: "object",
-  required: ["firstName", "lastName"],
-  properties: {
-    firstName: {
-      type: "string",
-      title: "First name",
-    },
-    lastName: {
-      type: "string",
-      title: "Last name",
-    },
-    age: {
-      type: "integer",
-      title: "Age",
-    },
-    bio: {
-      type: "string",
-      title: "Bio",
-    },
-    password: {
-      type: "string",
-      title: "Password",
-      minLength: 3,
-    },
-    telephone: {
-      type: "string",
-      title: "Telephone",
-      minLength: 10,
-    },
-  },
-};
-
-const uiSchema = {
-  firstName: {
-    classNames: "col-md-4 col-xs-4 success",
-    "ui:autofocus": true,
-    "ui:emptyValue": "",
-  },
-  lastName: {
-    classNames: "col-md-4 col-xs-4",
-  },
-  age: {
-    classNames: "col-md-4 col-xs-4",
-    "ui:widget": "updown",
-    "ui:title": "Age of person",
-  },
-  bio: {
-    "ui:widget": "textarea",
-    classNames: "col-md-12",
-  },
-  password: {
-    classNames: "col-md-6 col-xs-6",
-    "ui:widget": "password",
-    "ui:help": "Hint: Make it strong!",
-  },
-  date: {
-    classNames: "col-md-6 col-xs-6",
-    "ui:widget": "alt-datetime",
-  },
-  telephone: {
-    classNames: "col-md-6 col-xs-6",
-    "ui:options": {
-      inputType: "tel",
-    },
-  },
-};
-
-const rules = [
-  {
-    conditions: { firstName: "empty" },
-    event: {
-      type: "remove",
-      params: { fields: ["password"] },
-    },
-  },
-  {
-    conditions: { age: { greater: 20 } },
-    event: {
-      type: "require",
-      params: { fields: ["telephone"] },
-    },
-  },
-];
-
-const formData = {
-  lastName: "",
-  firstName: "",
-  age: 20,
-};
+import Selector from "./Selector";
+import samples from "./samples";
 
 let extraActions = {
   enlarge: function(field, schema, uiSchema) {
@@ -105,57 +15,95 @@ let extraActions = {
 let FormWithConditionals = applyRules(Form);
 const toJson = val => JSON.stringify(val, null, 2);
 
-export function App() {
-  return (
-    <div className="container">
-      <div className="col-sm-5">
-        <FormWithConditionals
-          onSchemaConfChange={nextSchemaConf =>
-            console.log(
-              `Conf changed ${JSON.stringify(nextSchemaConf.schema)}`
-            )}
-          rules={rules}
-          extraActions={extraActions}
-          liveValidate={false}
-          safeRenderCompletion={true}
-          noHtml5Validate={true}
-          formData={formData}
-          schema={schema}
-          uiSchema={uiSchema}
-        />
-      </div>
-      <div className="col-sm-7">
-        <Editor
-          title="JSONSchema"
-          theme="default"
-          code={toJson(schema)}
-          // onChange={this.onSchemaEdited}
-        />
-        <Editor
-          title="Rules"
-          theme="default"
-          code={toJson(rules)}
-          // onChange={this.onSchemaEdited}
-        />
-        <div className="row">
-          <div className="col-sm-6">
-            <Editor
-              title="UISchema"
-              theme="default"
-              code={toJson(uiSchema)}
-              // onChange={this.onUISchemaEdited}
-            />
+export class App extends Component {
+  constructor(props) {
+    super(props);
+    // initialize state with Simple data sample
+    const { schema, uiSchema, formData, rules } = samples.Simple;
+    this.state = {
+      schema,
+      uiSchema,
+      formData,
+      rules,
+      liveValidate: true,
+    };
+  }
+
+  onRulesEdited = rules => this.setState({ rules });
+
+  onSchemaEdited = schema => this.setState({ schema });
+
+  onUISchemaEdited = uiSchema => this.setState({ uiSchema });
+
+  onFormDataEdited = formData => this.setState({ formData });
+
+  load = data => {
+    this.setState({ form: false }, _ => this.setState({ ...data, form: true }));
+  };
+
+  render() {
+    const { schema, uiSchema, formData, rules } = this.state;
+
+    return (
+      <div className="container">
+        <div className="col-sm-8">
+          <Selector onSelected={this.load} />
+        </div>
+        <div className="col-sm-5">
+          <FormWithConditionals
+            onSchemaConfChange={nextSchemaConf =>
+              console.log(
+                `Conf changed ${JSON.stringify(nextSchemaConf.schema)}`
+              )}
+            rules={rules}
+            extraActions={extraActions}
+            liveValidate={false}
+            safeRenderCompletion={true}
+            noHtml5Validate={true}
+            formData={formData}
+            schema={schema}
+            uiSchema={uiSchema}
+          />
+        </div>
+        <div className="col-sm-7">
+          <div className="row">
+            <div className="col-sm-6">
+              <Editor
+                title="JSONSchema"
+                theme="default"
+                code={toJson(schema)}
+                onChange={this.onSchemaEdited}
+              />
+            </div>
+            <div className="col-sm-6">
+              <Editor
+                title="Rules"
+                theme="default"
+                code={toJson(rules)}
+                onChange={this.onRulesEdited}
+              />
+            </div>
           </div>
-          <div className="col-sm-6">
-            <Editor
-              title="formData"
-              theme="default"
-              code={toJson(formData)}
-              // onChange={this.onFormDataEdited}
-            />
+          <div className="row">
+            <div className="col-sm-6">
+              <Editor
+                title="UISchema"
+                theme="default"
+                code={toJson(uiSchema)}
+                onChange={this.onUISchemaEdited}
+              />
+            </div>
+            <div className="col-sm-6">
+              <Editor
+                title="formData"
+                theme="default"
+                code={toJson(formData)}
+                onChange={this.onFormDataEdited}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
