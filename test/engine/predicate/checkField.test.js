@@ -1,4 +1,4 @@
-import { checkField } from "../../src/engine/applicableActions";
+import checkField from "../../../src/engine/predicate/checkField";
 
 test("single line empty checkField", () => {
   expect(checkField("", "empty")).toBeTruthy();

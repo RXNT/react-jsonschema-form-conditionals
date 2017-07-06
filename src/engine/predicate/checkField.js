@@ -1,11 +1,10 @@
 import predicate from "predicate";
-import { isObject, toError, flatMap } from "../utils";
-import selectn from "selectn";
+import { isObject } from "../../utils";
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
 
-export function checkField(
+export default function checkField(
   fieldVal,
   rule,
   predicator = predicate,
@@ -42,31 +41,4 @@ export function checkField(
     // Simple rule - like emptyString
     return predicator[rule](fieldVal);
   }
-}
-
-export function conditionsMeet(rule, formData) {
-  if (!isObject(rule) || !isObject(formData)) {
-    toError(`Rule ${rule} with ${formData} can't be processed`);
-  }
-  return Object.keys(rule).every(ref => {
-    if (ref === "or") {
-      return rule[ref].some(subRule => conditionsMeet(subRule, formData));
-    } else if (ref === "and") {
-      return rule[ref].every(subRule => conditionsMeet(subRule, formData));
-    } else {
-      let refVal = selectn(ref, formData);
-      let refFieldRule = rule[ref];
-      return checkField(refVal, refFieldRule);
-    }
-  });
-}
-
-export default function applicableActions(rules, formData) {
-  return flatMap(rules, ({ conditions, event }) => {
-    if (conditionsMeet(conditions, formData)) {
-      return [event];
-    } else {
-      return [];
-    }
-  });
 }

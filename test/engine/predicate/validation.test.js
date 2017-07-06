@@ -5,8 +5,8 @@ import validate, {
   listInvalidPredicates,
   predicatesFromCondition,
   predicatesFromRule,
-} from "../../src/engine/validation";
-import { testInProd } from "../utils";
+} from "../../../src/engine/predicate/validation";
+import { testInProd } from "../../utils";
 
 function conditionsFrom(rules) {
   return rules.map(({ conditions }) => conditions);

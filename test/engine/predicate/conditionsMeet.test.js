@@ -1,4 +1,4 @@
-const { conditionsMeet } = require("../../src/engine/applicableActions");
+import conditionsMeet from "../../../src/engine/predicate/conditionsMeet";
 
 test("sanity checkField", function() {
   expect(() => conditionsMeet("empty", {})).toThrow();

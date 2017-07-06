@@ -1,4 +1,4 @@
-import applicableActions from "../../src/engine/applicableActions";
+import applicableActions from "../../../src/engine/predicate/applicableActions";
 
 const REMOVE_PASSWORD = {
   type: "remove",

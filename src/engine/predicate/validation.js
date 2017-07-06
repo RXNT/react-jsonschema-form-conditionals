@@ -1,5 +1,5 @@
 import predicate from "predicate";
-import { flatMap, isObject, toError } from "../utils";
+import { flatMap, isObject, toError } from "../../utils";
 
 export function predicatesFromRule(rule) {
   if (isObject(rule)) {

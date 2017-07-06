@@ -1,5 +1,5 @@
-import validate from "./validation";
-import applicableActions from "./applicableActions";
+import validate from "./predicate/validation";
+import applicableActions from "./predicate/applicableActions";
 
 const engine = {
   validate: (rules, schema) => {
