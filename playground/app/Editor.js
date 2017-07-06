@@ -2,15 +2,10 @@ import React, { Component } from "react";
 // Import a few CodeMirror themes; these are used to match alternative
 import Codemirror from "react-codemirror";
 import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/xml/xml";
+import "codemirror/mode/markdown/markdown";
 // bootstrap ones.
 import "codemirror/lib/codemirror.css";
-import "codemirror/theme/dracula.css";
-import "codemirror/theme/blackboard.css";
-import "codemirror/theme/mbo.css";
-import "codemirror/theme/ttcn.css";
-import "codemirror/theme/solarized.css";
-import "codemirror/theme/monokai.css";
-import "codemirror/theme/eclipse.css";
 
 import { shouldRender } from "./playgroundUtils";
 
@@ -76,7 +71,7 @@ export class JsonEditor extends Component {
   };
 
   render() {
-    const { title, theme } = this.props;
+    const { title } = this.props;
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
     return (
@@ -88,7 +83,7 @@ export class JsonEditor extends Component {
         <Codemirror
           value={this.state.code}
           onChange={this.onCodeChange}
-          options={Object.assign({}, jsonOptions, { theme })}
+          options={jsonOptions}
         />
       </div>
     );
@@ -126,16 +121,13 @@ export class Viewer extends Component {
   }
 
   render() {
-    const { title, theme } = this.props;
+    const { title } = this.props;
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
           {title}
         </div>
-        <Codemirror
-          value={this.state.code}
-          options={Object.assign({}, viewOptions, { theme })}
-        />
+        <Codemirror value={this.state.code} options={viewOptions} />
       </div>
     );
   }
@@ -145,10 +137,7 @@ const jsOptions = {
   theme: "default",
   height: "auto",
   viewportMargin: Infinity,
-  mode: {
-    name: "javascript",
-    statementIndent: 2,
-  },
+  mode: "javascript",
   lineNumbers: true,
   lineWrapping: true,
   indentWithTabs: false,
@@ -181,7 +170,7 @@ export class JSEditor extends Component {
   };
 
   render() {
-    const { title, theme } = this.props;
+    const { title } = this.props;
     const icon = this.state.valid ? "ok" : "remove";
     const cls = this.state.valid ? "valid" : "invalid";
     return (
@@ -193,7 +182,7 @@ export class JSEditor extends Component {
         <Codemirror
           value={this.state.code}
           onChange={this.onCodeChange}
-          options={Object.assign({}, jsOptions, { theme })}
+          options={jsOptions}
         />
       </div>
     );

@@ -75,6 +75,8 @@ export default function applyRules(FormComponent) {
       delete configs.onChange;
       delete configs.uiSchema;
 
+      this.props.rulesEngine.validate(this.props.rules, this.props.schema);
+
       return (
         <FormComponent
           {...configs}
