@@ -38,9 +38,9 @@ let FormWithConditionals = applyRules(Form);
 
 ...
 
-const rules = {
+const rules = [{
     ...
-};
+}];
 
 let FormWithConditionals = applyRules(Form);
 
@@ -63,6 +63,16 @@ import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 
 let schema = {
+  definitions: {
+    hobby: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        durationInMonth: { "type": "integer" },
+      },
+      "required": ["street_address", "city", "state"]
+    }
+  },
   title: "A registration form",
   description: "A simple form example.",
   type: "object",
@@ -108,6 +118,10 @@ let schema = {
       type: "string",
       title: "Telephone",
       minLength: 10
+    },
+    hobbies: {
+        type: "array",
+        items: { "$ref": "#/definitions/hobby" }
     }
   }
 }
@@ -139,16 +153,19 @@ with boolean logic extension.
 Let's say we need to `remove` `password`, when `firstName` is missing, this can be expressed like this:
 
 ```js
-let rules = {
-    password: {
-        action: "remove",
-        when: { firstName: "empty" },
+let rules = [{
+    conditions: {
+      firstName: "empty"
+    },
+    event: {
+        type: "remove",
+        params: { fields: [ "password" ] },
     }
-}
+}]
 ```
 
-`FormWithPredicates` translates this rules into - for `password` field perform `remove`, 
-when `firstName` is `empty`, pretty straightforward. 
+`FormWithPredicates` translates this rules into -
+when `firstName` is `empty`, perform `remove` of `password`, pretty straightforward. 
 
 `Empty` keyword translates to [equal in predicate library](https://landau.github.io/predicate/#equal) and required 
 action will be performed only when `predicate.empty(registration.firstName)` is `true`. 
@@ -159,16 +176,17 @@ action will be performed only when `predicate.empty(registration.firstName)` is 
 Let's say we need to `remove` `telephone`, when `age` is `less` than `5`  
 
 ```js
-let rules = {
-    telephone: {
-        action: "remove",
-        when: { age: { less : 5 } }
+let rules = [{
+    conditions: { age: { less : 5 } },
+    event: {
+      type: "remove",
+      params: { fields: [ "telephone" ] }
     }
-}
+}]
 ```
 
-`FormWithPredicates` translates this rule into - for `telephone` field perform `remove`, 
-when `age` is `less` than 5.
+`FormWithPredicates` translates this rule into -  
+when `age` is `less` than 5, `remove` `telephone` field from the schema.
 
 [Less](https://landau.github.io/predicate/#less) keyword translates to [less in predicate](https://landau.github.io/predicate/#less) and required 
 action will be performed only when `predicate.empty(registration.age, 5)` is `true`. 
@@ -180,20 +198,21 @@ action will be performed only when `predicate.empty(registration.age, 5)` is `tr
 For the field AND is a default behavior.
 
 Looking at previous rule, we decide that we want to change the rule and `remove` a `telephone`, 
-when `age` is between `5` and `70`, so it would be available only to people older, than `70` and yonger than `5`.
+when `age` is between `5` and `70`, so it would be available only to people older, than `70` and younger than `5`.
 
 ```js
-let rules = {
-  telephone: {
-      action: "remove",
-      when: {
+let rules = [{
+    conditions: {
         age: {
           greater: 5,
           less : 70,
         }
-      }
-  }
-}
+    },
+    event: {
+      type: "remove",
+      params: { fields: [ "telephone" ] }
+    }
+}]
 ```
 
 By default action will be applied only when both field conditions are true.
@@ -205,19 +224,20 @@ Let's say we want to change the logic to opposite, and remove telephone when
 age is greater, `less`er then `5` or `greater` than `70`, 
  
 ```js
-let rules = {
-  telephone: {
-      action: "remove",
-      when: {
-        age: {
-          not: {
-              greater: 5,
-              less : 70,
-          }
-        }
+let rules = [{
+  conditions: {
+    age: {
+      not: {
+          greater: 5,
+          less : 70,
       }
+    }
+  },
+  event: {
+    type: "remove",
+    params: { fields: "telephone"}
   }
-}
+}]
 ```
 
 This does it, since the final result will be opposite of the previous result.
@@ -228,18 +248,19 @@ The previous example works, but it's a bit hard to understand, luckily we can ex
 with `or` conditional.
 
 ```js
-let rules = {
-  telephone: {
-      action: "remove",
-      when: { age: { 
-        or: [
-          { less : 5 },
-          { greater: 70 }
-        ]
-      }
+let rules = [{
+  conditions: { age: { 
+      or: [
+        { less : 5 },
+        { greater: 70 }
+      ]
     }
+  },
+  event: {
+    type: "remove",
+    params: { fields: "telephone" }
   }
-}
+}]
 ```
 
 This is the same as `NOT`, but easier to grasp.
@@ -254,15 +275,16 @@ multi fields boolean operations.
 Let's say we want to `require` `bio`, when `age` is less than 70 and `country` is `USA`
 
 ```js
-let rules = {
-  bio: {
-      action: "require",
-      when: {
-        age: { less : 70 },
-        country: { is: "USA" }
-      }
+let rules = [{
+  conditions: {
+    age: { less : 70 },
+    country: { is: "USA" }
+  },
+  event: { 
+    type: "require",
+    params: { fields: [ "bio" ]}
   }
-}
+}]
 ```
 
 This is the way we can express this. By default each field is treated as a 
@@ -270,25 +292,26 @@ separate condition and all conditions must be meet.
 
 #### OR
 
-In addition to previous rule we need bio, if `state` is `NY`.
+In addition to previous rule we need `bio`, if `state` is `NY`.
 
 ```js
-let rules = {
-  bio: {
-      action: "require",
-      when: {
-        or: [
-          {
-            age: { less : 70 },
-            country: { is: "USA" }
-          },
-          {
-            state: { is: "NY"}
-          }
-        ]
+let rules = [{
+  conditions: {
+    or: [
+      {
+        age: { less : 70 },
+        country: { is: "USA" }
+      },
+      {
+        state: { is: "NY"}
       }
+    ]
+  },
+  event: { 
+    type: "require",
+    params: { fields: [ "bio" ]}
   }
-}
+}]
 ```
 
 #### NOT
@@ -296,10 +319,8 @@ let rules = {
 When we don't require `bio` we need `zip` code.
 
 ```js
-let rules = {
-  zip: {
-    action: "require",
-    when: {
+let rules = [{
+    conditions: {
       not: {
         or: [
           {
@@ -311,12 +332,34 @@ let rules = {
           }
         ]
       }
+    },
+    event: { 
+      type: "require",
+      params: { fields: [ "zip" ]}
     }
-  }
-}
+}]
 ```
 
+### Nested object queries
 
+Sometimes we need to make changes to the form if some nested condition is true. 
+
+For example if one of the `hobbies` is "baseball", make `state` `required`.
+This can be expressed like this:
+
+```js
+let rules = [{
+    conditions: {
+      hobbies: {
+        name: { equals: "baseball" },
+      }
+    },
+    event: { 
+      type: "require",
+      params: { fields: [ "state" ]}
+    }
+}]
+``` 
 
 ## Contribute
 
