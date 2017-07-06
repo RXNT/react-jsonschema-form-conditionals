@@ -37,8 +37,10 @@ export default function checkField(
         return predicator[p](fieldVal, comparable);
       }
     });
-  } else {
+  } else if (Array.isArray(fieldVal)) {
     // Simple rule - like emptyString
+    return fieldVal.some(val => predicator[rule](val));
+  } else {
     return predicator[rule](fieldVal);
   }
 }
