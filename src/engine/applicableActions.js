@@ -1,5 +1,6 @@
 import predicate from "predicate";
 import { isObject, toError, flatMap } from "../utils";
+import selectn from "selectn";
 
 const POSITIVE_PREDICATE = predicate;
 const NEGATIVE_PREDICATE = predicate.not;
@@ -53,7 +54,7 @@ export function conditionsMeet(rule, formData) {
     } else if (ref === "and") {
       return rule[ref].every(subRule => conditionsMeet(subRule, formData));
     } else {
-      let refVal = formData[ref];
+      let refVal = selectn(ref, formData);
       let refFieldRule = rule[ref];
       return checkField(refVal, refFieldRule);
     }
