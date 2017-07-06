@@ -32,8 +32,6 @@ export default class Executor {
       executor(params, schema, uiSchema);
     });
 
-    return new Promise(function(resolve) {
-      resolve({ schema, uiSchema });
-    });
+    return Promise.resolve({ schema, uiSchema });
   };
 }

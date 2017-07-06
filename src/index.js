@@ -10,23 +10,17 @@ export default function applyRules(FormComponent) {
     constructor(props) {
       super(props);
 
-      let { schema, rules, uiSchema, formData, extraActions } = this.props;
-
-      this.rulesExecutor = new Actions(rules, schema, uiSchema, extraActions);
+      let { schema, uiSchema, formData } = this.props;
       this.state = { schema, uiSchema, formData };
 
-      let self = this;
-      this.props.rulesEngine
-        .run(formData, rules, schema)
-        .then(this.rulesExecutor.run)
-        .then(newState => {
-          self.setState(newState);
-        });
+      this.runRulesOnRender = true;
     }
 
     componentWillReceiveProps(nextProps) {
       let { schema, formData, uiSchema } = nextProps;
       this.setState({ schema, formData, uiSchema });
+      this.runRulesOnRender =
+        this.runRulesOnRender || !deepEqual(nextProps, this.props);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -39,18 +33,25 @@ export default function applyRules(FormComponent) {
       return !deepEqual(nextProps, this.props);
     }
 
+    runRules = formData => {
+      let { rulesEngine, rules, schema, uiSchema, extraActions } = this.props;
+      let rulesExecutor = new Actions(rules, schema, uiSchema, extraActions);
+      console.log("Running rules");
+      return rulesEngine.run(formData, rules, schema).then(actions => {
+        console.log(`Received actions ${JSON.stringify(actions)}`);
+        return rulesExecutor.run(actions);
+      });
+    };
+
     ruleTracker = state => {
       let { formData } = state;
-      this.props.rulesEngine
-        .run(formData, this.props.rules, this.props.schema)
-        .then(this.rulesExecutor.run)
-        .then(newSchemaConf => {
-          this.notifySchemaUpdate(newSchemaConf, this.state);
-          this.setState(Object.assign(newSchemaConf, { formData }));
-          if (this.props.onChange) {
-            this.props.onChange(Object.assign({}, state, newSchemaConf));
-          }
-        });
+      this.runRules(formData).then(newSchemaConf => {
+        this.notifySchemaUpdate(newSchemaConf, this.state);
+        this.setState(Object.assign({}, newSchemaConf, { formData }));
+        if (this.props.onChange) {
+          this.props.onChange(Object.assign({}, state, newSchemaConf));
+        }
+      });
     };
 
     notifySchemaUpdate = (nextSchemaConf, schemaConf) => {
@@ -68,24 +69,23 @@ export default function applyRules(FormComponent) {
     };
 
     render() {
-      let configs = Object.assign({}, this.props);
+      let { schema, uiSchema, formData } = this.state;
+      let configs = Object.assign({}, this.props, {
+        schema,
+        uiSchema,
+        formData,
+        onChange: this.ruleTracker,
+      });
 
-      delete configs.schema;
-      delete configs.formData;
-      delete configs.onChange;
-      delete configs.uiSchema;
+      if (this.runRulesOnRender) {
+        this.runRulesOnRender = false;
+        let self = this;
+        this.runRules(this.state.formData).then(newState =>
+          self.setState(newState)
+        );
+      }
 
-      this.props.rulesEngine.validate(this.props.rules, this.props.schema);
-
-      return (
-        <FormComponent
-          {...configs}
-          schema={this.state.schema}
-          uiSchema={this.state.uiSchema}
-          formData={this.state.formData}
-          onChange={this.ruleTracker}
-        />
-      );
+      return <FormComponent {...configs} />;
     }
   }
 
