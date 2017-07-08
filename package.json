@@ -14,7 +14,7 @@
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
+    "publish-to-npm": "npm run dist && npm publish",
     "start": "webpack-dev-server",
     "tdd": "jest --watchAll",
     "test": "jest"
@@ -47,6 +47,7 @@
   "dependencies": {
     "deep-equal": "^1.0.1",
     "deepcopy": "^0.6.3",
+    "json-rules-engine-simplified": "^0.1.2",
     "predicate": "^1.0.0",
     "prop-types": "^15.5.10",
     "react-jsonschema-form": "^0.49.0",

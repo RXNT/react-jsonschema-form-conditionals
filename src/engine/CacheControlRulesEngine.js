@@ -19,7 +19,6 @@ class EngineFactory {
 const factory = new EngineFactory();
 
 const engine = {
-  validate: (rules, formData) => true,
   run: (formData, rules) => {
     let engine = factory.getEngine(rules);
     return engine.run(formData);

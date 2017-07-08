@@ -69,8 +69,7 @@ let schema = {
       properties: {
         name: { type: "string" },
         durationInMonth: { "type": "integer" },
-      },
-      "required": ["street_address", "city", "state"]
+      }
     }
   },
   title: "A registration form",
