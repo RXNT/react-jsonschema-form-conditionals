@@ -1,5 +1,5 @@
-import PredicatesRuleEngine from "../../src/engine/PredicatesRuleEngine";
-import { testInProd } from "../utils";
+import engineFactory from "../../src/engine/SimplifiedRuleEngineFactory";
+// import { testInProd } from "../utils";
 
 let invalidRules = [
   {
@@ -27,11 +27,8 @@ let schema = {
   },
 };
 
-let engine = PredicatesRuleEngine;
-
 test("initialize with invalid rules", () => {
-  expect(() => engine.run({}, invalidRules, schema)).toThrow();
-  expect(
-    testInProd(() => engine.run({}, invalidRules, schema))
-  ).not.toBeUndefined();
+  expect(() => engineFactory.getEngine(invalidRules, schema)).toThrow();
+  // let engine = testInProd(() => engineFactory.getEngine(invalidRules, schema));
+  // expect(engine).not.toBeUndefined();
 });

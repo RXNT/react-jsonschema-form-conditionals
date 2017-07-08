@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import applyRules from "../../src/index";
-import PredicatesRuleEngine from "../../src/engine/PredicatesRuleEngine";
-import CacheControlRulesEngine from "../../src/engine/CacheControlRulesEngine";
+import PredicatesRuleEngine from "../../src/engine/SimplifiedRuleEngineFactory";
+import CacheControlRulesEngine from "../../src/engine/CacheControlEngineFactory";
 import Form from "react-jsonschema-form";
 import { JsonEditor, Viewer } from "./Editor";
 import Selector from "./Selector";

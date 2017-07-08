@@ -1,20 +1,12 @@
-import CacheControlRulesEngine from "../../src/engine/CacheControlRulesEngine";
+import engineFactory from "../../src/engine/SimplifiedRuleEngineFactory";
 
 let rules = [
   {
     conditions: {
-      all: [
-        {
-          fact: "age",
-          operator: "greaterThan",
-          value: 5,
-        },
-        {
-          fact: "age",
-          operator: "lessThan",
-          value: 70,
-        },
-      ],
+      age: {
+        greater: 5,
+        less: 70,
+      },
     },
     event: {
       type: "remove",
@@ -30,11 +22,11 @@ let schema = {
   },
 };
 
-let engine = CacheControlRulesEngine;
+let engine = engineFactory.getEngine(rules, schema);
 
 test("age greater 5", () => {
   return engine
-    .run({ age: 10 }, rules, schema)
+    .run({ age: 10 })
     .then(actions =>
       expect(actions).toEqual([
         { type: "remove", params: { fields: ["telephone"] } },
@@ -43,14 +35,12 @@ test("age greater 5", () => {
 });
 
 test("age less 5", () => {
-  return engine
-    .run({ age: 4 }, rules, schema)
-    .then(actions => expect(actions).toEqual([]));
+  return engine.run({ age: 4 }).then(actions => expect(actions).toEqual([]));
 });
 
 test("age less 70 ", () => {
   return engine
-    .run({ age: 69 }, rules, schema)
+    .run({ age: 69 })
     .then(actions =>
       expect(actions).toEqual([
         { type: "remove", params: { fields: ["telephone"] } },
@@ -59,7 +49,5 @@ test("age less 70 ", () => {
 });
 
 test("age greater 70 ", () => {
-  return engine
-    .run({ age: 71 }, rules, schema)
-    .then(actions => expect(actions).toEqual([]));
+  return engine.run({ age: 71 }).then(actions => expect(actions).toEqual([]));
 });

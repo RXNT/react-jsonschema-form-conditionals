@@ -8,7 +8,7 @@ class EngineFactory {
     rules.forEach(rule => this.engine.addRule(rule));
   }
 
-  getEngine(rules) {
+  getEngine(rules, schema) {
     if (!deepEqual(this.rules, rules)) {
       this.createEngine(rules);
     }
@@ -16,13 +16,4 @@ class EngineFactory {
   }
 }
 
-const factory = new EngineFactory();
-
-const engine = {
-  run: (formData, rules) => {
-    let engine = factory.getEngine(rules);
-    return engine.run(formData);
-  },
-};
-
-export default engine;
+export default new EngineFactory();

@@ -13,8 +13,7 @@ without imposing additional limitations.
 
 ## Features
 
-- Declarative conditional logic with [Predicates](https://github.com/landau/predicate)
-- Support for [Json Rules Engine](https://github.com/CacheControl/json-rules-engine)
+- Support for [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) and [json-rules-engine-simplified](https://github.com/RxNT/json-rules-engine-simplified) 
 - Extensible action mechanism
 - Configuration over coding
 - Lightweight and extensible
