@@ -32,6 +32,7 @@ The simplest example of using `react-jsonschema-form-conditionals`
 
 ```jsx
 import applyRules from 'react-jsonschema-form-conditionals';
+import Engine from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
 import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 
@@ -46,6 +47,7 @@ let FormWithConditionals = applyRules(Form);
 ReactDOM.render(
   <FormWithConditionals
         rules = {rules}
+        rulesEngine={Engine}
         schema = {schema}
         ...
   />,
@@ -59,7 +61,6 @@ To show case uses for this library we'll be using simple registration schema exa
 
 import applyRules from 'react-jsonschema-form-conditionals';
 import Form from "react-jsonschema-form";
-let FormWithConditionals = applyRules(Form);
 
 let schema = {
   definitions: {
@@ -124,9 +125,11 @@ let schema = {
   }
 }
 
-let rules = {
+let rules = [{
     ...
-}
+}]
+
+let FormWithConditionals = applyRules(Form);
 
 render((
   <FormWithConditionals
@@ -136,8 +139,114 @@ render((
 ), document.getElementById("app"));
 ```
 
-In order to use FormWithPredicates
+Conditionals functionality is build using 2 things
+- Rules engine ([Json Rules Engine](https://github.com/CacheControl/json-rules-engine) or [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified))
+- Schema action mechanism 
+
+Rules engine responsibility is to trigger events, action mechanism 
+performs needed actions on the requests.
+
+## Rules engine
+
+Project supports 2 rules engines out of the box:
+- [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) 
+- [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
+
+### Enabling rules engine
  
+In order to use one or another you need to specify `EngineFactory` to use,
+which provides additional optimizations above the original rules engine.
+
+### [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified) factory
+
+To use [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you need to specify `SimplifiedRulesEngineFactory` 
+as a `rulesEngine` in `FormWithConditionals`
+
+For example:
+```jsx
+
+import applyRules from 'react-jsonschema-form-conditionals';
+import SimplifiedRulesEngineFactory from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
+import Form from "react-jsonschema-form";
+let FormWithConditionals = applyRules(Form);
+
+...
+
+let FormWithConditionals = applyRules(Form);
+
+ReactDOM.render(
+  <FormWithConditionals
+        rules = {rules}
+        rulesEngine={SimplifiedRulesEngineFactory}
+        schema = {schema}
+        ...
+  />,
+  document.querySelector('#app')
+);
+```
+
+That is it, now rules are expected to be in accordance with [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
+
+### Cache Control [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) 
+
+To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you need to specify `CacheControlRulesEngineFactory` 
+as a `rulesEngine` in `FormWithConditionals`
+
+For example: 
+```js
+
+import applyRules from 'react-jsonschema-form-conditionals';
+import CacheControlRulesEngineFactory from 'react-jsonschema-form-conditionals/engine/CacheControlRulesEngineFactory';
+import Form from "react-jsonschema-form";
+let FormWithConditionals = applyRules(Form);
+
+...
+
+let FormWithConditionals = applyRules(Form);
+
+ReactDOM.render(
+  <FormWithConditionals
+        rulesEngine={CacheControlRulesEngineFactory}
+        ...
+  />,
+  document.querySelector('#app')
+);
+```
+
+### Extending rules engine
+
+If non of the provided engines satisfies, your needs, you can 
+implement your own `EngineFactory` and `Engine` which should 
+comply to following:
+
+```js
+class EngingFactory {
+  getEngine(rules, schema) {
+    return Engine;
+  }
+}
+
+class Engine {
+  run() {
+    return Promise[Event];
+  }
+}
+```
+
+Original `rules` and `schema` is used as a parameter for a factory call.
+
+## Schema action mechanism
+
+Rules engine emits events, which are expected to be of a specific type:
+
+```js
+{
+  type: "remove",
+  params: {
+    fields: ["name"]
+  }
+}
+```
 
 ## Contribute
 
