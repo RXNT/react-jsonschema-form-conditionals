@@ -198,16 +198,15 @@ For example:
 import applyRules from 'react-jsonschema-form-conditionals';
 import CacheControlRulesEngineFactory from 'react-jsonschema-form-conditionals/engine/CacheControlRulesEngineFactory';
 import Form from "react-jsonschema-form";
-let FormWithConditionals = applyRules(Form);
 
-...
+// ...
 
 let FormWithConditionals = applyRules(Form);
 
 ReactDOM.render(
   <FormWithConditionals
         rulesEngine={CacheControlRulesEngineFactory}
-        ...
+        // ...
   />,
   document.querySelector('#app')
 );
@@ -362,6 +361,145 @@ After this event is triggered, `uiSchema` for both `password` & `name`, will be 
 
 ### Extension mechanism
 
+You can extend existing actions list, by specifying `extraActions` on the form.
+
+Let's say we need to introduce `replaceClassNames` action, that 
+would just specify `classNames` `col-md-4` for all fields except for `ignore`d one.
+We also want to trigger it only when `password` is `empty`.
+
+This is how we can do this:
+
+```jsx
+import applyRules from 'react-jsonschema-form-conditionals';
+import Engine from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
+import Form from "react-jsonschema-form";
+let FormWithConditionals = applyRules(Form);
+
+...
+
+const rules = [
+    {
+        conditons: {
+            password: "empty"
+        },
+        event: {
+            type: "replaceClassNames",
+            params: {
+                classNames: "col-md-4",
+                ignore: [ "password" ]
+            }
+        }
+    }
+];
+
+let FormWithConditionals = applyRules(Form);
+
+let extraActions = {
+    replaceClassNames: function(params, schema, uiSchema) {
+        Object.keys(schema.properties).forEach((field) => {
+            if (uiSchema[field] === undefined) {
+                uiSchema[field] = {}
+            }
+            uiSchema[field].classNames = params.classNames;
+        }
+    }
+};
+
+ReactDOM.render(
+  <FormWithConditionals
+        rules = {rules}
+        rulesEngine={Engine}
+        schema = {schema}
+        extraActions = {extraActions}
+        ...
+  />,
+  document.querySelector('#app')
+);
+```
+
+Provided snippet does just that.
+
+## Action validation mechanism
+
+All default actions are validated by default, checking that field exists in the schema, to save you some headaches. 
+There are 2 levels of validation
+
+- `propTypes` validation, using FB `prop-types` package
+- explicit validation
+
+You can define those validations in your actions as well, to improve actions usability.
+
+All validation is disabled in production.
+ 
+### Prop types action validation
+ 
+This is reuse of familiar `prop-types` validation used with React components, and it's used in the same way:
+
+In case of `require` it can look like this:
+```js
+require.propTypes = {
+  field: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]).isRequired,
+};
+```
+
+The rest is magic.
+
+WARNING, the default behavior of `prop-types` is to send errors to console,
+which you need to have running in order to see them.
+
+For our `replaceClassNames` action, it can look like this:
+
+```js
+replaceClassNames.propTypes = {
+  classNames: PropTypes.string.isRequired,
+  ignore: PropTypes.arrayOf(PropTypes.string)
+};
+```
+
+## Explicit validation
+
+In order to provide more granular validation, you can specify validate function on 
+your action, that will receive `params` and `schema` and can provide appropriate validation.
+
+For example, validation for `require` can be done like this:
+
+```js
+  require.validate = function({ field }, schema) {
+    if (Array.isArray(field)) {
+      field
+        .filter(f => schema && schema.properties && schema.properties[f] === undefined)
+        .forEach(f => console.error(`Field  "${f}" is missing from schema on "require"`));
+    } else if (
+      schema &&
+      schema.properties &&
+      schema.properties[field] === undefined
+    ) {
+      console.error(`Field  "${field}" is missing from schema on "require"`);
+    }
+  };
+```
+
+Validation is not mandatory, and will be done only if field is provided.
+
+For our `replaceClassNames` action, it would look similar: 
+```js
+  replaceClassNames.validate = function({ ignore }, schema) {
+    if (Array.isArray(field)) {
+      ignore
+        .filter(f => schema && schema.properties && schema.properties[f] === undefined)
+        .forEach(f => console.error(`Field  "${f}" is missing from schema on "replaceClassNames"`));
+    } else if (
+      schema &&
+      schema.properties &&
+      schema.properties[ignore] === undefined
+    ) {
+      console.error(`Field  "${ignore}" is missing from schema on "replaceClassNames"`);
+    }
+  };
+```
 
 ## Contribute
 
