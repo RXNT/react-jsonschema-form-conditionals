@@ -19,7 +19,7 @@ function validateInvalidAction(rules, actions) {
   }
 }
 
-function validateInvalidParams(rules, actions, schema) {
+function validateInvalidParams(rules, actions, schema, uiSchema) {
   rules.map(({ event: { type, params } }) => {
     let actionPropTypes = actions[type].propTypes;
     if (actionPropTypes !== undefined && actionPropTypes !== null) {
@@ -28,12 +28,12 @@ function validateInvalidParams(rules, actions, schema) {
 
     let actionValidation = actions[type].validate;
     if (actionValidation && typeof actionValidation === "function") {
-      actionValidation(params, schema);
+      actionValidation(params, schema, uiSchema);
     }
   });
 }
 
-export default function validate(rules, actions, schema) {
+export default function validate(rules, actions, schema, uiSchema) {
   validateInvalidAction(rules, actions);
-  validateInvalidParams(rules, actions, schema);
+  validateInvalidParams(rules, actions, schema, uiSchema);
 }

@@ -19,7 +19,7 @@ export default class Executor {
     );
 
     if (isDevelopment()) {
-      validate(rules, this.allActions, schema);
+      validate(rules, this.allActions, schema, uiSchema);
     }
   }
 

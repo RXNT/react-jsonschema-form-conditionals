@@ -462,12 +462,12 @@ replaceClassNames.propTypes = {
 ## Explicit validation
 
 In order to provide more granular validation, you can specify validate function on 
-your action, that will receive `params` and `schema` and can provide appropriate validation.
+your action, that will receive `params`, `schema` and `uiSchema` so you could provide appropriate validation.
 
 For example, validation for `require` can be done like this:
 
 ```js
-  require.validate = function({ field }, schema) {
+  require.validate = function({ field }, schema, uiSchema) {
     if (Array.isArray(field)) {
       field
         .filter(f => schema && schema.properties && schema.properties[f] === undefined)
@@ -486,7 +486,7 @@ Validation is not mandatory, and will be done only if field is provided.
 
 For our `replaceClassNames` action, it would look similar: 
 ```js
-  replaceClassNames.validate = function({ ignore }, schema) {
+  replaceClassNames.validate = function({ ignore }, schema, uiSchema) {
     if (Array.isArray(field)) {
       ignore
         .filter(f => schema && schema.properties && schema.properties[f] === undefined)
