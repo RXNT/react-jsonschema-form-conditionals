@@ -1,4 +1,4 @@
-import { isDevelopment } from "../utils";
+import { isDevelopment, validateFields } from "../utils";
 import PropTypes from "prop-types";
 
 /**
@@ -28,4 +28,6 @@ if (isDevelopment()) {
     ]).isRequired,
     conf: PropTypes.object.isRequired,
   };
+
+  replaceUi.validate = validateFields("replaceUi");
 }

@@ -1,4 +1,4 @@
-import { isDevelopment } from "../utils";
+import { isDevelopment, validateFields } from "../utils";
 import PropTypes from "prop-types";
 
 function doRemove(field, schema, uiSchema) {
@@ -33,4 +33,6 @@ if (isDevelopment()) {
       PropTypes.arrayOf(PropTypes.string),
     ]).isRequired,
   };
+
+  remove.validate = validateFields("remove");
 }

@@ -1,4 +1,4 @@
-import { isDevelopment } from "../utils";
+import { isDevelopment, validateFields } from "../utils";
 import PropTypes from "prop-types";
 
 function doRequire(f, schema) {
@@ -38,4 +38,6 @@ if (isDevelopment()) {
       PropTypes.arrayOf(PropTypes.string),
     ]).isRequired,
   };
+
+  require.validate = validateFields("require");
 }
