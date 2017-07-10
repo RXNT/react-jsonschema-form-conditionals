@@ -66,14 +66,14 @@ module.exports = {
       conditions: { firstName: "empty" },
       event: {
         type: "remove",
-        params: { fields: ["password"] },
+        params: { field: ["password"] },
       },
     },
     {
       conditions: { age: { greater: 20 } },
       event: {
         type: "require",
-        params: { fields: ["telephone"] },
+        params: { field: ["telephone"] },
       },
     },
   ],

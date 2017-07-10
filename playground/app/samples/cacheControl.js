@@ -74,7 +74,7 @@ module.exports = {
       },
       event: {
         type: "remove",
-        params: { fields: ["password"] },
+        params: { field: "password" },
       },
     },
   ],

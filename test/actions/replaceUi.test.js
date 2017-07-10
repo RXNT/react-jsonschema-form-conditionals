@@ -16,7 +16,7 @@ let origSchema = {
 test("default values", () => {
   let schema = {};
   let uiSchema = {};
-  replaceUi({ fields: ["title"], conf: {} }, schema, uiSchema);
+  replaceUi({ field: ["title"], conf: {} }, schema, uiSchema);
   expect(schema).toEqual({});
   expect(uiSchema).toEqual({ title: {} });
 });
@@ -27,7 +27,7 @@ test("add required section", () => {
   };
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
-  replaceUi({ fields: ["title"], conf }, schema, uiSchema);
+  replaceUi({ field: "title", conf }, schema, uiSchema);
   expect(schema).toEqual(origSchema);
 
   let expectedUiSchema = {

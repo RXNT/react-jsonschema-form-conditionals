@@ -14,11 +14,11 @@ test("executes single action", () => {
   let singleAction = [
     {
       type: "remove",
-      params: { fields: ["firstName"] },
+      params: { field: "firstName" },
     },
     {
       type: "require",
-      params: { fields: ["name"] },
+      params: { field: "name" },
     },
   ];
 
@@ -38,15 +38,15 @@ test("executes multiple actions", () => {
   let multiAction = [
     {
       type: "remove",
-      params: { fields: ["firstName"] },
+      params: { field: "firstName" },
     },
     {
       type: "require",
-      params: { fields: ["name"] },
+      params: { field: ["name"] },
     },
     {
       type: "replaceUi",
-      params: { fields: ["name"], conf: { classNames: "col-md-5" } },
+      params: { field: "name", conf: { classNames: "col-md-5" } },
     },
   ];
 

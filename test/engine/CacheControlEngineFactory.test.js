@@ -18,7 +18,7 @@ let rules = [
     },
     event: {
       type: "remove",
-      params: { fields: ["telephone"] },
+      params: { field: "telephone" },
     },
   },
 ];
@@ -37,7 +37,7 @@ test("age greater 5", () => {
     .run({ age: 10 })
     .then(actions =>
       expect(actions).toEqual([
-        { type: "remove", params: { fields: ["telephone"] } },
+        { type: "remove", params: { field: "telephone" } },
       ])
     );
 });
@@ -51,7 +51,7 @@ test("age less 70 ", () => {
     .run({ age: 69 })
     .then(actions =>
       expect(actions).toEqual([
-        { type: "remove", params: { fields: ["telephone"] } },
+        { type: "remove", params: { field: "telephone" } },
       ])
     );
 });

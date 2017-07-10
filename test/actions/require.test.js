@@ -17,7 +17,7 @@ test("add required section", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
 
-  require({ fields: ["title"] }, schema, uiSchema);
+  require({ field: "title" }, schema, uiSchema);
   let schemaWithTitleReq = {
     required: ["title"],
     properties: {
@@ -39,7 +39,7 @@ test("ignores already required field", () => {
   };
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
-  require({ fields: ["title"] }, schema, uiSchema);
+  require({ field: ["title"] }, schema, uiSchema);
   expect(schema).toEqual(origSchema);
   expect(uiSchema).toEqual(origUiSchema);
 });

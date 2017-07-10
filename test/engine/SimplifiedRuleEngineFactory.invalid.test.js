@@ -14,7 +14,7 @@ let invalidRules = [
     event: {
       type: "remove",
       params: {
-        fields: ["telephone"],
+        field: ["telephone"],
       },
     },
   },

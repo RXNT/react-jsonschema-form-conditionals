@@ -15,7 +15,7 @@ let origUiSchema = {
 test("removes field", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
-  remove({ fields: ["title"] }, schema, uiSchema);
+  remove({ field: ["title"] }, schema, uiSchema);
 
   let schemaWithoutTitle = {
     properties: {
@@ -33,7 +33,7 @@ test("removes field", () => {
 test("ignores invalid field", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
-  remove({ fields: ["lastName"] }, schema, uiSchema);
+  remove({ field: "lastName" }, schema, uiSchema);
   expect(schema).toEqual(origSchema);
   expect(uiSchema).toEqual(origUiSchema);
 });
@@ -50,7 +50,7 @@ test("remove required", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
 
-  remove({ fields: ["title"] }, schema, uiSchema);
+  remove({ field: "title" }, schema, uiSchema);
 
   let schemaWithoutTitle = {
     required: [],

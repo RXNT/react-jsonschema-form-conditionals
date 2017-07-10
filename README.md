@@ -233,20 +233,135 @@ class Engine {
 }
 ```
 
-Original `rules` and `schema` is used as a parameter for a factory call.
+Original `rules` and `schema` is used as a parameter for a factory call, 
+in order to be able to have additional functionality, such as rules to schema compliance validation, 
+like it's done in Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
 
 ## Schema action mechanism
 
-Rules engine emits events, which are expected to be of a specific type:
+Rules engine emits events, which are expected to have a `type` and `params` field,
+`type` is used to distinguish action that is needed, `params` are used as input for that action:
 
-```js
+```json
 {
-  type: "remove",
-  params: {
-    fields: ["name"]
+  "type": "remove",
+  "params": {
+    "field": "name"
   }
 }
 ```
+
+By default action mechanism defines a supported set of rules, which you can extend as needed:
+
+- `remove` removes a field or set of fields from `schema` and `uiSchema`
+- `require` makes a field or set of fields required
+- `replaceUi` replaces a field or set of fields `uiSchema` entrance
+
+### Remove action
+
+If you want to remove a field, your configuration should look like this:
+
+```json
+    {
+      "conditions": { },
+      "event": {
+        "type": "remove",
+        "params": {
+          "field": "password"
+        }
+      }
+    }
+```
+When `condition` is meet, `password` will be removed from both `schema` and `uiSchema`.
+ 
+In case you want to remove multiple fields `name`, `password`, rule should look like this:
+
+```json
+    {
+      "conditions": { },
+      "event": {
+        "type": "remove",
+        "params": {
+          "field": [ "name", "password" ]
+        }
+      }
+    }
+```
+### Require action
+
+The same convention goes for `require` action
+
+For a single field:
+
+```json
+    {
+      "conditions": { },
+      "event": {
+        "type": "require",
+        "params": {
+          "field": "password"
+        }
+      }
+    }
+```
+
+For multiple fields:
+
+```json
+    {
+      "conditions": { },
+      "event": {
+        "type": "require",
+        "params": {
+          "field": [ "name", "password"]
+        }
+      }
+    }
+```
+
+### Replace UI action
+
+The same convention goes for `require` action
+
+For a single field:
+
+```json
+    {
+      "conditions": { },
+      "event": {
+        "type": "replaceUi",
+        "params": {
+          "field": "password",
+          "conf": {
+            "classNames": "col-md-12"
+          }
+        }
+      }
+    }
+```
+
+After this event is triggered, `uiSchema` for the `password`, will be replaced with `conf` content, so it will become `col-md-12`.
+
+For multiple fields:
+
+```json
+    {
+      "conditions": { },
+      "event": {
+        "type": "require",
+        "params": {
+          "field": [ "name", "password"],
+          "conf": {
+            "classNames": "col-md-12"
+          }
+        }
+      }
+    }
+```
+After this event is triggered, `uiSchema` for both `password` & `name`, will be replaced with `conf` content.
+
+### Extension mechanism
+
 
 ## Contribute
 
