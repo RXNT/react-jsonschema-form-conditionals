@@ -33,12 +33,9 @@ export default function require({ field }, schema) {
 
 if (isDevelopment()) {
   require.propTypes = {
-    type: PropTypes.string.isRequired,
-    params: PropTypes.shape({
-      field: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.arrayOf(PropTypes.string),
-      ]),
-    }),
+    field: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string),
+    ]).isRequired,
   };
 }

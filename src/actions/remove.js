@@ -28,12 +28,9 @@ export default function remove({ field }, schema, uiSchema) {
 
 if (isDevelopment()) {
   remove.propTypes = {
-    type: PropTypes.string.isRequired,
-    params: PropTypes.shape({
-      field: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.arrayOf(PropTypes.string),
-      ]),
-    }),
+    field: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string),
+    ]).isRequired,
   };
 }

@@ -22,13 +22,10 @@ export default function replaceUi({ field, conf }, schema, uiSchema) {
 
 if (isDevelopment()) {
   replaceUi.propTypes = {
-    type: PropTypes.string.isRequired,
-    params: PropTypes.shape({
-      field: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.arrayOf(PropTypes.string),
-      ]),
-      conf: PropTypes.object.isRequired,
-    }),
+    field: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string),
+    ]).isRequired,
+    conf: PropTypes.object.isRequired,
   };
 }

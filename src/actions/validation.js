@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { toError } from "../utils";
 
 export function listAllActions(rules) {
@@ -11,9 +12,23 @@ export function listInvalidActions(rules, actions) {
   return Array.from(ruleActions);
 }
 
-export default function validate(rules, actions) {
+function validateInvalidAction(rules, actions) {
   let invalidActions = listInvalidActions(rules, actions);
   if (invalidActions.length !== 0) {
     toError(`Rule contains invalid action "${invalidActions}"`);
   }
+}
+
+function validateInvalidParams(rules, actions) {
+  rules.map(({ event: { type, params } }) => {
+    let actionPropTypes = actions[type].propTypes;
+    if (actionPropTypes !== undefined && actionPropTypes !== null) {
+      PropTypes.checkPropTypes(actionPropTypes, params, "prop", type);
+    }
+  });
+}
+
+export default function validate(rules, actions) {
+  validateInvalidAction(rules, actions);
+  validateInvalidParams(rules, actions);
 }
