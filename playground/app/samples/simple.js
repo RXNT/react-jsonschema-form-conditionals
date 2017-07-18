@@ -1,4 +1,6 @@
-module.exports = {
+import SimplifiedRuleEngineFactory from "../../../src/engine/SimplifiedRuleEngineFactory";
+
+const simple = {
   schema: {
     type: "object",
     required: ["firstName", "lastName"],
@@ -77,9 +79,7 @@ module.exports = {
       },
     },
   ],
-  extraActions: {
-    enlarge: function(field, schema, uiSchema) {
-      uiSchema[field].classNames = "col-md-8";
-    },
-  },
+  rulesEngine: SimplifiedRuleEngineFactory,
 };
+
+export default simple;

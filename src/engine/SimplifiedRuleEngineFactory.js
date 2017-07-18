@@ -1,7 +1,7 @@
 import Engine from "json-rules-engine-simplified";
 import deepEqual from "deep-equal";
 
-class EngineFactory {
+class SimplifiedRuleEngineFactory {
   createEngine(rules, schema) {
     this.rules = rules;
     this.schema = schema;
@@ -16,4 +16,4 @@ class EngineFactory {
   }
 }
 
-export default new EngineFactory();
+export default new SimplifiedRuleEngineFactory();

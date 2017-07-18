@@ -1,4 +1,6 @@
-module.exports = {
+import Cache from "../../../src/engine/CacheControlEngineFactory";
+
+const cache = {
   schema: {
     type: "object",
     required: ["firstName", "lastName"],
@@ -58,7 +60,7 @@ module.exports = {
     },
   },
   formData: {
-    lastName: "Norris",
+    age: 1000,
     bio: "Roundhouse kicking asses since 1940",
   },
   rules: [
@@ -78,10 +80,7 @@ module.exports = {
       },
     },
   ],
-  rulesType: "cache",
-  extraActions: {
-    enlarge: function(field, schema, uiSchema) {
-      uiSchema[field].classNames = "col-md-8";
-    },
-  },
+  rulesEngine: Cache,
 };
+
+export default cache;

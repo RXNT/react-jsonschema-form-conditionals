@@ -1,7 +1,7 @@
 import { Engine } from "json-rules-engine";
 import deepEqual from "deep-equal";
 
-class EngineFactory {
+class CacheControlEngineFactory {
   createEngine(rules) {
     this.rules = rules;
     this.engine = new Engine();
@@ -16,4 +16,4 @@ class EngineFactory {
   }
 }
 
-export default new EngineFactory();
+export default new CacheControlEngineFactory();

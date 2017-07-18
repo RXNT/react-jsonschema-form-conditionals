@@ -1,5 +1,5 @@
 import simple from "./simple";
-import cacheControl from "./cacheControl";
+import cacheControl from "./cache";
 
 const samples = {
   Simple: simple,
