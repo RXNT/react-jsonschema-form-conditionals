@@ -503,13 +503,12 @@ For our `replaceClassNames` action, it would look similar:
 
 ## Contribute
 
-- Issue Tracker: github.com/RxNT/form-with-rules/issues
-- Source Code: github.com/RxNT/form-with-rules
+- Issue Tracker: github.com/RxNT/react-jsonschema-form-conditionals/issues
+- Source Code: github.com/RxNT/react-jsonschema-form-conditionals
 
 ## Support
 
 If you are having issues, please let us know.
-We have a mailing list located at: ...
 
 ## License
 
