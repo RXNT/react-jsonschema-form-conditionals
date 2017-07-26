@@ -5,80 +5,88 @@ const simple = {
     type: "object",
     required: ["firstName", "lastName"],
     properties: {
-      firstName: {
-        type: "string",
-        title: "First name",
-      },
-      lastName: {
-        type: "string",
-        title: "Last name",
-      },
-      age: {
+      height: {
         type: "integer",
-        title: "Age",
+        title: "Height",
       },
-      bio: {
+      heightMeasure: {
         type: "string",
-        title: "Bio",
+        title: "Measure",
+        enum: ["In", "ft", "cms"],
       },
-      password: {
-        type: "string",
-        title: "Password",
-        minLength: 3,
+      weight: {
+        type: "integer",
+        title: "Weight",
       },
-      telephone: {
+      weightMeasure: {
         type: "string",
-        title: "Telephone",
-        minLength: 10,
+        title: "Measure",
+        enum: ["Lbs", "Kgs"],
+      },
+      bmi: {
+        type: "integer",
+        title: "BMI",
       },
     },
   },
   uiSchema: {
-    firstName: {
-      classNames: "success",
+    height: {
+      classNames: "col-md-6",
       "ui:autofocus": true,
-      "ui:emptyValue": "",
     },
-    age: {
-      "ui:widget": "updown",
-      "ui:title": "Age of person",
+    heightMeasure: {
+      classNames: "col-md-6",
     },
-    bio: {
-      "ui:widget": "textarea",
+    weight: {
+      classNames: "col-md-6",
     },
-    password: {
-      "ui:widget": "password",
-      "ui:help": "Hint: Make it strong!",
+    weightMeasure: {
+      classNames: "col-md-6",
     },
-    date: {
-      "ui:widget": "alt-datetime",
-    },
-    telephone: {
-      "ui:options": {
-        inputType: "tel",
-      },
+    bmi: {
+      classNames: "col-md-6",
     },
   },
   formData: {
-    lastName: "Norris",
-    bio: "Roundhouse kicking asses since 1940",
+    height: 181,
+    heightMeasure: "In",
+    weight: 117,
+    weightMeasure: "Kgs",
   },
   rules: [
     {
-      conditions: { firstName: "empty" },
-      event: {
-        type: "remove",
-        params: { field: ["password"] },
+      conditions: {
+        height: { greater: 0 },
+        heightMeasure: { not: "empty" },
+        weight: { greater: 0 },
+        weightMeasure: { not: "empty" },
       },
-    },
-    {
-      conditions: { age: { greater: 20 } },
       event: {
-        type: "require",
-        params: { field: ["telephone"] },
+        type: "updateBMI",
+        params: { field: "bmi" },
       },
     },
   ],
+  extraActions: {
+    updateBMI: function({ field }, schema, uiSchema, formData) {
+      let weightKilo = formData.weight;
+      switch (formData.weightMeasure) {
+        case "Lbs":
+          weightKilo = formData.weight * 0.453592;
+          break;
+      }
+      let heightMeters = formData.height / 100;
+      switch (formData.heightMeasure) {
+        case "In":
+          heightMeters = formData.height * 0.0254;
+          break;
+        case "ft":
+          heightMeters = formData.height * 0.3048;
+          break;
+      }
+      formData[field] = weightKilo / (heightMeters * heightMeters);
+    },
+  },
   rulesEngine: SimplifiedRuleEngineFactory,
 };
 

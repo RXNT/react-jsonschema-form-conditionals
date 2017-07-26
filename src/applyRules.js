@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Actions from "./actions";
+import Executor from "./actions";
 import deepEqual from "deep-equal";
 import { isDevelopment } from "./utils";
 
@@ -35,9 +35,9 @@ export default function applyRules(FormComponent) {
     runRules = formData => {
       let { rulesEngine, rules, schema, uiSchema, extraActions } = this.props;
       let engine = rulesEngine.getEngine(rules, schema);
-      let executor = new Actions(rules, schema, uiSchema, extraActions);
+      let executor = new Executor(rules, schema, uiSchema, extraActions);
       return engine.run(formData).then(actions => {
-        return executor.run(actions);
+        return executor.run(actions, formData);
       });
     };
 
@@ -45,7 +45,7 @@ export default function applyRules(FormComponent) {
       let { formData } = state;
       this.runRules(formData).then(newSchemaConf => {
         this.notifySchemaUpdate(newSchemaConf, this.state);
-        this.setState(Object.assign({}, newSchemaConf, { formData }));
+        this.setState(Object.assign({}, newSchemaConf));
         if (this.props.onChange) {
           this.props.onChange(Object.assign({}, state, newSchemaConf));
         }

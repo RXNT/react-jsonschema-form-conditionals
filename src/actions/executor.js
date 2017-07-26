@@ -23,15 +23,16 @@ export default class Executor {
     }
   }
 
-  run = actions => {
+  run = (actions, formData) => {
     let schema = deepcopy(this.schema);
     let uiSchema = deepcopy(this.uiSchema);
+    formData = deepcopy(formData);
 
     actions.forEach(({ type, params }) => {
       let executor = this.allActions[type];
-      executor(params, schema, uiSchema);
+      executor(params, schema, uiSchema, formData);
     });
 
-    return Promise.resolve({ schema, uiSchema });
+    return Promise.resolve({ schema, uiSchema, formData });
   };
 }
