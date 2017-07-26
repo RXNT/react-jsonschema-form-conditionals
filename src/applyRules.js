@@ -26,6 +26,9 @@ export default function applyRules(FormComponent) {
       if (!deepEqual(nextState.schema, this.state.schema)) {
         return true;
       }
+      if (!deepEqual(nextState.formData, this.state.formData)) {
+        return true;
+      }
       if (!deepEqual(nextState.uiSchema, this.state.uiSchema)) {
         return true;
       }

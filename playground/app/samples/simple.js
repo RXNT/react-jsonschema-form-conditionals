@@ -84,7 +84,7 @@ const simple = {
           heightMeters = formData.height * 0.3048;
           break;
       }
-      formData[field] = weightKilo / (heightMeters * heightMeters);
+      formData[field] = (weightKilo / (heightMeters * heightMeters)).toFixed(2);
     },
   },
   rulesEngine: SimplifiedRuleEngineFactory,
