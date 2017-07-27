@@ -611,6 +611,26 @@ For our `replaceClassNames` action, it would look similar:
   };
 ```
 
+# Listening to configuration changes
+
+In order to listen for configuration changes you can specify `onSchemaConfChange`, which will be notified every time `schema` or `uiSchema` changes it's value. 
+
+```js
+let FormWithConditionals = applyRules(Form);
+
+ReactDOM.render(
+  <FormWithConditionals
+        rules = {rules}
+        rulesEngine={Engine}
+        schema = {schema}
+        extraActions = {extraActions}
+        onSchemaConfChange = {({ schema, uiSchema }) => { console.log("configuration changed") }}
+  />,
+  document.querySelector('#app')
+);
+
+```
+
 ## Contribute
 
 - Issue Tracker: github.com/RxNT/react-jsonschema-form-conditionals/issues
