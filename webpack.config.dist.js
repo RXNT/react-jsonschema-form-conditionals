@@ -5,9 +5,7 @@ module.exports = {
   cache: true,
   context: __dirname + "/src",
   entry: {
-    main: "./index.js",
-    "engine/SimplifiedRuleEngineFactory": './engine/SimplifiedRuleEngineFactory',
-    "engine/CacheControlEngineFactory": "./engine/CacheControlEngineFactory",
+    main: "./index.js"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

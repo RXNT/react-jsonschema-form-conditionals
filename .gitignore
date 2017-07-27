@@ -39,3 +39,5 @@ public/
 json-schema-playing.iml
 
 *.iml
+
+*.tgz

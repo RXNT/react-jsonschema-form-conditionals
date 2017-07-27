@@ -1,4 +1,4 @@
-import SimplifiedRuleEngineFactory from "../../../src/engine/SimplifiedRuleEngineFactory";
+import { SimplifiedRuleEngineFactory } from "../../../src/";
 
 const simple = {
   schema: {

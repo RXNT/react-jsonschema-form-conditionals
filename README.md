@@ -32,7 +32,7 @@ The simplest example of using `react-jsonschema-form-conditionals`
 
 ```jsx
 import applyRules from 'react-jsonschema-form-conditionals';
-import Engine from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
+import { SimplifiedRuleEngineFactory as Engine }  from 'react-jsonschema-form-conditionals';
 import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 
@@ -166,7 +166,7 @@ For example:
 ```jsx
 
 import applyRules from 'react-jsonschema-form-conditionals';
-import SimplifiedRulesEngineFactory from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
+import { SimplifiedRulesEngineFactory } from 'react-jsonschema-form-conditionals';
 import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 
@@ -196,7 +196,7 @@ For example:
 ```js
 
 import applyRules from 'react-jsonschema-form-conditionals';
-import CacheControlRulesEngineFactory from 'react-jsonschema-form-conditionals/engine/CacheControlRulesEngineFactory';
+import { CacheControlRulesEngineFactory } from 'react-jsonschema-form-conditionals';
 import Form from "react-jsonschema-form";
 
 // ...
@@ -391,7 +391,7 @@ This is how we can do this:
 
 ```jsx
 import applyRules from 'react-jsonschema-form-conditionals';
-import Engine from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
+import { SimplifiedRuleEngineFactory as Engine } from 'react-jsonschema-form-conditionals';
 import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 
@@ -447,7 +447,7 @@ Let's say we want to have schema with `a`, `b` and `sum` fields
 
 ```jsx
 import applyRules from 'react-jsonschema-form-conditionals';
-import Engine from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
+import { SimplifiedRuleEngineFactory as Engine } from 'react-jsonschema-form-conditionals';
 import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 
