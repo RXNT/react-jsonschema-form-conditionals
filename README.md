@@ -254,6 +254,7 @@ By default action mechanism defines a supported set of rules, which you can exte
 
 - `remove` removes a field or set of fields from `schema` and `uiSchema`
 - `require` makes a field or set of fields required
+- `appendClass` appends specified class to field or list of fields in `uiSchema`
 - `replaceUi` replaces a field or set of fields `uiSchema` entrance
 
 ### Remove action
@@ -320,7 +321,7 @@ For multiple fields:
 
 ### Replace UI action
 
-The same convention goes for `require` action
+The same convention goes for `replaceUi` action
 
 For a single field:
 
@@ -359,6 +360,25 @@ For multiple fields:
 ```
 After this event is triggered, `uiSchema` for both `password` & `name`, will be replaced with `conf` content.
 
+### Append Class
+
+For a single field:
+
+```json
+    {
+      "conditions": { },
+      "event": {
+        "type": "appendClass",
+        "params": {
+          "field": "password",
+          "classNames": "has-success"
+        }
+      }
+    }
+```
+
+After this event is triggered, `uiSchema` for `password`, will have additional class `has-success`, if it's not already there.
+
 ### Extension mechanism
 
 You can extend existing actions list, by specifying `extraActions` on the form.
@@ -395,7 +415,7 @@ const rules = [
 let FormWithConditionals = applyRules(Form);
 
 let extraActions = {
-    replaceClassNames: function(params, schema, uiSchema) {
+    replaceClassNames: function(params, schema, uiSchema, formData) {
         Object.keys(schema.properties).forEach((field) => {
             if (uiSchema[field] === undefined) {
                 uiSchema[field] = {}
@@ -418,6 +438,96 @@ ReactDOM.render(
 ```
 
 Provided snippet does just that.
+
+### Extension with calculated values
+
+In case you need to calculate value, based on other field values, you can also do that.
+
+Let's say we want to have schema with `a`, `b` and `sum` fields
+
+```jsx
+import applyRules from 'react-jsonschema-form-conditionals';
+import Engine from 'react-jsonschema-form-conditionals/engine/SimplifiedRuleEngineFactory';
+import Form from "react-jsonschema-form";
+let FormWithConditionals = applyRules(Form);
+
+...
+
+const rules = [
+    {
+        conditons: {
+            a: { not: "empty" },
+            b: { not: "empty" }
+        },
+        event: {
+            type: "updateSum"
+        }
+    }
+];
+
+let FormWithConditionals = applyRules(Form);
+
+let extraActions = {
+    updateSum: function(params, schema, uiSchema, formData) {
+        formData.sum = formData.a + formData.b;
+    }
+};
+
+ReactDOM.render(
+  <FormWithConditionals
+        rules = {rules}
+        rulesEngine={Engine}
+        schema = {schema}
+        extraActions = {extraActions}
+        ...
+  />,
+  document.querySelector('#app')
+);
+```
+
+This is how you can do that.
+
+WARNING!!! You need to be careful with a rules order, if you update `formData` in your action.
+
+For example, let's say you want to mark `sum` field, if you have sum `greater` than `10`. The rule would look something like this:
+
+```json
+{
+  "conditions": {
+    "sum": { "greater" : 10 }
+  },
+  "event": {
+    "type": "appendClass",
+    "classNames": "has-success"
+  }
+}
+```
+
+But it will work only if you put it after `updateSum` rule, like this 
+```json
+[
+    {
+        "conditons": {
+            "a": { "not": "empty" },
+            "b": { "not": "empty" }
+        },
+        "event": {
+            "type": "updateSum"
+        }
+    },
+    {
+      "conditions": {
+        "sum": { "greater" : 10 }
+      },
+      "event": {
+        "type": "appendClass",
+        "classNames": "has-success"
+      }
+    }
+];
+```
+
+Otherwise it will work with **old `sum` values** and therefor show incorrect value. 
 
 ## Action validation mechanism
 
