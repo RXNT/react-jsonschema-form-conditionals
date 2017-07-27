@@ -68,3 +68,13 @@ export function findRelSchema(field, schema) {
     );
   }
 }
+
+export function findRelForm(field, formData = {}) {
+  let separator = field.indexOf(".");
+  if (separator === -1) {
+    return formData;
+  } else {
+    let parentField = field.substr(0, separator);
+    return findRelForm(field.substr(separator + 1), formData[parentField]);
+  }
+}
