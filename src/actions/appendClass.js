@@ -1,4 +1,4 @@
-import { isDevelopment, validateFields } from "../utils";
+import { isDevelopment, validateFields, toArray } from "../utils";
 import PropTypes from "prop-types";
 
 /**
@@ -25,11 +25,7 @@ function doAppend(field, classNames, uiSchema) {
 }
 
 export default function appendClass({ field, classNames }, schema, uiSchema) {
-  if (Array.isArray(field)) {
-    field.forEach(f => doAppend(f, classNames, uiSchema));
-  } else {
-    doAppend(field, classNames, uiSchema);
-  }
+  toArray(field).forEach(f => doAppend(f, classNames, uiSchema));
 }
 
 if (isDevelopment()) {

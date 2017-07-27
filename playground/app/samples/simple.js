@@ -62,7 +62,7 @@ const simple = {
         weightMeasure: { not: "empty" },
       },
       event: {
-        type: "updateBMI",
+        type: "calculateBMI",
         params: { field: "bmi" },
       },
     },
@@ -80,7 +80,7 @@ const simple = {
     },
   ],
   extraActions: {
-    updateBMI: function({ field }, schema, uiSchema, formData) {
+    calculateBMI: function({ field }, schema, uiSchema, formData) {
       function severity(bmi) {
         if (bmi <= 15) {
           return "Very severely underweight";
