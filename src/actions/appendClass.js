@@ -1,4 +1,9 @@
-import { isDevelopment, validateFields, toArray } from "../utils";
+import {
+  isDevelopment,
+  validateFields,
+  toArray,
+  findInUiSchema,
+} from "../utils";
 import PropTypes from "prop-types";
 
 /**
@@ -11,16 +16,13 @@ import PropTypes from "prop-types";
  * @returns {{schema: *, uiSchema: *}}
  */
 function doAppend(field, classNames, uiSchema) {
-  if (!uiSchema[field]) {
-    uiSchema[field] = {};
-  }
-  if (uiSchema[field].classNames) {
-    if (uiSchema[field].classNames.indexOf(classNames) === -1) {
-      uiSchema[field].classNames = `${uiSchema[field]
-        .classNames} ${classNames}`;
+  let fieldUiSchema = findInUiSchema(field, uiSchema);
+  if (fieldUiSchema.classNames) {
+    if (fieldUiSchema.classNames.indexOf(classNames) === -1) {
+      fieldUiSchema.classNames = `${fieldUiSchema.classNames} ${classNames}`;
     }
   } else {
-    uiSchema[field].classNames = classNames;
+    fieldUiSchema.classNames = classNames;
   }
 }
 

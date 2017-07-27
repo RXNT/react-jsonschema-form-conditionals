@@ -1,4 +1,9 @@
-import { isDevelopment, validateFields, toArray } from "../utils";
+import {
+  isDevelopment,
+  validateFields,
+  toArray,
+  findInUiSchema,
+} from "../utils";
 import PropTypes from "prop-types";
 
 /**
@@ -11,7 +16,11 @@ import PropTypes from "prop-types";
  * @returns {{schema: *, uiSchema: *}}
  */
 export default function replaceUi({ field, conf }, schema, uiSchema) {
-  toArray(field).forEach(f => (uiSchema[f] = conf));
+  toArray(field).forEach(f => {
+    let fieldUiSchema = findInUiSchema(f, uiSchema);
+    Object.keys(fieldUiSchema).forEach(key => delete fieldUiSchema[key]);
+    Object.assign(fieldUiSchema, conf);
+  });
 }
 
 if (isDevelopment()) {
