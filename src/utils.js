@@ -18,8 +18,9 @@ export function toError(message) {
   }
 }
 
-export function validateFields(action) {
-  return function({ field }, schema) {
+export function validateFields(action, toFields = ({ field }) => field) {
+  return function(params, schema) {
+    let field = toFields(params);
     if (Array.isArray(field)) {
       field
         .filter(
@@ -29,6 +30,7 @@ export function validateFields(action) {
           toError(`Field  "${f}" is missing from schema on "${action}"`)
         );
     } else if (
+      field.indexOf(".") === -1 &&
       schema &&
       schema.properties &&
       schema.properties[field] === undefined

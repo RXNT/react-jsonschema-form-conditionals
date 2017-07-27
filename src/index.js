@@ -1,9 +1,13 @@
 import applyRules from "./applyRules";
 
-import cacheControlFactory from "./engine/CacheControlEngineFactory";
-import simpleFactory from "./engine/SimplifiedRuleEngineFactory";
+import CacheControlEngineFactory from "./engine/CacheControlEngineFactory";
+import SimplifiedRuleEngineFactory from "./engine/SimplifiedRuleEngineFactory";
+import { validateFields } from "./utils";
 
-export const CacheControlEngineFactory = cacheControlFactory;
-export const SimplifiedRuleEngineFactory = simpleFactory;
+export {
+  validateFields,
+  CacheControlEngineFactory,
+  SimplifiedRuleEngineFactory,
+};
 
 export default applyRules;
