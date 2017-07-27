@@ -3,7 +3,6 @@ import SimplifiedRuleEngineFactory from "../../../src/engine/SimplifiedRuleEngin
 const simple = {
   schema: {
     type: "object",
-    required: ["firstName", "lastName"],
     properties: {
       height: {
         type: "integer",
@@ -11,7 +10,7 @@ const simple = {
       },
       heightMeasure: {
         type: "string",
-        title: "Measure",
+        title: "Height Measure",
         enum: ["In", "ft", "cms"],
       },
       weight: {
@@ -20,7 +19,7 @@ const simple = {
       },
       weightMeasure: {
         type: "string",
-        title: "Measure",
+        title: "Weight Measure",
         enum: ["Lbs", "Kgs"],
       },
       bmi: {
@@ -31,20 +30,21 @@ const simple = {
   },
   uiSchema: {
     height: {
-      classNames: "col-md-6",
+      classNames: "col-md-9",
       "ui:autofocus": true,
     },
     heightMeasure: {
-      classNames: "col-md-6",
+      classNames: "col-md-3",
     },
     weight: {
-      classNames: "col-md-6",
+      classNames: "col-md-9",
     },
     weightMeasure: {
-      classNames: "col-md-6",
+      classNames: "col-md-3",
     },
     bmi: {
-      classNames: "col-md-6",
+      classNames: "col-md-9",
+      "ui:disabled": true,
     },
   },
   formData: {
@@ -75,6 +75,35 @@ const simple = {
         params: {
           field: "bmi",
           classNames: "has-error",
+        },
+      },
+    },
+    {
+      conditions: {
+        bmi: {
+          greater: 18.5,
+          lessEq: 25,
+        },
+      },
+      event: {
+        type: "appendClass",
+        params: {
+          field: "bmi",
+          classNames: "has-success",
+        },
+      },
+    },
+    {
+      conditions: {
+        bmi: {
+          lessEq: 18.5,
+        },
+      },
+      event: {
+        type: "appendClass",
+        params: {
+          field: "bmi",
+          classNames: "has-warning",
         },
       },
     },

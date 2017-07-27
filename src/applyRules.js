@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Executor from "./actions";
 import deepEqual from "deep-equal";
 import { isDevelopment } from "./utils";
+import runRules from "./runRules";
 
 export default function applyRules(FormComponent) {
   class FormWithConditionals extends Component {
@@ -35,18 +35,9 @@ export default function applyRules(FormComponent) {
       return !deepEqual(nextProps, this.props);
     }
 
-    runRules = formData => {
-      let { rulesEngine, rules, schema, uiSchema, extraActions } = this.props;
-      let engine = rulesEngine.getEngine(rules, schema);
-      let executor = new Executor(rules, schema, uiSchema, extraActions);
-      return engine.run(formData).then(actions => {
-        return executor.run(actions, formData);
-      });
-    };
-
     ruleTracker = state => {
       let { formData } = state;
-      this.runRules(formData).then(newSchemaConf => {
+      runRules(formData, this.props).then(newSchemaConf => {
         this.notifySchemaUpdate(newSchemaConf, this.state);
         this.setState(Object.assign({}, newSchemaConf));
         if (this.props.onChange) {
@@ -81,7 +72,7 @@ export default function applyRules(FormComponent) {
       if (this.runRulesOnRender) {
         this.runRulesOnRender = false;
         let self = this;
-        this.runRules(this.state.formData).then(newState =>
+        runRules(this.state.formData, this.props).then(newState =>
           self.setState(newState)
         );
       }

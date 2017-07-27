@@ -1,4 +1,4 @@
-import Executor from "../../src/actions/executor";
+import toAction from "../../src/actions";
 import { testInProd } from "../utils";
 
 let schema = {
@@ -16,6 +16,6 @@ let invalidRules = {
 };
 
 test("No error in production", () => {
-  expect(() => new Executor(invalidRules, schema)).toThrow();
-  expect(testInProd(() => new Executor(invalidRules, schema))).toBeDefined();
+  expect(() => toAction(invalidRules, schema)).toThrow();
+  expect(testInProd(() => toAction(invalidRules, schema))).toBeUndefined();
 });

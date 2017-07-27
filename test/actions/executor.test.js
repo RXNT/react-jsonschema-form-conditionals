@@ -1,4 +1,5 @@
-import Executor from "../../src/actions/executor";
+import runRules from "../../src/runRules";
+import rulesEngine from "../../src/engine/SimplifiedRuleEngineFactory";
 
 let schema = {
   properties: {
@@ -8,21 +9,25 @@ let schema = {
   },
 };
 
-let executor = new Executor([], schema);
-
 test("executes single action", () => {
-  let singleAction = [
+  let rules = [
     {
-      type: "remove",
-      params: { field: "firstName" },
+      conditions: { lastName: "empty" },
+      event: {
+        type: "remove",
+        params: { field: "firstName" },
+      },
     },
     {
-      type: "require",
-      params: { field: "name" },
+      conditions: { lastName: "empty" },
+      event: {
+        type: "require",
+        params: { field: "name" },
+      },
     },
   ];
 
-  return executor.run(singleAction).then(({ schema }) => {
+  return runRules({}, { rules, schema, rulesEngine }).then(({ schema }) => {
     let expectedSchema = {
       required: ["name"],
       properties: {
@@ -35,22 +40,34 @@ test("executes single action", () => {
 });
 
 test("executes multiple actions", () => {
-  let multiAction = [
+  let rules = [
     {
-      type: "remove",
-      params: { field: "firstName" },
+      conditions: { lastName: "empty" },
+      event: {
+        type: "remove",
+        params: { field: "firstName" },
+      },
     },
     {
-      type: "require",
-      params: { field: ["name"] },
+      conditions: { lastName: "empty" },
+      event: {
+        type: "require",
+        params: { field: ["name"] },
+      },
     },
     {
-      type: "replaceUi",
-      params: { field: "name", conf: { classNames: "col-md-5" } },
+      conditions: { lastName: "empty" },
+      event: {
+        type: "replaceUi",
+        params: { field: "name", conf: { classNames: "col-md-5" } },
+      },
     },
   ];
 
-  return executor.run(multiAction).then(({ schema, uiSchema }) => {
+  return runRules(
+    {},
+    { rules, schema, rulesEngine }
+  ).then(({ schema, uiSchema }) => {
     let expectedSchema = {
       required: ["name"],
       properties: {
