@@ -1,4 +1,4 @@
-import { isDevelopment, validateFields } from "../utils";
+import { isDevelopment, validateFields, toArray } from "../utils";
 import PropTypes from "prop-types";
 
 function doRequire(f, schema) {
@@ -24,11 +24,7 @@ export default function require({ field }, schema) {
     schema.required = [];
   }
 
-  if (Array.isArray(field)) {
-    field.forEach(f => doRequire(f, schema));
-  } else {
-    doRequire(field, schema);
-  }
+  toArray(field).forEach(f => doRequire(f, schema));
 }
 
 if (isDevelopment()) {

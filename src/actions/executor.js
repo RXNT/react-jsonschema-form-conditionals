@@ -5,6 +5,7 @@ import validate from "./validation";
 import remove from "./remove";
 import require from "./require";
 import replaceUi from "./replaceUi";
+import appendClass from "./appendClass";
 
 export default class Executor {
   constructor(rules, schema, uiSchema = {}, extraActions) {
@@ -14,7 +15,7 @@ export default class Executor {
 
     this.allActions = Object.assign(
       {},
-      { remove, require, replaceUi },
+      { remove, require, replaceUi, appendClass },
       extraActions
     );
 

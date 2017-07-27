@@ -49,7 +49,7 @@ const simple = {
   },
   formData: {
     height: 181,
-    heightMeasure: "In",
+    heightMeasure: "cms",
     weight: 117,
     weightMeasure: "Kgs",
   },
@@ -66,9 +66,40 @@ const simple = {
         params: { field: "bmi" },
       },
     },
+    {
+      conditions: {
+        bmi: { greater: 25 },
+      },
+      event: {
+        type: "appendClass",
+        params: {
+          field: "bmi",
+          classNames: "has-error",
+        },
+      },
+    },
   ],
   extraActions: {
     updateBMI: function({ field }, schema, uiSchema, formData) {
+      function severity(bmi) {
+        if (bmi <= 15) {
+          return "Very severely underweight";
+        } else if (bmi <= 16) {
+          return "Severely underweight";
+        } else if (bmi <= 18.5) {
+          return "Underweight";
+        } else if (bmi <= 25) {
+          return "Normal";
+        } else if (bmi <= 30) {
+          return "Overweight";
+        } else if (bmi <= 35) {
+          return "Obese Class I (Moderately obese)";
+        } else if (bmi <= 40) {
+          return "Obese Class II (Severely obese)";
+        } else {
+          return "Obese Class III (Very severely obese)";
+        }
+      }
       let weightKilo = formData.weight;
       switch (formData.weightMeasure) {
         case "Lbs":
@@ -84,7 +115,12 @@ const simple = {
           heightMeters = formData.height * 0.3048;
           break;
       }
-      formData[field] = (weightKilo / (heightMeters * heightMeters)).toFixed(2);
+      if (!uiSchema[field]) {
+        uiSchema[field] = {};
+      }
+      let bmi = (weightKilo / (heightMeters * heightMeters)).toFixed(2);
+      uiSchema[field]["ui:help"] = severity(bmi);
+      formData[field] = bmi;
     },
   },
   rulesEngine: SimplifiedRuleEngineFactory,

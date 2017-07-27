@@ -1,4 +1,4 @@
-import { isDevelopment, validateFields } from "../utils";
+import { isDevelopment, validateFields, toArray } from "../utils";
 import PropTypes from "prop-types";
 
 function doRemove(field, schema, uiSchema) {
@@ -19,11 +19,7 @@ function doRemove(field, schema, uiSchema) {
  * @returns {{schema: *, uiSchema: *}}
  */
 export default function remove({ field }, schema, uiSchema) {
-  if (Array.isArray(field)) {
-    field.forEach(field => doRemove(field, schema, uiSchema));
-  } else {
-    doRemove(field, schema, uiSchema);
-  }
+  toArray(field).forEach(field => doRemove(field, schema, uiSchema));
 }
 
 if (isDevelopment()) {

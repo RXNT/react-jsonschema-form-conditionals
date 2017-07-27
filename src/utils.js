@@ -2,6 +2,14 @@ export function isDevelopment() {
   return process.env.NODE_ENV !== "production";
 }
 
+export function toArray(field) {
+  if (Array.isArray(field)) {
+    return field;
+  } else {
+    return [field];
+  }
+}
+
 export function toError(message) {
   if (isDevelopment()) {
     throw new ReferenceError(message);
