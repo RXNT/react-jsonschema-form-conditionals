@@ -1,7 +1,16 @@
-import { isDevelopment, validateFields, toArray } from "../utils";
+import {
+  isDevelopment,
+  validateFields,
+  toArray,
+  findRelSchema,
+} from "../utils";
 import PropTypes from "prop-types";
 
 function doRequire(f, schema) {
+  if (!schema.required) {
+    schema.required = [];
+  }
+
   if (schema.properties[f] === undefined) {
     console.error(`${f} is missing from the schema, and can't be required`);
   }
@@ -20,11 +29,7 @@ function doRequire(f, schema) {
  * @returns {{schema: *, uiSchema: *}}
  */
 export default function require({ field }, schema) {
-  if (!schema.required) {
-    schema.required = [];
-  }
-
-  toArray(field).forEach(f => doRequire(f, schema));
+  toArray(field).forEach(f => doRequire(f, findRelSchema(field, schema)));
 }
 
 if (isDevelopment()) {

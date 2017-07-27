@@ -2,7 +2,7 @@ import {
   isDevelopment,
   validateFields,
   toArray,
-  findInUiSchema,
+  findRelUiSchema,
 } from "../utils";
 import PropTypes from "prop-types";
 
@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
  */
 export default function replaceUi({ field, conf }, schema, uiSchema) {
   toArray(field).forEach(f => {
-    let fieldUiSchema = findInUiSchema(f, uiSchema);
+    let fieldUiSchema = findRelUiSchema(f, uiSchema);
     Object.keys(fieldUiSchema).forEach(key => delete fieldUiSchema[key]);
     Object.assign(fieldUiSchema, conf);
   });

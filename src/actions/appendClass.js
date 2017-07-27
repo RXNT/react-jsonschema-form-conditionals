@@ -2,7 +2,7 @@ import {
   isDevelopment,
   validateFields,
   toArray,
-  findInUiSchema,
+  findRelUiSchema,
 } from "../utils";
 import PropTypes from "prop-types";
 
@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
  * @returns {{schema: *, uiSchema: *}}
  */
 function doAppend(field, classNames, uiSchema) {
-  let fieldUiSchema = findInUiSchema(field, uiSchema);
+  let fieldUiSchema = findRelUiSchema(field, uiSchema);
   if (fieldUiSchema.classNames) {
     if (fieldUiSchema.classNames.indexOf(classNames) === -1) {
       fieldUiSchema.classNames = `${fieldUiSchema.classNames} ${classNames}`;
