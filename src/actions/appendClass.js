@@ -39,5 +39,10 @@ if (isDevelopment()) {
     classNames: PropTypes.string.isRequired,
   };
 
-  appendClass.validate = validateFields("appendClass");
+  appendClass.validate = function() {
+    console.warn(
+      "appendClass is deprecated and will be removed in future releases, use uiAppend instead"
+    );
+    return validateFields("appendClass");
+  };
 }

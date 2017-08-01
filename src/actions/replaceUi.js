@@ -32,5 +32,10 @@ if (isDevelopment()) {
     conf: PropTypes.object.isRequired,
   };
 
-  replaceUi.validate = validateFields("replaceUi");
+  replaceUi.validate = function() {
+    console.warn(
+      "replaceUi is deprecated and will be removed in future releases, use uiReplace instead"
+    );
+    validateFields("replaceUi");
+  };
 }
