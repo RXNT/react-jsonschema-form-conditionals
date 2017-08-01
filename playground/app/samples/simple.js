@@ -71,10 +71,12 @@ const simple = {
         bmi: { greater: 25 },
       },
       event: {
-        type: "appendClass",
+        type: "uiAppend",
         params: {
-          field: "bmi",
-          classNames: "has-error",
+          bmi: {
+            classNames: "has-error",
+            "ui:disabled": false,
+          },
         },
       },
     },
@@ -86,10 +88,11 @@ const simple = {
         },
       },
       event: {
-        type: "appendClass",
+        type: "uiAppend",
         params: {
-          field: "bmi",
-          classNames: "has-success",
+          bmi: {
+            classNames: "has-success",
+          },
         },
       },
     },
@@ -100,35 +103,73 @@ const simple = {
         },
       },
       event: {
-        type: "appendClass",
+        type: "uiAppend",
         params: {
-          field: "bmi",
-          classNames: "has-warning",
+          bmi: {
+            classNames: "has-warning",
+          },
         },
+      },
+    },
+    {
+      conditions: { bmi: { lessEq: 15 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Very severely underweight" } },
+      },
+    },
+    {
+      conditions: { bmi: { greater: 15, lessEq: 16 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Severely underweight" } },
+      },
+    },
+    {
+      conditions: { bmi: { greater: 16, lessEq: 18.5 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Underweight" } },
+      },
+    },
+    {
+      conditions: { bmi: { greater: 18.5, lessEq: 25 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Normal" } },
+      },
+    },
+    {
+      conditions: { bmi: { greater: 25, lessEq: 30 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Overweight" } },
+      },
+    },
+    {
+      conditions: { bmi: { greater: 30, lessEq: 35 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Obese Class I (Moderately obese)" } },
+      },
+    },
+    {
+      conditions: { bmi: { greater: 35, lessEq: 40 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Obese Class II (Severely obese)" } },
+      },
+    },
+    {
+      conditions: { bmi: { greater: 40 } },
+      event: {
+        type: "uiOverride",
+        params: { bmi: { "ui:help": "Obese Class III (Very severely obese)" } },
       },
     },
   ],
   extraActions: {
     calculateBMI: function({ field }, schema, uiSchema, formData) {
-      function severity(bmi) {
-        if (bmi <= 15) {
-          return "Very severely underweight";
-        } else if (bmi <= 16) {
-          return "Severely underweight";
-        } else if (bmi <= 18.5) {
-          return "Underweight";
-        } else if (bmi <= 25) {
-          return "Normal";
-        } else if (bmi <= 30) {
-          return "Overweight";
-        } else if (bmi <= 35) {
-          return "Obese Class I (Moderately obese)";
-        } else if (bmi <= 40) {
-          return "Obese Class II (Severely obese)";
-        } else {
-          return "Obese Class III (Very severely obese)";
-        }
-      }
       let weightKilo = formData.weight;
       switch (formData.weightMeasure) {
         case "Lbs":
@@ -148,7 +189,6 @@ const simple = {
         uiSchema[field] = {};
       }
       let bmi = (weightKilo / (heightMeters * heightMeters)).toFixed(2);
-      uiSchema[field]["ui:help"] = severity(bmi);
       formData[field] = bmi;
     },
   },

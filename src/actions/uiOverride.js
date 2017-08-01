@@ -19,5 +19,7 @@ export default function uiOverride(params, schema, uiSchema) {
 
 if (isDevelopment()) {
   uiOverride.propTypes = PropTypes.object.isRequired;
-  uiOverride.validate = validateFields("uiReplace");
+  uiOverride.validate = validateFields("uiOverride", params =>
+    Object.keys(params)
+  );
 }

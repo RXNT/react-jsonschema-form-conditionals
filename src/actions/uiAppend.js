@@ -2,7 +2,7 @@ import { findRelUiSchema, isDevelopment, validateFields } from "../utils";
 import PropTypes from "prop-types";
 
 /**
- * Merge original field in uiSchema with external configuration
+ * Append original field in uiSchema with external configuration
  *
  * @param field
  * @param schema
@@ -10,26 +10,34 @@ import PropTypes from "prop-types";
  * @param conf
  * @returns {{schema: *, uiSchema: *}}
  */
-function doAppend(target, fieldSchema) {
-  Object.keys(fieldSchema).map(prop => {
-    let val = fieldSchema[prop];
-    if (target[prop]) {
-      if (target[prop].indexOf(val) === -1) {
-        target[prop] = `${target[prop]}${fieldSchema[prop]}`;
+function doAppend(agg, fieldSchema) {
+  Object.keys(fieldSchema).forEach(key => {
+    let val = fieldSchema[key];
+    let aggVal = agg[key];
+    if (!aggVal) {
+      agg[key] = val;
+    } else if (Array.isArray(aggVal)) {
+      val.filter(v => !aggVal.includes(v)).forEach(v => aggVal.push(v));
+    } else if (typeof val === "object") {
+      doAppend(aggVal, val);
+    } else if (typeof aggVal === "string") {
+      if (!aggVal.includes(val)) {
+        agg[key] = aggVal + " " + val;
       }
     } else {
-      target[prop] = val;
+      agg[key] = val;
     }
   });
+  return agg;
 }
 
 export default function uiAppend(params, schema, uiSchema) {
   Object.keys(params).forEach(field => {
-    doAppend(params[field], findRelUiSchema(field, uiSchema));
+    doAppend(findRelUiSchema(field, uiSchema), params[field]);
   });
 }
 
 if (isDevelopment()) {
   uiAppend.propTypes = PropTypes.object.isRequired;
-  uiAppend.validate = validateFields("uiAppend");
+  uiAppend.validate = validateFields("uiAppend", params => Object.keys(params));
 }
