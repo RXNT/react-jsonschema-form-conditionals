@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/RxNT/react-jsonschema-form-conditionals/badge.svg?branch=master)](https://coveralls.io/github/RxNT/react-jsonschema-form-conditionals?branch=master)
+[![npm version](https://badge.fury.io/js/react-jsonschema-form-conditionals.svg)](https://badge.fury.io/js/react-jsonschema-form-conditionals)
 # Form with conditionals
 
 This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with 
