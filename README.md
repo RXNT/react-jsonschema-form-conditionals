@@ -717,4 +717,4 @@ If you are having issues, please let us know.
 
 ## License
 
-The project is licensed under the ... license.
+The project is licensed under the Apache-2.0 license.

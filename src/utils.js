@@ -40,30 +40,14 @@ export function validateFields(action, toFields = ({ field }) => field) {
   };
 }
 
-export function findRelUiSchema(field, uiSchema, defaultVal = {}) {
-  let separator = field.indexOf(".");
-  if (separator === -1) {
-    if (!uiSchema[field]) {
-      uiSchema[field] = defaultVal;
-    }
-    return uiSchema[field];
-  } else {
-    let parentField = field.substr(0, separator);
-    if (!uiSchema[parentField]) {
-      uiSchema[parentField] = {};
-    }
-    return findRelUiSchema(
-      field.substr(separator + 1),
-      uiSchema[parentField],
-      defaultVal
-    );
-  }
-}
-
 export function findRelSchema(field, schema) {
   let separator = field.indexOf(".");
   if (separator === -1) {
-    return schema;
+    if (schema.properties[field]["$ref"]) {
+      return schema.definitions[field];
+    } else {
+      return schema;
+    }
   } else {
     let parentField = field.substr(0, separator);
     return findRelSchema(

@@ -3,7 +3,7 @@
   "description": "Extension of react-jsonschema-form with conditional field support",
   "private": false,
   "author": "mavarazy@gmail.com",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
@@ -15,7 +15,7 @@
     "precommit": "lint-staged",
     "prepush": "npm test",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run dist && npm version patch &&  npm publish",
+    "publish-to-npm": "npm run dist &&  npm publish && npm version patch",
     "start": "webpack-dev-server",
     "tdd": "jest --watchAll",
     "test": "jest"
