@@ -3,8 +3,6 @@ import validateAction from "./validation";
 
 import remove from "./remove";
 import require from "./require";
-import replaceUi from "./replaceUi";
-import appendClass from "./appendClass";
 import uiAppend from "./uiAppend";
 import uiReplace from "./uiReplace";
 import uiOverride from "./uiOverride";
@@ -12,8 +10,6 @@ import uiOverride from "./uiOverride";
 const DEFAULT_ACTIONS = {
   remove,
   require,
-  replaceUi,
-  appendClass,
   uiAppend,
   uiReplace,
   uiOverride,

@@ -2,11 +2,11 @@ import deepcopy from "deepcopy";
 import uiAppend from "../../src/actions/uiAppend";
 
 let origUiSchema = {
-  title: {
+  "ui:order": ["firstName"],
+  lastName: {
     classNames: "col-md-1",
   },
   firstName: {
-    arr: [1],
     "ui:disabled": false,
     num: 23,
   },
@@ -14,18 +14,18 @@ let origUiSchema = {
 
 let origSchema = {
   properties: {
-    title: { type: "string" },
+    lastName: { type: "string" },
     firstName: { type: "string" },
   },
 };
 
 let params = {
-  title: {
+  "ui:order": ["lastName"],
+  lastName: {
     classNames: "has-error",
   },
   firstName: {
     classNames: "col-md-6",
-    arr: [2],
     "ui:disabled": true,
     num: 22,
   },
@@ -45,12 +45,12 @@ test("append required section", () => {
   uiAppend(params, schema, uiSchema);
   expect(schema).toEqual(origSchema);
   let expectedUiSchema = {
-    title: {
+    "ui:order": ["firstName", "lastName"],
+    lastName: {
       classNames: "col-md-1 has-error",
     },
     firstName: {
       classNames: "col-md-6",
-      arr: [1, 2],
       "ui:disabled": true,
       num: 22,
     },

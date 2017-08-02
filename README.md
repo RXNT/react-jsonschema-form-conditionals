@@ -322,77 +322,139 @@ For multiple fields:
 
 ## UiSchema actions 
 
-API defines a set of actions, that you can take on `uiSchema`, they covermost of the 
+API defines a set of actions, that you can take on `uiSchema`, they cover most of the 
 
-- `appendClass` appends specified class to field or list of fields in `uiSchema`
-- `replaceUi` replaces a field or set of fields `uiSchema` entrance
+- `uiAppend` appends `uiSchema` specified in params with an original `uiSchema`
+- `uiOverride` replaces field in original `uiSchema` with fields in `params`, keeping unrelated entries
+- `uiRepalce` replaces whole `uiSchema` with a conf schema
 
-
-### Replace UI action
-
-!!! DEPRECATED use uiReplace
-
-The same convention goes for `replaceUi` action
-
-For a single field:
+To show case, let's take a simple `schema`
 
 ```json
-    {
-      "conditions": { },
-      "event": {
-        "type": "replaceUi",
-        "params": {
-          "field": "password",
-          "conf": {
-            "classNames": "col-md-12"
-          }
-        }
-      }
-    }
+{
+  "properties": {
+    "lastName": { "type": "string" },
+    "firstName": { "type": "string" },
+    "nickName": { "type": "string"}
+  }
+}
 ```
 
-After this event is triggered, `uiSchema` for the `password`, will be replaced with `conf` content, so it will become `col-md-12`.
-
-For multiple fields:
+and `uiSchema`
 
 ```json
-    {
-      "conditions": { },
-      "event": {
-        "type": "require",
-        "params": {
-          "field": [ "name", "password"],
-          "conf": {
-            "classNames": "col-md-12"
-          }
-        }
-      }
-    }
+{
+  "ui:order": ["firstName"],
+  "lastName": {
+    "classNames": "col-md-1",
+  },
+  "firstName": {
+    "ui:disabled": false,
+    "num": 23
+  },
+  "nickName": {
+    "classNames": "col-md-12"
+  }
+}
 ```
-After this event is triggered, `uiSchema` for both `password` & `name`, will be replaced with `conf` content.
-
-### Append Class
-
-!!! DEPRECATED use uiAppend
-
-For a single field:
-
+with event `params` something like this
 ```json
-    {
-      "conditions": { },
-      "event": {
-        "type": "appendClass",
-        "params": {
-          "field": "password",
-          "classNames": "has-success"
-        }
-      }
-    }
+{
+  "ui:order": [ "lastName" ],
+  "lastName": {
+    "classNames": "has-error"
+  },
+  "firstName" : {
+    "classNames": "col-md-6",
+    "ui:disabled": true,
+    "num": 22
+  }
+}
 ```
 
-After this event is triggered, `uiSchema` for `password`, will have additional class `has-success`, if it's not already there.
+And look at different results depend on the choosen action.
 
-### Extension mechanism
+### uiAppend
+
+UiAppend can handle `arrays` and `string`, with fallback to `uiOverride` behavior for all other fields.
+
+So the expected result `uiSchema` will be:
+```json
+{
+  "ui:order": ["firstName", "lastName"],
+  "lastName": {
+    "classNames": "col-md-1 has-error"
+  },
+  "firstName": {
+    "classNames": "col-md-6",
+    "ui:disabled": true,
+    "num": 22
+  },
+  "nickName": {
+    "classNames": "col-md-12"
+  }
+}
+```
+
+In this case it
+ - added `lastName` to `ui:order` array,
+ - appended `has-error` to `classNames` in `lastName` field
+ - added `classNames` and enabled `firstName`
+ - as for the `num` in `firstName` it just overrode it 
+
+This is useful for example if you want to add some additional markup in your code, without touching layout that you've defined.
+
+### uiOverride
+
+`uiOverride` behaves similar to append, but instead of appending it completely replaces overlapping values  
+
+So the expected result `uiSchema` will be:
+```json
+{
+  "ui:order": [ "lastName" ],
+  "lastName": {
+    "classNames": "has-error"
+  },
+  "firstName": {
+    "classNames": "col-md-6",
+    "ui:disabled": true,
+    "num": 22
+  },
+  "nickName": {
+    "classNames": "col-md-12"
+  }
+}
+```
+
+In this case it
+ - `ui:order` was replaced with configured value
+ - `className` for the `lastName` was replaced with `has-error` 
+ - added `classNames` and enabled `firstName`
+ - as for the `num` in `firstName` it just overrode it 
+
+### uiReplace
+
+`uiReplace` just replaces all fields in `uiSchema` with `params` fields, leaving unrelated fields untouched.
+ 
+So the result `uiSchema` will be
+```json
+{
+  "ui:order": [ "lastName" ],
+  "lastName": {
+    "classNames": "has-error"
+  },
+  "firstName" : {
+    "classNames": "col-md-6",
+    "ui:disabled": true,
+    "num": 22
+  },
+  "nickName": {
+     "classNames": "col-md-12"
+   }
+}
+```
+ 
+## Extension mechanism
 
 You can extend existing actions list, by specifying `extraActions` on the form.
 

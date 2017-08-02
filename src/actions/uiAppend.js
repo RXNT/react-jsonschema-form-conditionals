@@ -1,4 +1,4 @@
-import { findRelUiSchema, isDevelopment, validateFields } from "../utils";
+import { isDevelopment, toArray, validateFields } from "../utils";
 import PropTypes from "prop-types";
 
 /**
@@ -10,31 +10,30 @@ import PropTypes from "prop-types";
  * @param conf
  * @returns {{schema: *, uiSchema: *}}
  */
-function doAppend(agg, fieldSchema) {
-  Object.keys(fieldSchema).forEach(key => {
-    let val = fieldSchema[key];
-    let aggVal = agg[key];
-    if (!aggVal) {
-      agg[key] = val;
-    } else if (Array.isArray(aggVal)) {
-      val.filter(v => !aggVal.includes(v)).forEach(v => aggVal.push(v));
-    } else if (typeof val === "object") {
-      doAppend(aggVal, val);
-    } else if (typeof aggVal === "string") {
-      if (!aggVal.includes(val)) {
-        agg[key] = aggVal + " " + val;
+function doAppend(uiSchema, params) {
+  Object.keys(params).forEach(field => {
+    let appendVal = params[field];
+    let fieldUiSchema = uiSchema[field];
+    if (!fieldUiSchema) {
+      uiSchema[field] = appendVal;
+    } else if (Array.isArray(fieldUiSchema)) {
+      toArray(appendVal)
+        .filter(v => !fieldUiSchema.includes(v))
+        .forEach(v => fieldUiSchema.push(v));
+    } else if (typeof appendVal === "object" && !Array.isArray(appendVal)) {
+      doAppend(fieldUiSchema, appendVal);
+    } else if (typeof fieldUiSchema === "string") {
+      if (!fieldUiSchema.includes(appendVal)) {
+        uiSchema[field] = fieldUiSchema + " " + appendVal;
       }
     } else {
-      agg[key] = val;
+      uiSchema[field] = appendVal;
     }
   });
-  return agg;
 }
 
 export default function uiAppend(params, schema, uiSchema) {
-  Object.keys(params).forEach(field => {
-    doAppend(findRelUiSchema(field, uiSchema), params[field]);
-  });
+  doAppend(uiSchema, params);
 }
 
 if (isDevelopment()) {

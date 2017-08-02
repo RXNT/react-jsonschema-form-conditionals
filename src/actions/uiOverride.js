@@ -1,4 +1,4 @@
-import { isDevelopment, validateFields, findRelUiSchema } from "../utils";
+import { isDevelopment, validateFields } from "../utils";
 import PropTypes from "prop-types";
 
 /**
@@ -10,11 +10,22 @@ import PropTypes from "prop-types";
  * @param conf
  * @returns {{schema: *, uiSchema: *}}
  */
-export default function uiOverride(params, schema, uiSchema) {
-  Object.keys(params).forEach(f => {
-    let fieldUiSchema = findRelUiSchema(f, uiSchema);
-    Object.assign(fieldUiSchema, params[f]);
+function doOverride(uiSchema, params) {
+  Object.keys(params).forEach(field => {
+    let appendVal = params[field];
+    let fieldUiSchema = uiSchema[field];
+    if (!fieldUiSchema) {
+      uiSchema[field] = appendVal;
+    } else if (typeof appendVal === "object" && !Array.isArray(appendVal)) {
+      doOverride(fieldUiSchema, appendVal);
+    } else {
+      uiSchema[field] = appendVal;
+    }
   });
+}
+
+export default function uiOverride(params, schema, uiSchema) {
+  doOverride(uiSchema, params);
 }
 
 if (isDevelopment()) {

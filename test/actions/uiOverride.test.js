@@ -2,11 +2,11 @@ import deepcopy from "deepcopy";
 import uiOverride from "../../src/actions/uiOverride";
 
 let origUiSchema = {
-  title: {
+  "ui:order": ["bar", "foo"],
+  lastName: {
     classNames: "col-md-1",
   },
   firstName: {
-    arr: [1],
     "ui:disabled": false,
     num: 23,
   },
@@ -14,18 +14,18 @@ let origUiSchema = {
 
 let origSchema = {
   properties: {
-    title: { type: "string" },
+    lastName: { type: "string" },
     firstName: { type: "string" },
   },
 };
 
 let params = {
-  title: {
+  "ui:order": ["lastName"],
+  lastName: {
     classNames: "has-error",
   },
   firstName: {
     classNames: "col-md-6",
-    arr: [2],
     "ui:disabled": true,
     num: 22,
   },
@@ -39,18 +39,18 @@ test("default values", () => {
   expect(uiSchema).toEqual(params);
 });
 
-test("append required section", () => {
+test("override required section", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
   uiOverride(params, schema, uiSchema);
   expect(schema).toEqual(origSchema);
   let expectedUiSchema = {
-    title: {
+    "ui:order": ["lastName"],
+    lastName: {
       classNames: "has-error",
     },
     firstName: {
       classNames: "col-md-6",
-      arr: [2],
       "ui:disabled": true,
       num: 22,
     },

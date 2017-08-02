@@ -58,8 +58,8 @@ test("executes multiple actions", () => {
     {
       conditions: { lastName: "empty" },
       event: {
-        type: "replaceUi",
-        params: { field: "name", conf: { classNames: "col-md-5" } },
+        type: "uiReplace",
+        params: { name: { classNames: "col-md-5" } },
       },
     },
   ];

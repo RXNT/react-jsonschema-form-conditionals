@@ -40,11 +40,11 @@ export function validateFields(action, toFields = ({ field }) => field) {
   };
 }
 
-export function findRelUiSchema(field, uiSchema = {}) {
+export function findRelUiSchema(field, uiSchema, defaultVal = {}) {
   let separator = field.indexOf(".");
   if (separator === -1) {
     if (!uiSchema[field]) {
-      uiSchema[field] = {};
+      uiSchema[field] = defaultVal;
     }
     return uiSchema[field];
   } else {
@@ -52,7 +52,11 @@ export function findRelUiSchema(field, uiSchema = {}) {
     if (!uiSchema[parentField]) {
       uiSchema[parentField] = {};
     }
-    return findRelUiSchema(field.substr(separator + 1), uiSchema[parentField]);
+    return findRelUiSchema(
+      field.substr(separator + 1),
+      uiSchema[parentField],
+      defaultVal
+    );
   }
 }
 

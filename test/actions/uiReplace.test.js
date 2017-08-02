@@ -2,7 +2,7 @@ import deepcopy from "deepcopy";
 import uiReplace from "../../src/actions/uiReplace";
 
 let origUiSchema = {
-  title: {
+  lastName: {
     classNames: "col-md-1",
   },
   firstName: {
@@ -10,17 +10,21 @@ let origUiSchema = {
     "ui:disabled": false,
     num: 23,
   },
+  nickName: {
+    classNames: "col-md-12",
+  },
 };
 
 let origSchema = {
   properties: {
-    title: { type: "string" },
+    lastName: { type: "string" },
     firstName: { type: "string" },
   },
 };
 
 let params = {
-  title: {
+  "ui:order": ["lastName"],
+  lastName: {
     classNames: "has-error",
   },
   firstName: {
@@ -39,10 +43,12 @@ test("default values", () => {
   expect(uiSchema).toEqual(params);
 });
 
-test("append required section", () => {
+test("replace required section", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
   uiReplace(params, schema, uiSchema);
   expect(schema).toEqual(origSchema);
-  expect(uiSchema).toEqual(params);
+  expect(uiSchema).toEqual(
+    Object.assign(params, { nickName: origUiSchema.nickName })
+  );
 });
