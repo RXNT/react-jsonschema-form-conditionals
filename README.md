@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/RxNT/react-jsonschema-form-conditionals.svg?branch=master)](https://travis-ci.org/RxNT/react-jsonschema-form-conditionals)
 [![Coverage Status](https://coveralls.io/repos/github/RxNT/react-jsonschema-form-conditionals/badge.svg?branch=master)](https://coveralls.io/github/RxNT/react-jsonschema-form-conditionals?branch=master)
 [![npm version](https://badge.fury.io/js/react-jsonschema-form-conditionals.svg)](https://badge.fury.io/js/react-jsonschema-form-conditionals)
 # Form with conditionals
@@ -256,8 +257,6 @@ By default action mechanism defines a supported set of rules, which you can exte
 
 - `remove` removes a field or set of fields from `schema` and `uiSchema`
 - `require` makes a field or set of fields required
-- `appendClass` appends specified class to field or list of fields in `uiSchema`
-- `replaceUi` replaces a field or set of fields `uiSchema` entrance
 
 ### Remove action
 
@@ -321,7 +320,17 @@ For multiple fields:
     }
 ```
 
+## UiSchema actions 
+
+API defines a set of actions, that you can take on `uiSchema`, they covermost of the 
+
+- `appendClass` appends specified class to field or list of fields in `uiSchema`
+- `replaceUi` replaces a field or set of fields `uiSchema` entrance
+
+
 ### Replace UI action
+
+!!! DEPRECATED use uiReplace
 
 The same convention goes for `replaceUi` action
 
@@ -363,6 +372,8 @@ For multiple fields:
 After this event is triggered, `uiSchema` for both `password` & `name`, will be replaced with `conf` content.
 
 ### Append Class
+
+!!! DEPRECATED use uiAppend
 
 For a single field:
 
