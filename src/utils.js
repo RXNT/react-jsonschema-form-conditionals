@@ -40,20 +40,44 @@ export function validateFields(action, toFields = ({ field }) => field) {
   };
 }
 
+function fetchSchema(ref, schema) {
+  if (ref.startsWith("#/")) {
+    ref.substr(2).split("/");
+    return ref
+      .substr(2)
+      .split("/")
+      .reduce((schema, field) => schema[field], schema);
+  } else {
+    toError("Only local references supported at this point");
+    return undefined;
+  }
+}
+
+function toRefField(field, { properties }) {
+  if (properties[field]) {
+    if (properties[field]["$ref"]) {
+      return properties[field]["$ref"];
+    } else if (properties[field].items && properties[field].items["$ref"]) {
+      return properties[field].items["$ref"];
+    }
+  }
+  return undefined;
+}
+
 export function findRelSchema(field, schema) {
   let separator = field.indexOf(".");
   if (separator === -1) {
-    if (schema.properties[field]["$ref"]) {
-      return schema.definitions[field];
+    let ref = toRefField(field, schema);
+    return ref ? fetchSchema(ref, schema) : schema;
+  } else {
+    let parentField = field.substr(0, separator);
+    let ref = toRefField(parentField, schema);
+    if (ref) {
+      let refSchema = fetchSchema(ref, schema);
+      return findRelSchema(field.substr(separator + 1), refSchema);
     } else {
       return schema;
     }
-  } else {
-    let parentField = field.substr(0, separator);
-    return findRelSchema(
-      field.substr(separator + 1),
-      schema.definitions[parentField]
-    );
   }
 }
 

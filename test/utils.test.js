@@ -1,6 +1,29 @@
-import { isDevelopment, toError, findRelSchema } from "../src/utils";
-
+import { findRelSchema, isDevelopment, toError } from "../src/utils";
 import { testInProd } from "./utils";
+
+let schema = {
+  definitions: {
+    address: {
+      properties: {
+        street: { type: "string" },
+        zip: { type: "string" },
+      },
+    },
+  },
+  properties: {
+    lastName: { type: "string" },
+    age: { type: "number" },
+    someAddress: {
+      $ref: "#/definitions/address",
+    },
+    houses: {
+      type: "array",
+      items: {
+        $ref: "#/definitions/address",
+      },
+    },
+  },
+};
 
 test("isProduction", () => {
   expect(isDevelopment()).toBeTruthy();
@@ -13,41 +36,22 @@ test("error throws exception", () => {
 });
 
 test("find rel schema with plain schema", () => {
-  let schema = {
-    properties: {
-      lastName: { type: "string" },
-      age: { type: "number" },
-    },
-  };
   expect(findRelSchema("lastName", schema)).toEqual(schema);
   expect(findRelSchema("age", schema)).toEqual(schema);
 });
 
 test("find rel schema with ref object schema", () => {
-  let schema = {
-    definitions: {
-      address: {
-        properties: {
-          street: { type: "string" },
-          zip: { type: "string" },
-        },
-      },
-    },
-    properties: {
-      lastName: { type: "string" },
-      age: { type: "number" },
-      address: {
-        $ref: "#/definitions/address",
-      },
-    },
-  };
-  expect(findRelSchema("address", schema)).toEqual({
-    properties: {
-      street: { type: "string" },
-      zip: { type: "string" },
-    },
-  });
-  expect(findRelSchema("address.street", schema)).toEqual(
+  expect(findRelSchema("someAddress", schema)).toEqual(
+    schema.definitions.address
+  );
+  expect(findRelSchema("someAddress.street", schema)).toEqual(
+    schema.definitions.address
+  );
+});
+
+test("find rel schema with ref array object schema", () => {
+  expect(findRelSchema("houses", schema)).toEqual(schema.definitions.address);
+  expect(findRelSchema("houses.street", schema)).toEqual(
     schema.definitions.address
   );
 });
