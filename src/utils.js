@@ -1,24 +1,24 @@
-export function isDevelopment() {
+export const isDevelopment = () => {
   return process.env.NODE_ENV !== "production";
-}
+};
 
-export function toArray(field) {
+export const toArray = field => {
   if (Array.isArray(field)) {
     return field;
   } else {
     return [field];
   }
-}
+};
 
-export function toError(message) {
+export const toError = message => {
   if (isDevelopment()) {
     throw new ReferenceError(message);
   } else {
     console.error(message);
   }
-}
+};
 
-export function validateFields(action, fetchFields) {
+export const validateFields = (action, fetchFields) => {
   if (!fetchFields) {
     toError("validateFields requires toFields function");
     return;
@@ -31,7 +31,7 @@ export function validateFields(action, fetchFields) {
         toError(`Field  "${field}" is missing from schema on "${action}"`)
       );
   };
-}
+};
 
 function fetchSchema(ref, schema) {
   if (ref.startsWith("#/")) {
@@ -57,7 +57,7 @@ function toRefField(field, { properties }) {
   return undefined;
 }
 
-export function findRelSchema(field, schema) {
+export const findRelSchema = (field, schema) => {
   let separator = field.indexOf(".");
   if (separator === -1) {
     let ref = toRefField(field, schema);
@@ -72,9 +72,9 @@ export function findRelSchema(field, schema) {
       return schema;
     }
   }
-}
+};
 
-export function findRelForm(field, formData = {}) {
+export const findRelForm = (field, formData = {}) => {
   let separator = field.indexOf(".");
   if (separator === -1) {
     return formData;
@@ -82,4 +82,4 @@ export function findRelForm(field, formData = {}) {
     let parentField = field.substr(0, separator);
     return findRelForm(field.substr(separator + 1), formData[parentField]);
   }
-}
+};
