@@ -41,6 +41,6 @@ if (isDevelopment()) {
   };
 
   require.validate = validateFields("require", function({ field }) {
-    return toArray(field);
+    return field;
   });
 }

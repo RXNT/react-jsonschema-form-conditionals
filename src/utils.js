@@ -18,29 +18,18 @@ export function toError(message) {
   }
 }
 
-export function validateFields(action, toFields = () => []) {
-  if (!toFields) {
+export function validateFields(action, fetchFields) {
+  if (!fetchFields) {
     toError("validateFields requires toFields function");
     return;
   }
-  return (params, schema) => {
-    let field = toFields(params);
-    if (Array.isArray(field)) {
-      field
-        .filter(
-          f => schema && schema.properties && schema.properties[f] === undefined
-        )
-        .forEach(f =>
-          toError(`Field  "${f}" is missing from schema on "${action}"`)
-        );
-    } else if (
-      field.indexOf(".") === -1 &&
-      schema &&
-      schema.properties &&
-      schema.properties[field] === undefined
-    ) {
-      toError(`Field  "${field}" is missing from schema on "${action}"`);
-    }
+  return (params, { properties }) => {
+    let relFields = toArray(fetchFields(params));
+    relFields
+      .filter(field => properties && properties[field] === undefined)
+      .forEach(field =>
+        toError(`Field  "${field}" is missing from schema on "${action}"`)
+      );
   };
 }
 

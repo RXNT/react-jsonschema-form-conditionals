@@ -38,6 +38,6 @@ if (isDevelopment()) {
   };
 
   remove.validate = validateFields("remove", function({ field }) {
-    return toArray(field);
+    return field;
   });
 }
