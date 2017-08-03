@@ -37,5 +37,7 @@ if (isDevelopment()) {
     ]).isRequired,
   };
 
-  remove.validate = validateFields("remove");
+  remove.validate = validateFields("remove", function({ field }) {
+    return toArray(field);
+  });
 }

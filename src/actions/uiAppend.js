@@ -38,5 +38,7 @@ export default function uiAppend(params, schema, uiSchema) {
 
 if (isDevelopment()) {
   uiAppend.propTypes = PropTypes.object.isRequired;
-  uiAppend.validate = validateFields("uiAppend", params => Object.keys(params));
+  uiAppend.validate = validateFields("uiAppend", function(params) {
+    return Object.keys(params);
+  });
 }

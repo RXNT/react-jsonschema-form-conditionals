@@ -40,5 +40,7 @@ if (isDevelopment()) {
     ]).isRequired,
   };
 
-  require.validate = validateFields("require");
+  require.validate = validateFields("require", function({ field }) {
+    return toArray(field);
+  });
 }

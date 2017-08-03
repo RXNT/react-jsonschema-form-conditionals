@@ -18,7 +18,7 @@ export default function uiReplace(params, schema, uiSchema) {
 
 if (isDevelopment()) {
   uiReplace.propTypes = PropTypes.object.isRequired;
-  uiReplace.validate = validateFields("uiReplace", params =>
-    Object.keys(params)
-  );
+  uiReplace.validate = validateFields("uiReplace", function(params) {
+    return Object.keys(params);
+  });
 }

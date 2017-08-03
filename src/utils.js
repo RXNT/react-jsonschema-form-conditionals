@@ -18,8 +18,12 @@ export function toError(message) {
   }
 }
 
-export function validateFields(action, toFields = ({ field }) => field) {
-  return function(params, schema) {
+export function validateFields(action, toFields = () => []) {
+  if (!toFields) {
+    toError("validateFields requires toFields function");
+    return;
+  }
+  return (params, schema) => {
     let field = toFields(params);
     if (Array.isArray(field)) {
       field
