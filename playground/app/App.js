@@ -34,14 +34,12 @@ export default class ResultForm extends Component {
     super(props);
   }
 
-  onSchemaConfChange = ({ schema, uiSchema }) => {
-    this.setState({ activeSchema: schema, activeUiSchema: uiSchema });
+  handleChange = ({ schema, uiSchema, formData }) => {
+    this.setState({ activeSchema: schema, activeUiSchema: uiSchema, formData });
   };
 
   render() {
     let conf = Object.assign({}, this.props, this.state);
-    return (
-      <FormToDisplay onSchemaConfChange={this.onSchemaConfChange} {...conf} />
-    );
+    return <FormToDisplay {...conf} />;
   }
 }

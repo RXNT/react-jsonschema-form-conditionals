@@ -26,6 +26,10 @@ const simple = {
         type: "integer",
         title: "BMI",
       },
+      oxygen: {
+        type: "integer",
+        title: "Oxygen",
+      },
     },
   },
   uiSchema: {
@@ -45,6 +49,9 @@ const simple = {
     bmi: {
       classNames: "col-md-9",
       "ui:disabled": true,
+    },
+    oxygen: {
+      classNames: "col-md-9",
     },
   },
   formData: {

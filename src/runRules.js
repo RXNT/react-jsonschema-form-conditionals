@@ -12,8 +12,10 @@ function toExecutor(predicate, action) {
   };
 }
 
-export default function runRules(formData = {}, props) {
-  let { rulesEngine, rules, schema, uiSchema = {}, extraActions = {} } = props;
+export default function runRules(
+  formData = {},
+  { rulesEngine, rules, schema, uiSchema = {}, extraActions = {} }
+) {
   let ruleExecutors = rules.map(rule => {
     let predicate = rulesEngine.getEngine([rule], schema);
     let action = toAction(rule, schema, uiSchema, extraActions);

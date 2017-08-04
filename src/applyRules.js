@@ -12,56 +12,64 @@ export default function applyRules(FormComponent) {
       let { schema, uiSchema, formData } = this.props;
       this.state = { schema, uiSchema, formData };
 
-      this.runRulesOnRender = true;
+      this.formData = formData;
+      this.handleChange({ formData });
     }
 
+    sameSchema = nextProps => {
+      return deepEqual(
+        { schema: nextProps.schema, uiSchema: nextProps.uiSchema },
+        { schema: this.props.schema, uiSchema: this.props.uiSchema }
+      );
+    };
+
+    sameFormData = nextProps => {
+      return deepEqual(nextProps.formData, this.formData);
+    };
+
     componentWillReceiveProps(nextProps) {
-      let { schema, formData, uiSchema } = nextProps;
-      this.setState({ schema, formData, uiSchema });
-      this.runRulesOnRender =
-        this.runRulesOnRender || !deepEqual(nextProps, this.props);
+      let { schema, uiSchema, formData } = nextProps;
+      if (!this.sameSchema(nextProps) || !this.sameFormData(nextProps)) {
+        this.setState({ schema, uiSchema, formData }, () =>
+          this.handleChange({ formData })
+        );
+      }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-      if (!deepEqual(nextState.schema, this.state.schema)) {
-        return true;
-      }
-      if (!deepEqual(nextState.formData, this.state.formData)) {
-        return true;
-      }
-      if (!deepEqual(nextState.uiSchema, this.state.uiSchema)) {
-        return true;
-      }
-      return !deepEqual(nextProps, this.props);
+      let sameSchema = this.sameSchema(nextProps);
+      let sameData = this.sameFormData(nextProps);
+      let sameState = deepEqual(nextState, this.state);
+      return !sameSchema || !sameData || !sameState;
     }
+
+    updateState = (changedFormData, conf) => {
+      this.formData = conf.formData;
+      let sameConf = deepEqual(
+        { schema: conf.schema, uiSchema: conf.uiSchema },
+        { schema: this.state.schema, uiSchema: this.state.uiSchema }
+      );
+      let sameForm = deepEqual(changedFormData, conf.formData);
+      if (!sameConf || !sameForm) {
+        this.setState(Object.assign({}, conf));
+      }
+    };
 
     handleChange = state => {
       let { formData } = state;
-      runRules(formData, this.props).then(newSchemaConf => {
-        this.setState(Object.assign({}, newSchemaConf));
+      runRules(formData, this.props).then(conf => {
+        this.updateState(formData, conf);
         if (this.props.onChange) {
-          this.props.onChange(Object.assign({}, state, newSchemaConf));
+          state = Object.assign({}, state, conf);
+          this.props.onChange(state);
         }
       });
     };
 
     render() {
-      let { schema, uiSchema, formData } = this.state;
-      let configs = Object.assign({}, this.props, {
-        schema,
-        uiSchema,
-        formData,
+      let configs = Object.assign({}, this.props, this.state, {
         onChange: this.handleChange,
       });
-
-      if (this.runRulesOnRender) {
-        this.runRulesOnRender = false;
-        let self = this;
-        runRules(this.state.formData, this.props).then(newState =>
-          self.setState(newState)
-        );
-      }
-
       return <FormComponent {...configs} />;
     }
   }
