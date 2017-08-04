@@ -35,29 +35,14 @@ export default function applyRules(FormComponent) {
       return !deepEqual(nextProps, this.props);
     }
 
-    ruleTracker = state => {
+    handleChange = state => {
       let { formData } = state;
       runRules(formData, this.props).then(newSchemaConf => {
-        this.notifySchemaUpdate(newSchemaConf, this.state);
         this.setState(Object.assign({}, newSchemaConf));
         if (this.props.onChange) {
           this.props.onChange(Object.assign({}, state, newSchemaConf));
         }
       });
-    };
-
-    notifySchemaUpdate = (nextSchemaConf, schemaConf) => {
-      if (this.props.onSchemaConfChange === undefined) {
-        return;
-      }
-
-      let schemaChanged =
-        !deepEqual(nextSchemaConf.schema, schemaConf.schema) ||
-        !deepEqual(nextSchemaConf.uiSchema, schemaConf.uiSchema);
-
-      if (schemaChanged) {
-        this.props.onSchemaConfChange(nextSchemaConf, schemaConf);
-      }
     };
 
     render() {
@@ -66,7 +51,7 @@ export default function applyRules(FormComponent) {
         schema,
         uiSchema,
         formData,
-        onChange: this.ruleTracker,
+        onChange: this.handleChange,
       });
 
       if (this.runRulesOnRender) {
@@ -92,7 +77,6 @@ export default function applyRules(FormComponent) {
           }),
         })
       ).isRequired,
-      onSchemaConfChange: PropTypes.func,
       extraActions: PropTypes.object,
     };
   }
