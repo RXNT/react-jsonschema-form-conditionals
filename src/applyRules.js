@@ -37,10 +37,13 @@ export default function applyRules(FormComponent) {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-      let sameSchema = this.sameSchema(nextProps);
       let sameData = this.sameFormData(nextProps);
       let sameState = deepEqual(nextState, this.state);
-      return !sameSchema || !sameData || !sameState;
+      let sameProps = deepEqual(
+        Object.assign({}, this.props, { formData: this.formData }),
+        nextProps
+      );
+      return !sameProps || !sameData || !sameState;
     }
 
     updateState = (changedFormData, conf) => {
