@@ -2,6 +2,8 @@ export const isDevelopment = () => {
   return process.env.NODE_ENV !== "production";
 };
 
+const isFunction = f => typeof f === "function";
+
 export const toArray = field => {
   if (Array.isArray(field)) {
     return field;
@@ -20,11 +22,13 @@ export const toError = message => {
 
 export const validateFields = (action, fetchFields) => {
   if (!fetchFields) {
-    toError("validateFields requires toFields function");
+    toError("validateFields requires fetchFields function");
     return;
   }
   return (params, { properties }) => {
-    let relFields = toArray(fetchFields(params));
+    let relFields = isFunction(fetchFields)
+      ? toArray(fetchFields(params))
+      : toArray(fetchFields);
     relFields
       .filter(field => properties && properties[field] === undefined)
       .forEach(field =>
@@ -67,8 +71,11 @@ export const findRelSchema = (field, schema) => {
     let ref = toRefField(parentField, schema);
     if (ref) {
       let refSchema = fetchSchema(ref, schema);
-      return findRelSchema(field.substr(separator + 1), refSchema);
+      return refSchema
+        ? findRelSchema(field.substr(separator + 1), refSchema)
+        : schema;
     } else {
+      toError(`Failed to find ${ref}`);
       return schema;
     }
   }

@@ -1,10 +1,10 @@
-import validate from "../../src/actions/validation";
+import validateAction from "../../src/actions/validateAction";
 import toAction from "../../src/actions";
 
 test("empty", () => {
   let emptyRules = {};
 
-  expect(validate(emptyRules, {})).toBeUndefined();
+  expect(validateAction(emptyRules, {})).toBeUndefined();
 });
 
 test("rules with invalid actions", () => {

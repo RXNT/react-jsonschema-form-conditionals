@@ -1,5 +1,5 @@
 import { isDevelopment, toError } from "../utils";
-import validateAction from "./validation";
+import validateAction from "./validateAction";
 
 import remove from "./remove";
 import require from "./require";

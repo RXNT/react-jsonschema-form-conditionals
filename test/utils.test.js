@@ -1,4 +1,9 @@
-import { findRelSchema, isDevelopment, toError } from "../src/utils";
+import {
+  findRelSchema,
+  isDevelopment,
+  toError,
+  validateFields,
+} from "../src/utils";
 import { testInProd } from "./utils";
 
 let schema = {
@@ -21,6 +26,9 @@ let schema = {
       items: {
         $ref: "#/definitions/address",
       },
+    },
+    email: {
+      $ref: "https://example.com/email.json",
     },
   },
 };
@@ -50,8 +58,44 @@ test("find rel schema with ref object schema", () => {
 });
 
 test("find rel schema with ref array object schema", () => {
-  expect(findRelSchema("houses", schema)).toEqual(schema.definitions.address);
-  expect(findRelSchema("houses.street", schema)).toEqual(
-    schema.definitions.address
+  let { definitions: { address } } = schema;
+  expect(findRelSchema("houses", schema)).toEqual(address);
+  expect(findRelSchema("houses.street", schema)).toEqual(address);
+});
+
+test("fail to find rel schema", () => {
+  expect(() => findRelSchema("email", schema)).toThrow();
+  expect(testInProd(() => findRelSchema("email", schema))).toBeUndefined();
+});
+
+test("fail to find rel schema field", () => {
+  expect(() => findRelSchema("email.protocol", schema)).toThrow();
+  expect(testInProd(() => findRelSchema("email.protocol", schema))).toEqual(
+    schema
   );
+});
+
+test("invalid field", () => {
+  expect(() => findRelSchema("lastName.protocol", schema)).toThrow();
+  expect(testInProd(() => findRelSchema("lastName.protocol", schema))).toEqual(
+    schema
+  );
+});
+
+test("validate field checks for a function", () => {
+  expect(validateFields("fakeAction", [])).not.toBeUndefined();
+  expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
+  expect(
+    testInProd(() => validateFields("fakeAction", () => "a"))
+  ).not.toBeUndefined();
+  expect(() => validateFields("fakeAction")).toThrow();
+  expect(() => validateFields("fakeAction", null)).toThrow();
+  expect(
+    testInProd(() => validateFields("fakeAction", undefined))
+  ).toBeUndefined();
+  expect(testInProd(() => validateFields("fakeAction"))).toBeUndefined();
+  expect(testInProd(() => validateFields("fakeAction", null))).toBeUndefined();
+  expect(
+    testInProd(() => validateFields("fakeAction", undefined))
+  ).toBeUndefined();
 });
