@@ -1,4 +1,4 @@
-import Cache from "../../../src/engine/CacheControlEngineFactory";
+import Engine from "json-rules-engine";
 
 const cache = {
   schema: {
@@ -80,7 +80,7 @@ const cache = {
       },
     },
   ],
-  rulesEngine: Cache,
+  rulesEngine: Engine,
 };
 
 export default cache;

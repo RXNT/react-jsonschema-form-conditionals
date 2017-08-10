@@ -33,7 +33,7 @@ export const validateFields = (action, fetchFields) => {
   };
 };
 
-function fetchSchema(ref, schema) {
+const fetchSchema = (ref, schema) => {
   if (ref.startsWith("#/")) {
     ref.substr(2).split("/");
     return ref
@@ -44,9 +44,9 @@ function fetchSchema(ref, schema) {
     toError("Only local references supported at this point");
     return undefined;
   }
-}
+};
 
-function toRefField(field, { properties }) {
+const toRefField = (field, { properties }) => {
   if (properties[field]) {
     if (properties[field]["$ref"]) {
       return properties[field]["$ref"];
@@ -55,7 +55,7 @@ function toRefField(field, { properties }) {
     }
   }
   return undefined;
-}
+};
 
 export const findRelSchema = (field, schema) => {
   let separator = field.indexOf(".");
@@ -71,15 +71,5 @@ export const findRelSchema = (field, schema) => {
     } else {
       return schema;
     }
-  }
-};
-
-export const findRelForm = (field, formData = {}) => {
-  let separator = field.indexOf(".");
-  if (separator === -1) {
-    return formData;
-  } else {
-    let parentField = field.substr(0, separator);
-    return findRelForm(field.substr(separator + 1), formData[parentField]);
   }
 };

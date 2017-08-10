@@ -17,7 +17,8 @@ export default function runRules(
   { rulesEngine, rules, schema, uiSchema = {}, extraActions = {} }
 ) {
   let ruleExecutors = rules.map(rule => {
-    let predicate = rulesEngine.getEngine([rule], schema);
+    let predicate = new rulesEngine([], schema);
+    predicate.addRule(rule);
     let action = toAction(rule, schema, uiSchema, extraActions);
     return toExecutor(predicate, action);
   });

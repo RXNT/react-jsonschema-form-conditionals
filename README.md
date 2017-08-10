@@ -35,7 +35,7 @@ The simplest example of using `react-jsonschema-form-conditionals`
 
 ```jsx
 import applyRules from 'react-jsonschema-form-conditionals';
-import { SimplifiedRuleEngineFactory as Engine }  from 'react-jsonschema-form-conditionals';
+import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 
@@ -192,14 +192,14 @@ That is it, now rules are expected to be in accordance with [Simplified Json Rul
 
 ### Cache Control [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) 
 
-To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you need to specify `CacheControlRulesEngineFactory` 
+To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you need to specify it 
 as a `rulesEngine` in `FormWithConditionals`
 
 For example: 
 ```js
 
 import applyRules from 'react-jsonschema-form-conditionals';
-import { CacheControlRulesEngineFactory } from 'react-jsonschema-form-conditionals';
+import Engine from 'json-rules-engine';
 import Form from "react-jsonschema-form";
 
 // ...
@@ -208,7 +208,7 @@ let FormWithConditionals = applyRules(Form);
 
 ReactDOM.render(
   <FormWithConditionals
-        rulesEngine={CacheControlRulesEngineFactory}
+        rulesEngine={Engine}
         // ...
   />,
   document.querySelector('#app')
@@ -522,7 +522,7 @@ Let's say we want to have schema with `a`, `b` and `sum` fields
 
 ```jsx
 import applyRules from 'react-jsonschema-form-conditionals';
-import { SimplifiedRuleEngineFactory as Engine } from 'react-jsonschema-form-conditionals';
+import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
 let FormWithConditionals = applyRules(Form);
 

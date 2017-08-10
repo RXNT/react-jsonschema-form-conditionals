@@ -1,4 +1,4 @@
-import { SimplifiedRuleEngineFactory } from "../../../src/";
+import Engine from "json-rules-engine-simplified";
 
 const simple = {
   schema: {
@@ -199,7 +199,7 @@ const simple = {
       formData[field] = bmi;
     },
   },
-  rulesEngine: SimplifiedRuleEngineFactory,
+  rulesEngine: Engine,
 };
 
 export default simple;

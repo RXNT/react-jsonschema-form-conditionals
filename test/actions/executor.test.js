@@ -1,5 +1,5 @@
 import runRules from "../../src/runRules";
-import rulesEngine from "../../src/engine/SimplifiedRuleEngineFactory";
+import rulesEngine from "json-rules-engine-simplified";
 
 let schema = {
   properties: {
