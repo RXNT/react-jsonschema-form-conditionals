@@ -1,7 +1,7 @@
 import applyRules from "./applyRules";
 
-import { validateFields, findRelSchema } from "./utils";
+import { validateFields, findParentSchema } from "./utils";
 
-export { validateFields, findRelSchema };
+export { validateFields, findParentSchema };
 
 export default applyRules;

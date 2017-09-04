@@ -1,5 +1,5 @@
 import {
-  findRelSchema,
+  findParentSchema,
   isDevelopment,
   toError,
   validateFields,
@@ -44,42 +44,42 @@ test("error throws exception", () => {
 });
 
 test("find rel schema with plain schema", () => {
-  expect(findRelSchema("lastName", schema)).toEqual(schema);
-  expect(findRelSchema("age", schema)).toEqual(schema);
+  expect(findParentSchema("lastName", schema)).toEqual(schema);
+  expect(findParentSchema("age", schema)).toEqual(schema);
 });
 
 test("find rel schema with ref object schema", () => {
-  expect(findRelSchema("someAddress", schema)).toEqual(
+  expect(findParentSchema("someAddress", schema)).toEqual(
     schema.definitions.address
   );
-  expect(findRelSchema("someAddress.street", schema)).toEqual(
+  expect(findParentSchema("someAddress.street", schema)).toEqual(
     schema.definitions.address
   );
 });
 
 test("find rel schema with ref array object schema", () => {
   let { definitions: { address } } = schema;
-  expect(findRelSchema("houses", schema)).toEqual(address);
-  expect(findRelSchema("houses.street", schema)).toEqual(address);
+  expect(findParentSchema("houses", schema)).toEqual(address);
+  expect(findParentSchema("houses.street", schema)).toEqual(address);
 });
 
 test("fail to find rel schema", () => {
-  expect(() => findRelSchema("email", schema)).toThrow();
-  expect(testInProd(() => findRelSchema("email", schema))).toBeUndefined();
+  expect(() => findParentSchema("email", schema)).toThrow();
+  expect(testInProd(() => findParentSchema("email", schema))).toBeUndefined();
 });
 
 test("fail to find rel schema field", () => {
-  expect(() => findRelSchema("email.protocol", schema)).toThrow();
-  expect(testInProd(() => findRelSchema("email.protocol", schema))).toEqual(
+  expect(() => findParentSchema("email.protocol", schema)).toThrow();
+  expect(testInProd(() => findParentSchema("email.protocol", schema))).toEqual(
     schema
   );
 });
 
 test("invalid field", () => {
-  expect(() => findRelSchema("lastName.protocol", schema)).toThrow();
-  expect(testInProd(() => findRelSchema("lastName.protocol", schema))).toEqual(
-    schema
-  );
+  expect(() => findParentSchema("lastName.protocol", schema)).toThrow();
+  expect(
+    testInProd(() => findParentSchema("lastName.protocol", schema))
+  ).toEqual(schema);
 });
 
 test("validate field checks for a function", () => {

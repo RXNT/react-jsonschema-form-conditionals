@@ -1,3 +1,5 @@
+export const OBJECT = "object";
+
 export const isDevelopment = () => {
   return process.env.NODE_ENV !== "production";
 };
@@ -20,62 +22,85 @@ export const toError = message => {
   }
 };
 
+const hasField = (field, schema) => {
+  let separator = field.indexOf(".");
+  if (separator === -1) {
+    return schema.properties[field] !== undefined;
+  } else {
+    let parentField = field.substr(0, separator);
+    let refSch = toRefSchema(parentField, schema);
+    if (refSch) {
+      let refSchema = fetchRefSchema(refSch, schema);
+      return refSchema
+        ? hasField(field.substr(separator + 1), refSchema)
+        : false;
+    } else {
+      toError(`Failed to find ${refSch} for ${field}`);
+      return false;
+    }
+  }
+};
+
 export const validateFields = (action, fetchFields) => {
   if (!fetchFields) {
     toError("validateFields requires fetchFields function");
     return;
   }
-  return (params, { properties }) => {
+  return (params, schema) => {
     let relFields = isFunction(fetchFields)
       ? toArray(fetchFields(params))
       : toArray(fetchFields);
     relFields
-      .filter(field => properties && properties[field] === undefined)
+      .filter(field => !hasField(field, schema))
       .forEach(field =>
-        toError(`Field  "${field}" is missing from schema on "${action}"`)
+        toError(`Field "${field}" is missing from schema on "${action}"`)
       );
   };
 };
 
-const fetchSchema = (ref, schema) => {
+const fetchRefSchema = (ref, schema) => {
   if (ref.startsWith("#/")) {
     ref.substr(2).split("/");
     return ref
       .substr(2)
       .split("/")
       .reduce((schema, field) => schema[field], schema);
+  } else if (schema.properties[ref] && schema.properties[ref].type === OBJECT) {
+    return schema.properties[ref];
   } else {
     toError("Only local references supported at this point");
     return undefined;
   }
 };
 
-const toRefField = (field, { properties }) => {
+const toRefSchema = (field, { properties }) => {
   if (properties[field]) {
     if (properties[field]["$ref"]) {
       return properties[field]["$ref"];
     } else if (properties[field].items && properties[field].items["$ref"]) {
       return properties[field].items["$ref"];
+    } else if (properties[field].type === OBJECT) {
+      return field;
     }
   }
   return undefined;
 };
 
-export const findRelSchema = (field, schema) => {
+export const findParentSchema = (field, schema) => {
   let separator = field.indexOf(".");
   if (separator === -1) {
-    let ref = toRefField(field, schema);
-    return ref ? fetchSchema(ref, schema) : schema;
+    let refSch = toRefSchema(field, schema);
+    return refSch ? fetchRefSchema(refSch, schema) : schema;
   } else {
     let parentField = field.substr(0, separator);
-    let ref = toRefField(parentField, schema);
-    if (ref) {
-      let refSchema = fetchSchema(ref, schema);
+    let refSch = toRefSchema(parentField, schema);
+    if (refSch) {
+      let refSchema = fetchRefSchema(refSch, schema);
       return refSchema
-        ? findRelSchema(field.substr(separator + 1), refSchema)
+        ? findParentSchema(field.substr(separator + 1), refSchema)
         : schema;
     } else {
-      toError(`Failed to find ${ref}`);
+      toError(`Failed to find ${refSch}`);
       return schema;
     }
   }

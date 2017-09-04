@@ -2,7 +2,7 @@ import {
   isDevelopment,
   validateFields,
   toArray,
-  findRelSchema,
+  findParentSchema,
 } from "../utils";
 import PropTypes from "prop-types";
 
@@ -25,7 +25,7 @@ function doRemove(field, schema, uiSchema) {
  */
 export default function remove({ field }, schema, uiSchema) {
   toArray(field).forEach(field =>
-    doRemove(field, findRelSchema(field, schema), uiSchema)
+    doRemove(field, findParentSchema(field, schema), uiSchema)
   );
 }
 

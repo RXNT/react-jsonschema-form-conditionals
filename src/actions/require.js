@@ -2,7 +2,7 @@ import {
   isDevelopment,
   validateFields,
   toArray,
-  findRelSchema,
+  findParentSchema,
 } from "../utils";
 import PropTypes from "prop-types";
 
@@ -29,7 +29,7 @@ function doRequire(f, schema) {
  * @returns {{schema: *, uiSchema: *}}
  */
 export default function require({ field }, schema) {
-  toArray(field).forEach(f => doRequire(f, findRelSchema(field, schema)));
+  toArray(field).forEach(f => doRequire(f, findParentSchema(field, schema)));
 }
 
 if (isDevelopment()) {
