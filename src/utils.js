@@ -86,22 +86,28 @@ const toRefSchema = (field, { properties }) => {
   return undefined;
 };
 
-export const findParentSchema = (field, schema) => {
+/**
+ * Find relevant schema for the field
+ * @returns { field: "string", schema: "object" } relevant field and schema
+ */
+export const findRelSchemaAndField = (field, schema) => {
   let separator = field.indexOf(".");
   if (separator === -1) {
-    let refSch = toRefSchema(field, schema);
-    return refSch ? fetchRefSchema(refSch, schema) : schema;
-  } else {
-    let parentField = field.substr(0, separator);
-    let refSch = toRefSchema(parentField, schema);
-    if (refSch) {
-      let refSchema = fetchRefSchema(refSch, schema);
-      return refSchema
-        ? findParentSchema(field.substr(separator + 1), refSchema)
-        : schema;
-    } else {
-      toError(`Failed to find ${refSch}`);
-      return schema;
-    }
+    return { field, schema };
   }
+
+  let parentField = field.substr(0, separator);
+  let refSch = toRefSchema(parentField, schema);
+  if (!refSch) {
+    toError(`Failed to find ${refSch}`);
+    return { field, schema };
+  }
+
+  let refSchema = fetchRefSchema(refSch, schema);
+  if (refSchema) {
+    return findRelSchemaAndField(field.substr(separator + 1), refSchema);
+  }
+
+  toError(`Failed to retrieve ${refSchema} from schema`);
+  return { field, schema };
 };

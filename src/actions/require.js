@@ -2,21 +2,21 @@ import {
   isDevelopment,
   validateFields,
   toArray,
-  findParentSchema,
+  findRelSchemaAndField,
 } from "../utils";
 import PropTypes from "prop-types";
 
-function doRequire(f, schema) {
+function doRequire({ field, schema }) {
   if (!schema.required) {
     schema.required = [];
   }
 
-  if (schema.properties[f] === undefined) {
-    console.error(`${f} is missing from the schema, and can't be required`);
+  if (schema.properties[field] === undefined) {
+    console.error(`${field} is missing from the schema, and can't be required`);
   }
 
-  if (schema.required.indexOf(f) === -1) {
-    schema.required.push(f);
+  if (schema.required.indexOf(field) === -1) {
+    schema.required.push(field);
   }
 }
 
@@ -29,7 +29,10 @@ function doRequire(f, schema) {
  * @returns {{schema: *, uiSchema: *}}
  */
 export default function require({ field }, schema) {
-  toArray(field).forEach(f => doRequire(f, findParentSchema(field, schema)));
+  let fieldArr = toArray(field);
+  toArray(fieldArr).forEach(field =>
+    doRequire(findRelSchemaAndField(field, schema))
+  );
 }
 
 if (isDevelopment()) {

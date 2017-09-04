@@ -1,19 +1,21 @@
 import {
-  findParentSchema,
+  findRelSchemaAndField,
   isDevelopment,
   toError,
   validateFields,
 } from "../src/utils";
 import { testInProd } from "./utils";
 
+let addressSchema = {
+  properties: {
+    street: { type: "string" },
+    zip: { type: "string" },
+  },
+};
+
 let schema = {
   definitions: {
-    address: {
-      properties: {
-        street: { type: "string" },
-        zip: { type: "string" },
-      },
-    },
+    address: addressSchema,
   },
   properties: {
     lastName: { type: "string" },
@@ -44,42 +46,58 @@ test("error throws exception", () => {
 });
 
 test("find rel schema with plain schema", () => {
-  expect(findParentSchema("lastName", schema)).toEqual(schema);
-  expect(findParentSchema("age", schema)).toEqual(schema);
+  expect(findRelSchemaAndField("lastName", schema)).toEqual({
+    field: "lastName",
+    schema,
+  });
+  expect(findRelSchemaAndField("age", schema)).toEqual({
+    field: "age",
+    schema,
+  });
 });
 
 test("find rel schema with ref object schema", () => {
-  expect(findParentSchema("someAddress", schema)).toEqual(
-    schema.definitions.address
-  );
-  expect(findParentSchema("someAddress.street", schema)).toEqual(
-    schema.definitions.address
-  );
+  expect(findRelSchemaAndField("someAddress", schema)).toEqual({
+    field: "someAddress",
+    schema,
+  });
+  expect(findRelSchemaAndField("someAddress.street", schema)).toEqual({
+    field: "street",
+    schema: addressSchema,
+  });
 });
 
 test("find rel schema with ref array object schema", () => {
   let { definitions: { address } } = schema;
-  expect(findParentSchema("houses", schema)).toEqual(address);
-  expect(findParentSchema("houses.street", schema)).toEqual(address);
+  expect(findRelSchemaAndField("houses", schema)).toEqual({
+    field: "houses",
+    schema,
+  });
+  expect(findRelSchemaAndField("houses.street", schema)).toEqual({
+    field: "street",
+    schema: address,
+  });
 });
 
 test("fail to find rel schema", () => {
-  expect(() => findParentSchema("email", schema)).toThrow();
-  expect(testInProd(() => findParentSchema("email", schema))).toBeUndefined();
+  expect(() => findRelSchemaAndField("email.host", schema)).toThrow();
+  expect(
+    testInProd(() => findRelSchemaAndField("email.host", schema))
+  ).toEqual({ field: "email.host", schema });
 });
 
 test("fail to find rel schema field", () => {
-  expect(() => findParentSchema("email.protocol", schema)).toThrow();
-  expect(testInProd(() => findParentSchema("email.protocol", schema))).toEqual(
-    schema
-  );
+  expect(() => findRelSchemaAndField("email.protocol", schema)).toThrow();
+  expect(
+    testInProd(() => findRelSchemaAndField("email.protocol", schema))
+  ).toEqual({ field: "email.protocol", schema });
 });
 
 test("invalid field", () => {
-  expect(() => findParentSchema("lastName.protocol", schema)).toThrow();
+  expect(() => findRelSchemaAndField("lastName.protocol", schema)).toThrow();
   expect(
-    testInProd(() => findParentSchema("lastName.protocol", schema))
-  ).toEqual(schema);
+    testInProd(() => findRelSchemaAndField("lastName.protocol", schema))
+  ).toEqual({ field: "lastName.protocol", schema });
 });
 
 test("validate field checks for a function", () => {

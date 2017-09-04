@@ -2,11 +2,11 @@ import {
   isDevelopment,
   validateFields,
   toArray,
-  findParentSchema,
+  findRelSchemaAndField,
 } from "../utils";
 import PropTypes from "prop-types";
 
-function doRemove(field, schema, uiSchema) {
+function doRemove({ field, schema }, uiSchema) {
   let requiredIndex = schema.required ? schema.required.indexOf(field) : -1;
   if (requiredIndex !== -1) {
     schema.required.splice(requiredIndex);
@@ -24,8 +24,9 @@ function doRemove(field, schema, uiSchema) {
  * @returns {{schema: *, uiSchema: *}}
  */
 export default function remove({ field }, schema, uiSchema) {
-  toArray(field).forEach(field =>
-    doRemove(field, findParentSchema(field, schema), uiSchema)
+  let fieldArr = toArray(field);
+  fieldArr.forEach(field =>
+    doRemove(findRelSchemaAndField(field, schema), uiSchema)
   );
 }
 
