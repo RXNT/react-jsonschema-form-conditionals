@@ -562,7 +562,9 @@ ReactDOM.render(
 
 This is how you can do that.
 
-WARNING!!! You need to be careful with a rules order, if you update `formData` in your action.
+
+> WARNING!!! You need to be careful with a rules order, when using calculated values.
+> Put calculation rules at the top of your rules specification.
 
 For example, let's say you want to mark `sum` field, if you have sum `greater` than `10`. The rule would look something like this:
 
