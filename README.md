@@ -218,19 +218,17 @@ ReactDOM.render(
 ### Extending rules engine
 
 If non of the provided engines satisfies, your needs, you can 
-implement your own `EngineFactory` and `Engine` which should 
+implement your own `Engine` which should 
 comply to following:
 
 ```js
-class EngingFactory {
-  getEngine(rules, schema) {
-    return Engine;
-  }
-}
-
 class Engine {
-  run() {
-    return Promise[Event];
+  constructor(rules, schema) {
+  }
+  addRule = (rule) => {
+  }
+  run = (formData) => {
+    return Promise[Event]
   }
 }
 ```
@@ -562,7 +560,6 @@ ReactDOM.render(
 
 This is how you can do that.
 
-
 > WARNING!!! You need to be careful with a rules order, when using calculated values.
 > Put calculation rules at the top of your rules specification.
 
@@ -604,7 +601,40 @@ But it will work only if you put it after `updateSum` rule, like this
 ];
 ```
 
-Otherwise it will work with **old `sum` values** and therefor show incorrect value. 
+Otherwise it will work with **old `sum` values** and therefor show incorrect value.
+
+### Rules order
+
+Originally actions performed in sequence defined in the array. If you have interdependent rules, that you need to run in order 
+you can specify `order` on a rule, so that it would be executed first. Rules are executed based on order from lowest to highest with
+rules without order executed last.
+
+For example to make updateSum work regardless the order rules were added, you can do following:
+```json
+[
+    {
+      "conditions": {
+        "sum": { "greater" : 10 }
+      },
+      "order": 1,
+      "event": {
+        "type": "appendClass",
+        "classNames": "has-success"
+      }
+    },
+    {
+        "conditons": {
+            "a": { "not": "empty" },
+            "b": { "not": "empty" }
+        },
+        "order": 0,
+        "event": {
+            "type": "updateSum"
+        }
+    }
+]
+```
+Here although `updateSum` comes after `appendClass`, it will be executed first, since it has a lower order.
 
 ## Action validation mechanism
 

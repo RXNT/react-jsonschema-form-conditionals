@@ -28,12 +28,28 @@ function doRunRules(
   });
 }
 
+export function normRules(rules) {
+  return rules.sort(function(a, b) {
+    if (a.order === undefined) {
+      if (b.order !== undefined) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+    if (b.order === undefined) {
+      return -1;
+    }
+    return a.order - b.order;
+  });
+}
+
 export default function runRules(
   formData = {},
   { rulesEngine, rules, schema, uiSchema = {}, extraActions = {} }
 ) {
   let engine = new rulesEngine([], schema);
-  rules.forEach(rule => engine.addRule(rule));
+  normRules(rules).forEach(rule => engine.addRule(rule));
 
   return doRunRules(
     engine,

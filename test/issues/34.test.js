@@ -15,7 +15,7 @@ function populateField(field, val, formData) {
   }
 }
 
-let extraActions = {
+const extraActions = {
   populate: function({ options }, schema, uiSchema, formData) {
     Object.keys(options).forEach(field =>
       populateField(field, options[field], formData)
@@ -23,7 +23,7 @@ let extraActions = {
   },
 };
 
-let origSchema = {
+const origSchema = {
   type: "object",
   properties: {
     registration: {
@@ -46,7 +46,7 @@ let origSchema = {
   },
 };
 
-let hideNonRelevant = {
+const hideNonRelevant = {
   title: "Rule #2",
   description:
     "This hides Address, Email, Gender and the Password fields until First Name and Last Name have a value",
@@ -78,7 +78,7 @@ let hideNonRelevant = {
   },
 };
 
-let fillDefaults = {
+const fillDefaults = {
   title: "Rule #3",
   description: "prefills firstName",
   conditions: {
@@ -131,6 +131,30 @@ test("Opposite rule", () => {
     {
       rulesEngine,
       rules: [fillDefaults, hideNonRelevant],
+      schema: origSchema,
+      uiSchema: {},
+      extraActions,
+    }
+  ).then(({ schema, uiSchema, formData }) => {
+    expect(schema.properties.registration).toEqual(
+      origSchema.properties.registration
+    );
+    expect(uiSchema).toEqual({});
+    expect(formData).toEqual({
+      registration: { firstName: "Barry", lastName: "White", gender: "Male" },
+    });
+  });
+});
+
+test("Opposite rule with order", () => {
+  return runRules(
+    { registration: { firstName: "Barry" } },
+    {
+      rulesEngine,
+      rules: [
+        Object.assign({}, hideNonRelevant, { order: 1 }),
+        Object.assign({}, fillDefaults, { order: 0 }),
+      ],
       schema: origSchema,
       uiSchema: {},
       extraActions,

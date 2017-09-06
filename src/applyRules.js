@@ -83,6 +83,7 @@ export default function applyRules(FormComponent) {
       rules: PropTypes.arrayOf(
         PropTypes.shape({
           conditions: PropTypes.object.isRequired,
+          order: PropTypes.number,
           event: PropTypes.shape({
             type: PropTypes.string.isRequired,
           }),
