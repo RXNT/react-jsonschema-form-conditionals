@@ -1,5 +1,5 @@
 import validateAction from "../../src/actions/validateAction";
-import toAction from "../../src/actions";
+import execute from "../../src/actions";
 
 test("empty", () => {
   let emptyRules = {};
@@ -15,5 +15,5 @@ test("rules with invalid actions", () => {
     },
   };
 
-  expect(() => toAction(invalidRule)).toThrow();
+  expect(() => execute(invalidRule.event)).toThrow();
 });

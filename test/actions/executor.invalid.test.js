@@ -1,4 +1,4 @@
-import toAction from "../../src/actions";
+import execute from "../../src/actions";
 import { testInProd } from "../utils";
 
 let schema = {
@@ -9,13 +9,12 @@ let schema = {
   },
 };
 
-let invalidRules = {
-  password: {
-    where: {},
-  },
+let invalidAction = {
+  type: "removes",
+  field: ["firstName"],
 };
 
 test("No error in production", () => {
-  expect(() => toAction(invalidRules, schema)).toThrow();
-  expect(testInProd(() => toAction(invalidRules, schema))).toBeUndefined();
+  expect(() => execute(invalidAction, {}, schema)).toThrow();
+  expect(testInProd(() => execute(invalidAction, {}, schema))).toBeUndefined();
 });

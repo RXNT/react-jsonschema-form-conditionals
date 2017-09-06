@@ -15,21 +15,20 @@ const DEFAULT_ACTIONS = {
   uiOverride,
 };
 
-export default function toAction(
-  { event: { type, params } = {} },
+export default function execute(
+  { type, params },
+  formData,
   schema,
   uiSchema,
-  extraActions
+  extraActions = {}
 ) {
-  let action =
-    extraActions && extraActions[type]
-      ? extraActions[type]
-      : DEFAULT_ACTIONS[type];
-  if (action === undefined) {
-    toError(`Rule contains invalid action "${type}"`);
-  }
+  let action = extraActions[type] ? extraActions[type] : DEFAULT_ACTIONS[type];
   if (isDevelopment()) {
     validateAction(action, params, schema, uiSchema);
   }
-  return action;
+  if (action === undefined) {
+    toError(`Rule contains invalid action "${type}"`);
+    return;
+  }
+  action(params, schema, uiSchema, formData);
 }
