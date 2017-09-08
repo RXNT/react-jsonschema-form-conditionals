@@ -1,6 +1,6 @@
 import Engine from "json-rules-engine-simplified";
 
-const simple = {
+const conf = {
   schema: {
     type: "object",
     properties: {
@@ -202,4 +202,4 @@ const simple = {
   rulesEngine: Engine,
 };
 
-export default simple;
+export default conf;
