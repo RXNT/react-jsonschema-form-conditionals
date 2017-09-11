@@ -45,9 +45,13 @@ export function normRules(rules) {
 }
 
 export default function runRules(
-  formData = {},
+  formData,
   { rulesEngine, rules, schema, uiSchema = {}, extraActions = {} }
 ) {
+  if (formData === undefined || formData === null) {
+    return Promise.resolve({ schema, uiSchema, formData });
+  }
+
   let engine = new rulesEngine([], schema);
   normRules(rules).forEach(rule => engine.addRule(rule));
 

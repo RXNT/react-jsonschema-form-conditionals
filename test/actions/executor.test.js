@@ -27,11 +27,14 @@ test("executes single action", () => {
     },
   ];
 
-  return runRules(undefined, {
-    rules,
-    schema,
-    rulesEngine,
-  }).then(({ schema }) => {
+  return runRules(
+    {},
+    {
+      rules,
+      schema,
+      rulesEngine,
+    }
+  ).then(({ schema }) => {
     let expectedSchema = {
       required: ["name"],
       properties: {
