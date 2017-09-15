@@ -37,7 +37,6 @@ The simplest example of using `react-jsonschema-form-conditionals`
 import applyRules from 'react-jsonschema-form-conditionals';
 import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
-let FormWithConditionals = applyRules(Form);
 
 ...
 
@@ -45,15 +44,10 @@ const rules = [{
     ...
 }];
 
-let FormWithConditionals = applyRules(Form);
+let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine)(Form);
 
 ReactDOM.render(
-  <FormWithConditionals
-        rules = {rules}
-        rulesEngine={Engine}
-        schema = {schema}
-        ...
-  />,
+  <FormWithConditionals .../>,
   document.querySelector('#app')
 );
 ```
@@ -132,13 +126,10 @@ let rules = [{
     ...
 }]
 
-let FormWithConditionals = applyRules(Form);
+let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine)(Form);
 
 render((
-  <FormWithConditionals
-    schema={schema}
-    rules={rules}
-  />
+  <FormWithConditionals />
 ), document.getElementById("app"));
 ```
 
@@ -155,47 +146,30 @@ Project supports 2 rules engines out of the box:
 - [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) 
 - [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
 
-### Enabling rules engine
- 
-In order to use one or another you need to specify `EngineFactory` to use,
-which provides additional optimizations above the original rules engine.
-
-### [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified) factory
-
-To use [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you need to specify `SimplifiedRulesEngineFactory` 
-as a `rulesEngine` in `FormWithConditionals`
+In order to use either of those, you need to specify `Engine` in `applyRules` configuration.
 
 For example:
-```jsx
+
+To use [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you can do following:
+```js
 
 import applyRules from 'react-jsonschema-form-conditionals';
-import { SimplifiedRulesEngineFactory } from 'react-jsonschema-form-conditionals';
 import Form from "react-jsonschema-form";
-let FormWithConditionals = applyRules(Form);
+
+import Engine from 'json-rules-engine-simplified';
 
 ...
 
-let FormWithConditionals = applyRules(Form);
+let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine)(Form);
 
 ReactDOM.render(
-  <FormWithConditionals
-        rules = {rules}
-        rulesEngine={SimplifiedRulesEngineFactory}
-        schema = {schema}
-        ...
-  />,
+  <FormWithConditionals />,
   document.querySelector('#app')
 );
-```
+``` 
 
-That is it, now rules are expected to be in accordance with [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
-
-### Cache Control [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) 
-
-To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you need to specify it 
-as a `rulesEngine` in `FormWithConditionals`
-
-For example: 
+To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), is almost the same:
+ 
 ```js
 
 import applyRules from 'react-jsonschema-form-conditionals';
@@ -204,13 +178,10 @@ import Form from "react-jsonschema-form";
 
 // ...
 
-let FormWithConditionals = applyRules(Form);
+let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine)(Form);
 
 ReactDOM.render(
-  <FormWithConditionals
-        rulesEngine={Engine}
-        // ...
-  />,
+  <FormWithConditionals />,
   document.querySelector('#app')
 );
 ```
@@ -462,11 +433,10 @@ We also want to trigger it only when `password` is `empty`.
 
 This is how we can do this:
 
-```jsx
+```js
 import applyRules from 'react-jsonschema-form-conditionals';
-import { SimplifiedRuleEngineFactory as Engine } from 'react-jsonschema-form-conditionals';
+import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
-let FormWithConditionals = applyRules(Form);
 
 ...
 
@@ -485,7 +455,6 @@ const rules = [
     }
 ];
 
-let FormWithConditionals = applyRules(Form);
 
 let extraActions = {
     replaceClassNames: function(params, schema, uiSchema, formData) {
@@ -498,14 +467,10 @@ let extraActions = {
     }
 };
 
+let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine, extraActions)(Form);
+
 ReactDOM.render(
-  <FormWithConditionals
-        rules = {rules}
-        rulesEngine={Engine}
-        schema = {schema}
-        extraActions = {extraActions}
-        ...
-  />,
+  <FormWithConditionals/>,
   document.querySelector('#app')
 );
 ```
@@ -518,11 +483,10 @@ In case you need to calculate value, based on other field values, you can also d
 
 Let's say we want to have schema with `a`, `b` and `sum` fields
 
-```jsx
+```js
 import applyRules from 'react-jsonschema-form-conditionals';
 import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
-let FormWithConditionals = applyRules(Form);
 
 ...
 
@@ -538,7 +502,6 @@ const rules = [
     }
 ];
 
-let FormWithConditionals = applyRules(Form);
 
 let extraActions = {
     updateSum: function(params, schema, uiSchema, formData) {
@@ -546,14 +509,10 @@ let extraActions = {
     }
 };
 
+let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine, extraActions)(Form);
+
 ReactDOM.render(
-  <FormWithConditionals
-        rules = {rules}
-        rulesEngine={Engine}
-        schema = {schema}
-        extraActions = {extraActions}
-        ...
-  />,
+  <FormWithConditionals/>,
   document.querySelector('#app')
 );
 ```
@@ -723,16 +682,10 @@ For our `replaceClassNames` action, it would look similar:
 In order to listen for configuration changes you can specify `onSchemaConfChange`, which will be notified every time `schema` or `uiSchema` changes it's value. 
 
 ```js
-let FormWithConditionals = applyRules(Form);
+let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine, extraActions)(Form);
 
 ReactDOM.render(
-  <FormWithConditionals
-        rules = {rules}
-        rulesEngine={Engine}
-        schema = {schema}
-        extraActions = {extraActions}
-        onSchemaConfChange = {({ schema, uiSchema }) => { console.log("configuration changed") }}
-  />,
+  <FormWithConditionals onSchemaConfChange = {({ schema, uiSchema }) => { console.log("configuration changed") }}/>,
   document.querySelector('#app')
 );
 
@@ -750,3 +703,12 @@ If you are having issues, please let us know.
 ## License
 
 The project is licensed under the Apache-2.0 license.
+
+
+## Migration 
+
+### Migration to 0.4.x
+
+The only significant change is signature of `applyRules` call. In 0.4.0 `schema`, `uiSchema`, `rules`, `Engine` and `extraActions` all consider to be constant that is why, they moved to `applyRules` call.
+This helps improve performance on large schemas.
+

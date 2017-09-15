@@ -1,5 +1,5 @@
-import runRules from "../../src/runRules";
-import rulesEngine from "json-rules-engine-simplified";
+import rulesRunner from "../../src/rulesRunner";
+import Engine from "json-rules-engine-simplified";
 
 let schema = {
   properties: {
@@ -39,10 +39,9 @@ test("array works", () => {
       classNames: "danger",
     },
   };
-  return runRules(
-    {},
-    { rulesEngine, rules, schema }
-  ).then(({ schema, uiSchema }) => {
+
+  let runRules = rulesRunner(schema, {}, rules, Engine);
+  return runRules({}).then(({ schema, uiSchema }) => {
     expect(schema).toEqual(expSchema);
     expect(uiSchema).toEqual(expUiSchema);
   });

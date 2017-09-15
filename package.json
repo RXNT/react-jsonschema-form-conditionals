@@ -3,7 +3,7 @@
   "description": "Extension of react-jsonschema-form with conditional field support",
   "private": false,
   "author": "mavarazy@gmail.com",
-  "version": "0.2.19",
+  "version": "0.3.0",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
@@ -84,6 +84,7 @@
     "html": "1.0.0",
     "husky": "^0.14.3",
     "jest": "^21.0.2",
+    "jest-cli": "^21.1.0",
     "jsdom": "^11.2.0",
     "json-rules-engine": "^2.0.2",
     "json-rules-engine-simplified": "^0.1.11",

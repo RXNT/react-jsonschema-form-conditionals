@@ -44,28 +44,39 @@ export function normRules(rules) {
   });
 }
 
-export default function runRules(
-  formData,
-  { rulesEngine, rules, schema, uiSchema = {}, extraActions = {} }
+export default function rulesRunner(
+  schema,
+  uiSchema,
+  rules,
+  Engine,
+  extraActions
 ) {
-  if (formData === undefined || formData === null) {
-    return Promise.resolve({ schema, uiSchema, formData });
-  }
-
-  let engine = new rulesEngine([], schema);
+  let engine = new Engine([], schema);
   normRules(rules).forEach(rule => engine.addRule(rule));
 
-  return doRunRules(
-    engine,
-    formData,
-    schema,
-    uiSchema,
-    extraActions
-  ).then(res => {
-    if (deepEqual(res.formData, formData)) {
-      return res;
-    } else {
-      return doRunRules(engine, res.formData, schema, uiSchema, extraActions);
+  return formData => {
+    if (formData === undefined || formData === null) {
+      return Promise.resolve({ schema, uiSchema, formData });
     }
-  });
+
+    return doRunRules(
+      engine,
+      formData,
+      schema,
+      uiSchema,
+      extraActions
+    ).then(conf => {
+      if (deepEqual(conf.formData, formData)) {
+        return conf;
+      } else {
+        return doRunRules(
+          engine,
+          conf.formData,
+          schema,
+          uiSchema,
+          extraActions
+        );
+      }
+    });
+  };
 }

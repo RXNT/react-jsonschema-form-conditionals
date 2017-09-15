@@ -1,4 +1,4 @@
-import { normRules } from "../src/runRules";
+import { normRules } from "../src/rulesRunner";
 
 test("order from low to high ", () => {
   let unOrderedRules = [

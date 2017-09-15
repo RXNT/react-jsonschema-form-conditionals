@@ -1,5 +1,5 @@
-import runRules from "../../src/runRules";
-import rulesEngine from "json-rules-engine-simplified";
+import rulesRunner from "../../src/rulesRunner";
+import Engine from "json-rules-engine-simplified";
 
 function populateField(field, val, formData) {
   let separator = field.indexOf(".");
@@ -45,6 +45,8 @@ const origSchema = {
     },
   },
 };
+
+let origUiSchema = {};
 
 const hideNonRelevant = {
   title: "Rule #2",
@@ -103,16 +105,18 @@ const fillDefaults = {
 };
 
 test("Direct rule", () => {
-  return runRules(
-    { registration: { firstName: "Barry" } },
-    {
-      rulesEngine,
-      rules: [hideNonRelevant, fillDefaults],
-      schema: origSchema,
-      uiSchema: {},
-      extraActions,
-    }
-  ).then(({ schema, uiSchema, formData }) => {
+  let rules = [hideNonRelevant, fillDefaults];
+  let runRules = rulesRunner(
+    origSchema,
+    origUiSchema,
+    rules,
+    Engine,
+    extraActions
+  );
+
+  return runRules({
+    registration: { firstName: "Barry" },
+  }).then(({ schema, uiSchema, formData }) => {
     let expectedSchema = {
       firstName: { type: "string" },
       lastName: { type: "string" },
@@ -126,16 +130,17 @@ test("Direct rule", () => {
 });
 
 test("Opposite rule", () => {
-  return runRules(
-    { registration: { firstName: "Barry" } },
-    {
-      rulesEngine,
-      rules: [fillDefaults, hideNonRelevant],
-      schema: origSchema,
-      uiSchema: {},
-      extraActions,
-    }
-  ).then(({ schema, uiSchema, formData }) => {
+  let rules = [fillDefaults, hideNonRelevant];
+  let runRules = rulesRunner(
+    origSchema,
+    origUiSchema,
+    rules,
+    Engine,
+    extraActions
+  );
+  return runRules({
+    registration: { firstName: "Barry" },
+  }).then(({ schema, uiSchema, formData }) => {
     expect(schema.properties.registration).toEqual(
       origSchema.properties.registration
     );
@@ -147,19 +152,20 @@ test("Opposite rule", () => {
 });
 
 test("Opposite rule with order", () => {
-  return runRules(
-    { registration: { firstName: "Barry" } },
-    {
-      rulesEngine,
-      rules: [
-        Object.assign({}, hideNonRelevant, { order: 1 }),
-        Object.assign({}, fillDefaults, { order: 0 }),
-      ],
-      schema: origSchema,
-      uiSchema: {},
-      extraActions,
-    }
-  ).then(({ schema, uiSchema, formData }) => {
+  let rules = [
+    Object.assign({}, hideNonRelevant, { order: 1 }),
+    Object.assign({}, fillDefaults, { order: 0 }),
+  ];
+  let runRules = rulesRunner(
+    origSchema,
+    origUiSchema,
+    rules,
+    Engine,
+    extraActions
+  );
+  return runRules({
+    registration: { firstName: "Barry" },
+  }).then(({ schema, uiSchema, formData }) => {
     expect(schema.properties.registration).toEqual(
       origSchema.properties.registration
     );

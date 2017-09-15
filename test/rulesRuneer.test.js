@@ -1,5 +1,5 @@
-import runRules from "../../src/runRules";
-import rulesEngine from "json-rules-engine-simplified";
+import rulesRuner from "../src/rulesRunner";
+import Engine from "json-rules-engine-simplified";
 
 let schema = {
   properties: {
@@ -27,14 +27,9 @@ test("executes single action", () => {
     },
   ];
 
-  return runRules(
-    {},
-    {
-      rules,
-      schema,
-      rulesEngine,
-    }
-  ).then(({ schema }) => {
+  let runRules = rulesRuner(schema, {}, rules, Engine);
+
+  return runRules({}).then(({ schema }) => {
     let expectedSchema = {
       required: ["name"],
       properties: {
@@ -71,10 +66,9 @@ test("executes multiple actions", () => {
     },
   ];
 
-  return runRules(
-    {},
-    { rules, schema, rulesEngine }
-  ).then(({ schema, uiSchema }) => {
+  let runRules = rulesRuner(schema, {}, rules, Engine);
+
+  return runRules({}).then(({ schema, uiSchema }) => {
     let expectedSchema = {
       required: ["name"],
       properties: {
