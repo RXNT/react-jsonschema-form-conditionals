@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/react-jsonschema-form-conditionals.svg)](https://badge.fury.io/js/react-jsonschema-form-conditionals)
 # Form with conditionals
 
-This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with 
+This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with
 conditional logic, which allow to have more complicated logic expressed and controlled with JSON schema.
 This is primarily useful for complicated schemas with extended business logic,
 which are suspect to changes and need to be manageable and changeable without modifying running application.
@@ -11,12 +11,12 @@ which are suspect to changes and need to be manageable and changeable without mo
 If you need simple rule logic, that does not change a lot, you can use original [mozilla project](https://github.com/mozilla-services/react-jsonschema-form),
 by following examples like https://jsfiddle.net/69z2wepo/68259/
 
-The project is done to be fully compatible with mozilla, 
+The project is done to be fully compatible with mozilla,
 without imposing additional limitations.
 
 ## Features
 
-- Support for [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) and [json-rules-engine-simplified](https://github.com/RxNT/json-rules-engine-simplified) 
+- Support for [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) and [json-rules-engine-simplified](https://github.com/RxNT/json-rules-engine-simplified)
 - Extensible action mechanism
 - Configuration over coding
 - Lightweight and extensible
@@ -52,7 +52,7 @@ ReactDOM.render(
 );
 ```
 
-To show case uses for this library we'll be using simple registration schema example 
+To show case uses for this library we'll be using simple registration schema example
 
 ```jsx
 
@@ -95,15 +95,15 @@ let schema = {
     },
     country: {
       type: "string",
-      title: "Country" 
+      title: "Country"
     },
     state: {
       type: "string",
-      title: "State" 
+      title: "State"
     },
     zip: {
       type: "string",
-      title: "ZIP" 
+      title: "ZIP"
     },
     password: {
       type: "string",
@@ -135,15 +135,15 @@ render((
 
 Conditionals functionality is build using 2 things
 - Rules engine ([Json Rules Engine](https://github.com/CacheControl/json-rules-engine) or [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified))
-- Schema action mechanism 
+- Schema action mechanism
 
-Rules engine responsibility is to trigger events, action mechanism 
+Rules engine responsibility is to trigger events, action mechanism
 performs needed actions on the requests.
 
 ## Rules engine
 
 Project supports 2 rules engines out of the box:
-- [Json Rules Engine](https://github.com/CacheControl/json-rules-engine) 
+- [Json Rules Engine](https://github.com/CacheControl/json-rules-engine)
 - [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
 
 In order to use either of those, you need to specify `Engine` in `applyRules` configuration.
@@ -166,10 +166,10 @@ ReactDOM.render(
   <FormWithConditionals />,
   document.querySelector('#app')
 );
-``` 
+```
 
 To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), is almost the same:
- 
+
 ```js
 
 import applyRules from 'react-jsonschema-form-conditionals';
@@ -188,8 +188,8 @@ ReactDOM.render(
 
 ### Extending rules engine
 
-If non of the provided engines satisfies, your needs, you can 
-implement your own `Engine` which should 
+If non of the provided engines satisfies, your needs, you can
+implement your own `Engine` which should
 comply to following:
 
 ```js
@@ -204,8 +204,8 @@ class Engine {
 }
 ```
 
-Original `rules` and `schema` is used as a parameter for a factory call, 
-in order to be able to have additional functionality, such as rules to schema compliance validation, 
+Original `rules` and `schema` is used as a parameter for a factory call,
+in order to be able to have additional functionality, such as rules to schema compliance validation,
 like it's done in Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
 
 ## Schema action mechanism
@@ -242,8 +242,8 @@ If you want to remove a field, your configuration should look like this:
       }
     }
 ```
-When `condition` is meet, `password` will be removed from both `schema` and `uiSchema`.
- 
+When `condition` is met, `password` will be removed from both `schema` and `uiSchema`.
+
 In case you want to remove multiple fields `name`, `password`, rule should look like this:
 
 ```json
@@ -257,6 +257,45 @@ In case you want to remove multiple fields `name`, `password`, rule should look 
       }
     }
 ```
+
+To remove nested schema properties, use json dot notation. e.g. For schema object:
+
+```json
+  {
+    "type": "object",
+    "properties": {
+      "someParentWrapper": {
+        "type": "object",
+        "properties": {
+          "booleanValA": {
+            "type": "boolean",
+            "title": "Some boolean input"
+          },
+          "booleanValB": {
+            "type": "boolean",
+            "title": "Another boolean input"
+          }
+        }
+      }
+    }
+  }
+
+```
+
+You can remove the nested booleanValA or booleanValB like so:
+
+```json
+  {
+    "conditions": { },
+    "event": {
+      "type": "remove",
+      "params": {
+        "field": "someParentWrapper.booleanValA"
+      }
+    }
+  }
+```
+
 ### Require action
 
 The same convention goes for `require` action
@@ -289,9 +328,9 @@ For multiple fields:
     }
 ```
 
-## UiSchema actions 
+## UiSchema actions
 
-API defines a set of actions, that you can take on `uiSchema`, they cover most of the 
+API defines a set of actions, that you can take on `uiSchema`, they cover most of the
 
 - `uiAppend` appends `uiSchema` specified in params with an original `uiSchema`
 - `uiOverride` replaces field in original `uiSchema` with fields in `params`, keeping unrelated entries
@@ -369,7 +408,7 @@ In this case it
  - added `lastName` to `ui:order` array,
  - appended `has-error` to `classNames` in `lastName` field
  - added `classNames` and enabled `firstName`
- - as for the `num` in `firstName` it just overrode it 
+ - as for the `num` in `firstName` it just overrode it
 
 This is useful for example if you want to add some additional markup in your code, without touching layout that you've defined.
 
@@ -397,14 +436,14 @@ So the expected result `uiSchema` will be:
 
 In this case it
  - `ui:order` was replaced with configured value
- - `className` for the `lastName` was replaced with `has-error` 
+ - `className` for the `lastName` was replaced with `has-error`
  - added `classNames` and enabled `firstName`
- - as for the `num` in `firstName` it just overrode it 
+ - as for the `num` in `firstName` it just overrode it
 
 ### uiReplace
 
 `uiReplace` just replaces all fields in `uiSchema` with `params` fields, leaving unrelated fields untouched.
- 
+
 So the result `uiSchema` will be
 ```json
 {
@@ -422,12 +461,12 @@ So the result `uiSchema` will be
    }
 }
 ```
- 
+
 ## Extension mechanism
 
 You can extend existing actions list, by specifying `extraActions` on the form.
 
-Let's say we need to introduce `replaceClassNames` action, that 
+Let's say we need to introduce `replaceClassNames` action, that
 would just specify `classNames` `col-md-4` for all fields except for `ignore`d one.
 We also want to trigger it only when `password` is `empty`.
 
@@ -536,7 +575,7 @@ For example, let's say you want to mark `sum` field, if you have sum `greater` t
 }
 ```
 
-But it will work only if you put it after `updateSum` rule, like this 
+But it will work only if you put it after `updateSum` rule, like this
 ```json
 [
     {
@@ -564,7 +603,7 @@ Otherwise it will work with **old `sum` values** and therefor show incorrect val
 
 ### Rules order
 
-Originally actions performed in sequence defined in the array. If you have interdependent rules, that you need to run in order 
+Originally actions performed in sequence defined in the array. If you have interdependent rules, that you need to run in order
 you can specify `order` on a rule, so that it would be executed first. Rules are executed based on order from lowest to highest with
 rules without order executed last.
 
@@ -597,7 +636,7 @@ Here although `updateSum` comes after `appendClass`, it will be executed first, 
 
 ## Action validation mechanism
 
-All default actions are validated by default, checking that field exists in the schema, to save you some headaches. 
+All default actions are validated by default, checking that field exists in the schema, to save you some headaches.
 There are 2 levels of validation
 
 - `propTypes` validation, using FB `prop-types` package
@@ -606,9 +645,9 @@ There are 2 levels of validation
 You can define those validations in your actions as well, to improve actions usability.
 
 All validation is disabled in production.
- 
+
 ### Prop types action validation
- 
+
 This is reuse of familiar `prop-types` validation used with React components, and it's used in the same way:
 
 In case of `require` it can look like this:
@@ -637,7 +676,7 @@ replaceClassNames.propTypes = {
 
 ## Explicit validation
 
-In order to provide more granular validation, you can specify validate function on 
+In order to provide more granular validation, you can specify validate function on
 your action, that will receive `params`, `schema` and `uiSchema` so you could provide appropriate validation.
 
 For example, validation for `require` can be done like this:
@@ -660,7 +699,7 @@ For example, validation for `require` can be done like this:
 
 Validation is not mandatory, and will be done only if field is provided.
 
-For our `replaceClassNames` action, it would look similar: 
+For our `replaceClassNames` action, it would look similar:
 ```js
   replaceClassNames.validate = function({ ignore }, schema, uiSchema) {
     if (Array.isArray(field)) {
@@ -679,7 +718,7 @@ For our `replaceClassNames` action, it would look similar:
 
 # Listening to configuration changes
 
-In order to listen for configuration changes you can specify `onSchemaConfChange`, which will be notified every time `schema` or `uiSchema` changes it's value. 
+In order to listen for configuration changes you can specify `onSchemaConfChange`, which will be notified every time `schema` or `uiSchema` changes it's value.
 
 ```js
 let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine, extraActions)(Form);
@@ -705,10 +744,9 @@ If you are having issues, please let us know.
 The project is licensed under the Apache-2.0 license.
 
 
-## Migration 
+## Migration
 
 ### Migration to 0.4.x
 
 The only significant change is signature of `applyRules` call. In 0.4.0 `schema`, `uiSchema`, `rules`, `Engine` and `extraActions` all consider to be constant that is why, they moved to `applyRules` call.
 This helps improve performance on large schemas.
-
