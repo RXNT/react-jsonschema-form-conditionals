@@ -4,8 +4,6 @@ export const isDevelopment = () => {
   return process.env.NODE_ENV !== "production";
 };
 
-const isFunction = f => typeof f === "function";
-
 export const toArray = field => {
   if (Array.isArray(field)) {
     return field;
@@ -22,43 +20,7 @@ export const toError = message => {
   }
 };
 
-const hasField = (field, schema) => {
-  let separator = field.indexOf(".");
-  if (separator === -1) {
-    return schema.properties[field] !== undefined;
-  } else {
-    let parentField = field.substr(0, separator);
-    let refSch = toRefSchema(parentField, schema);
-    if (refSch) {
-      let refSchema = fetchRefSchema(refSch, schema);
-      return refSchema
-        ? hasField(field.substr(separator + 1), refSchema)
-        : false;
-    } else {
-      toError(`Failed to find ${refSch} for ${field}`);
-      return false;
-    }
-  }
-};
-
-export const validateFields = (action, fetchFields) => {
-  if (!fetchFields) {
-    toError("validateFields requires fetchFields function");
-    return;
-  }
-  return (params, schema) => {
-    let relFields = isFunction(fetchFields)
-      ? toArray(fetchFields(params))
-      : toArray(fetchFields);
-    relFields
-      .filter(field => !hasField(field, schema))
-      .forEach(field =>
-        toError(`Field "${field}" is missing from schema on "${action}"`)
-      );
-  };
-};
-
-const fetchRefSchema = (ref, schema) => {
+export const fetchRefSchema = (ref, schema) => {
   if (ref.startsWith("#/")) {
     ref.substr(2).split("/");
     return ref
@@ -73,7 +35,7 @@ const fetchRefSchema = (ref, schema) => {
   }
 };
 
-const toRefSchema = (field, { properties }) => {
+export const toRefSchema = (field, { properties }) => {
   if (properties[field]) {
     if (properties[field]["$ref"]) {
       return properties[field]["$ref"];
@@ -111,3 +73,18 @@ export const findRelSchemaAndField = (field, schema) => {
   toError(`Failed to retrieve ${refSchema} from schema`);
   return { field, schema };
 };
+
+export function findRelUiSchema(field, uiSchema) {
+  let separator = field.indexOf(".");
+  if (separator === -1) {
+    return uiSchema;
+  }
+
+  let parentField = field.substr(0, separator);
+  let refUiSchema = uiSchema[parentField];
+  if (!refUiSchema) {
+    return uiSchema;
+  } else {
+    return findRelUiSchema(field.substr(separator + 1), refUiSchema);
+  }
+}

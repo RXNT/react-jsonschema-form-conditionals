@@ -1,9 +1,4 @@
-import {
-  findRelSchemaAndField,
-  isDevelopment,
-  toError,
-  validateFields,
-} from "../src/utils";
+import { findRelSchemaAndField, isDevelopment, toError } from "../src/utils";
 import { testInProd } from "./utils";
 
 let addressSchema = {
@@ -98,22 +93,4 @@ test("invalid field", () => {
   expect(
     testInProd(() => findRelSchemaAndField("lastName.protocol", schema))
   ).toEqual({ field: "lastName.protocol", schema });
-});
-
-test("validate field checks for a function", () => {
-  expect(validateFields("fakeAction", [])).not.toBeUndefined();
-  expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
-  expect(
-    testInProd(() => validateFields("fakeAction", () => "a"))
-  ).not.toBeUndefined();
-  expect(() => validateFields("fakeAction")).toThrow();
-  expect(() => validateFields("fakeAction", null)).toThrow();
-  expect(
-    testInProd(() => validateFields("fakeAction", undefined))
-  ).toBeUndefined();
-  expect(testInProd(() => validateFields("fakeAction"))).toBeUndefined();
-  expect(testInProd(() => validateFields("fakeAction", null))).toBeUndefined();
-  expect(
-    testInProd(() => validateFields("fakeAction", undefined))
-  ).toBeUndefined();
 });

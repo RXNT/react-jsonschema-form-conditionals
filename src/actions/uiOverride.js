@@ -1,4 +1,4 @@
-import { isDevelopment, validateFields } from "../utils";
+import { validateFields } from "./validateAction";
 import PropTypes from "prop-types";
 
 /**
@@ -28,9 +28,7 @@ export default function uiOverride(params, schema, uiSchema) {
   doOverride(uiSchema, params);
 }
 
-if (isDevelopment()) {
-  uiOverride.propTypes = PropTypes.object.isRequired;
-  uiOverride.validate = validateFields("uiOverride", function(params) {
-    return Object.keys(params);
-  });
-}
+uiOverride.propTypes = PropTypes.object.isRequired;
+uiOverride.validate = validateFields("uiOverride", function(params) {
+  return Object.keys(params);
+});

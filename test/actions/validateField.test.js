@@ -1,4 +1,4 @@
-import { validateFields } from "../../src/utils";
+import { validateFields } from "../../src/actions/validateAction";
 import { testInProd } from "./../utils";
 
 function checkValidParams(fetchFunction, params, schema, uiSchema) {
@@ -10,7 +10,7 @@ function checkValidParams(fetchFunction, params, schema, uiSchema) {
 
 function checkInValidParams(fetchFunction, params, schema, uiSchema) {
   let validator = validateFields("fakeAction", fetchFunction);
-  return test("field INvalid params on schema", () => {
+  return test("field inValid params on schema", () => {
     expect(() => validator(params, schema, uiSchema)).toThrow();
     expect(
       testInProd(() => validator(params, schema, uiSchema))
@@ -25,17 +25,35 @@ let schema = {
   },
 };
 
-checkValidParams(["lastName"], {}, schema);
-checkValidParams("lastName", {}, schema);
+checkValidParams(() => ["lastName"], {}, schema);
+checkValidParams(() => "lastName", {}, schema);
 checkValidParams(() => "lastName", {}, schema);
 checkValidParams(() => ["lastName"], {}, schema);
 
-checkInValidParams(["lastname"], {}, schema);
-checkInValidParams("lastname", {}, schema);
+checkInValidParams(() => ["lastname"], {}, schema);
+checkInValidParams(() => "lastname", {}, schema);
 checkInValidParams(() => "lastname", {}, schema);
 checkInValidParams(() => ["lastname"], {}, schema);
 
 test("validate field construction", () => {
+  expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
+  expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
+  expect(
+    testInProd(() => validateFields("fakeAction", () => "a"))
+  ).not.toBeUndefined();
+  expect(() => validateFields("fakeAction")).toThrow();
+  expect(() => validateFields("fakeAction", null)).toThrow();
+  expect(
+    testInProd(() => validateFields("fakeAction", undefined))
+  ).toBeUndefined();
+  expect(testInProd(() => validateFields("fakeAction"))).toBeUndefined();
+  expect(testInProd(() => validateFields("fakeAction", null))).toBeUndefined();
+  expect(
+    testInProd(() => validateFields("fakeAction", undefined))
+  ).toBeUndefined();
+});
+
+test("validate field checks for a function", () => {
   expect(validateFields("fakeAction", [])).not.toBeUndefined();
   expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
   expect(

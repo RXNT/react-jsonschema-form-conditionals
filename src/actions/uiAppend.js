@@ -1,4 +1,5 @@
-import { isDevelopment, toArray, validateFields } from "../utils";
+import { toArray } from "../utils";
+import { validateFields } from "./validateAction";
 import PropTypes from "prop-types";
 
 /**
@@ -36,9 +37,7 @@ export default function uiAppend(params, schema, uiSchema) {
   doAppend(uiSchema, params);
 }
 
-if (isDevelopment()) {
-  uiAppend.propTypes = PropTypes.object.isRequired;
-  uiAppend.validate = validateFields("uiAppend", function(params) {
-    return Object.keys(params);
-  });
-}
+uiAppend.propTypes = PropTypes.object.isRequired;
+uiAppend.validate = validateFields("uiAppend", function(params) {
+  return Object.keys(params);
+});

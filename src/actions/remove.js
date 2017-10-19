@@ -1,9 +1,5 @@
-import {
-  isDevelopment,
-  validateFields,
-  toArray,
-  findRelSchemaAndField,
-} from "../utils";
+import { toArray, findRelSchemaAndField, findRelUiSchema } from "../utils";
+import { validateFields } from "./validateAction";
 import PropTypes from "prop-types";
 
 function doRemove({ field, schema }, uiSchema) {
@@ -13,6 +9,12 @@ function doRemove({ field, schema }, uiSchema) {
   }
   delete schema.properties[field];
   delete uiSchema[field];
+  let fieldIndex = (uiSchema["ui:order"] ? uiSchema["ui:order"] : []).indexOf(
+    field
+  );
+  if (fieldIndex !== -1) {
+    uiSchema["ui:order"].splice(fieldIndex, 1);
+  }
 }
 
 /**
@@ -26,19 +28,20 @@ function doRemove({ field, schema }, uiSchema) {
 export default function remove({ field }, schema, uiSchema) {
   let fieldArr = toArray(field);
   fieldArr.forEach(field =>
-    doRemove(findRelSchemaAndField(field, schema), uiSchema)
+    doRemove(
+      findRelSchemaAndField(field, schema),
+      findRelUiSchema(field, uiSchema)
+    )
   );
 }
 
-if (isDevelopment()) {
-  remove.propTypes = {
-    field: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.arrayOf(PropTypes.string),
-    ]).isRequired,
-  };
+remove.propTypes = {
+  field: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]).isRequired,
+};
 
-  remove.validate = validateFields("remove", function({ field }) {
-    return field;
-  });
-}
+remove.validate = validateFields("remove", function({ field }) {
+  return field;
+});

@@ -1,25 +1,29 @@
 import deepcopy from "deepcopy";
 import require from "../../src/actions/require";
+import validateAction from "../../src/actions/validateAction";
+import { testInProd } from "../utils";
 
 let origUiSchema = {
   title: {},
   firstName: {},
 };
 
-test("add required section", () => {
-  let origSchema = {
-    properties: {
-      title: { type: "string" },
-      firstName: { type: "string" },
-    },
-  };
+let origSchema = {
+  required: ["title"],
+  properties: {
+    title: { type: "string" },
+    firstName: { type: "string" },
+  },
+};
 
+test("add required section", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
 
-  require({ field: "title" }, schema, uiSchema);
+  require({ field: "firstName" }, schema);
+
   let schemaWithTitleReq = {
-    required: ["title"],
+    required: ["title", "firstName"],
     properties: {
       title: { type: "string" },
       firstName: { type: "string" },
@@ -30,16 +34,25 @@ test("add required section", () => {
 });
 
 test("ignores already required field", () => {
-  let origSchema = {
-    required: ["title"],
-    properties: {
-      title: { type: "string" },
-      firstName: { type: "string" },
-    },
-  };
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
-  require({ field: ["title"] }, schema, uiSchema);
+
+  require({ field: ["title"] }, schema);
+
   expect(schema).toEqual(origSchema);
   expect(uiSchema).toEqual(origUiSchema);
+});
+
+test("require validates fields", () => {
+  expect(() =>
+    validateAction(require, { field: ["totle"] }, origSchema, origUiSchema)
+  ).toThrow();
+  expect(
+    testInProd(() =>
+      validateAction(require, { field: ["totle"] }, origSchema, origUiSchema)
+    )
+  ).toBeUndefined();
+  expect(
+    validateAction(require, { field: ["title"] }, origSchema, origUiSchema)
+  ).toBeUndefined();
 });

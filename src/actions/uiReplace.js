@@ -1,4 +1,4 @@
-import { isDevelopment, validateFields } from "../utils";
+import { validateFields } from "./validateAction";
 import PropTypes from "prop-types";
 
 /**
@@ -16,9 +16,7 @@ export default function uiReplace(params, schema, uiSchema) {
   });
 }
 
-if (isDevelopment()) {
-  uiReplace.propTypes = PropTypes.object.isRequired;
-  uiReplace.validate = validateFields("uiReplace", function(params) {
-    return Object.keys(params);
-  });
-}
+uiReplace.propTypes = PropTypes.object.isRequired;
+uiReplace.validate = validateFields("uiReplace", function(params) {
+  return Object.keys(params);
+});

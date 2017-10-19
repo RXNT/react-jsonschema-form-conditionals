@@ -1,5 +1,7 @@
 import deepcopy from "deepcopy";
 import remove from "../../src/actions/remove";
+import validateAction from "../../src/actions/validateAction";
+import { testInProd } from "../utils";
 
 let origSchema = {
   properties: {
@@ -64,4 +66,18 @@ test("remove required", () => {
     firstName: {},
   };
   expect(uiSchema).toEqual(uiSchemaWithoutTitle);
+});
+
+test("remove validates fields", () => {
+  expect(() =>
+    validateAction(remove, { field: ["totle"] }, origSchema, origUiSchema)
+  ).toThrow();
+  expect(
+    testInProd(() =>
+      validateAction(remove, { field: ["totle"] }, origSchema, origUiSchema)
+    )
+  ).toBeUndefined();
+  expect(
+    validateAction(remove, { field: ["title"] }, origSchema, origUiSchema)
+  ).toBeUndefined();
 });

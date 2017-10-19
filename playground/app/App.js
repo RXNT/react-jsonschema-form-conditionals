@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "react-jsonschema-form";
 import applyRules from "../../src/applyRules";
-import conf from "./conf";
+import conf from "./conf/embedded";
 
 let { schema, uiSchema, rules, rulesEngine, extraActions, formData } = conf;
 

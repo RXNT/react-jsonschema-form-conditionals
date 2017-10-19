@@ -39,6 +39,16 @@ test("default values", () => {
   expect(uiSchema).toEqual(params);
 });
 
+test("double append", () => {
+  let schema = {};
+  let uiSchema = {};
+  uiAppend(params, schema, uiSchema);
+  uiAppend(params, schema, uiSchema);
+  uiAppend(params, schema, uiSchema);
+  expect(schema).toEqual({});
+  expect(uiSchema).toEqual(params);
+});
+
 test("append required section", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
