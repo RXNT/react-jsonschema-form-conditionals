@@ -45,10 +45,12 @@
     "node": ">=8"
   },
   "peerDependencies": {
-    "deepcopy": "^0.6.3",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-jsonschema-form": "^0.51.0"
+  },
+  "dependencies": {
+    "deepcopy": "^0.6.3"
   },
   "devDependencies": {
     "atob": "^2.0.3",
