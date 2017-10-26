@@ -1,6 +1,6 @@
 import execute from "./actions";
 import deepcopy from "deepcopy";
-import deepEqual from "deep-equal";
+import { deepEquals } from "react-jsonschema-form/lib/utils";
 
 function doRunRules(
   engine,
@@ -66,7 +66,7 @@ export default function rulesRunner(
       uiSchema,
       extraActions
     ).then(conf => {
-      if (deepEqual(conf.formData, formData)) {
+      if (deepEquals(conf.formData, formData)) {
         return conf;
       } else {
         return doRunRules(

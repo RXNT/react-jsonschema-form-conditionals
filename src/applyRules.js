@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import deepEqual from "deep-equal";
+import { deepEquals } from "react-jsonschema-form/lib/utils";
 import { isDevelopment } from "./utils";
 import rulesRunner from "./rulesRunner";
 
@@ -49,7 +49,7 @@ export default function applyRules(
       }
 
       sameFormData = nextProps => {
-        return deepEqual(nextProps.formData, this.formData);
+        return deepEquals(nextProps.formData, this.formData);
       };
 
       componentWillReceiveProps(nextProps) {
