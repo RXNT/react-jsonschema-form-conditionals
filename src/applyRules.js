@@ -41,38 +41,63 @@ export default function applyRules(
       constructor(props) {
         super(props);
 
-        let { formData } = this.props;
-        this.state = { schema, uiSchema, formData };
+        this.state = { schema, uiSchema };
 
-        this.formData = formData;
-        this.handleChange(this.state);
+        this.updateSchema(this.props.formData);
       }
 
-      sameFormData = nextProps => {
-        return deepEquals(nextProps.formData, this.formData);
-      };
-
       componentWillReceiveProps(nextProps) {
-        let { formData } = nextProps;
-        if (!this.sameFormData(nextProps)) {
-          this.setState({ formData }, () => this.handleChange({ formData }));
+        if (
+          nextProps !== this.props &&
+          !deepEquals(nextProps.formData, this.formData)
+        ) {
+          this.updateSchema(nextProps.formData);
+          this.propsChanged = true;
+        } else if (
+          !deepEquals(
+            nextProps,
+            Object.assign({}, this.props, { formData: nextProps.formData })
+          )
+        ) {
+          this.propsChanged = true;
         }
       }
 
-      handleChange = state => {
-        let { formData } = state;
-        runRules(formData).then(conf => {
+      updateSchema = formData => {
+        this.formData = formData;
+        return runRules(formData).then(conf => {
           this.setState(conf);
-          if (this.props.onChange) {
-            this.props.onChange(Object.assign({}, state, conf));
-          }
+          return conf;
         });
       };
 
+      handleChange = state => {
+        let { formData } = state;
+        let updTask = this.updateSchema(formData);
+        if (this.props.onChange) {
+          updTask.then(conf =>
+            this.props.onChange(Object.assign({}, state, conf))
+          );
+        }
+      };
+
+      shouldComponentUpdate(nextProps, nextState) {
+        if (this.propsChanged) {
+          this.propsChanged = false;
+          return true;
+        }
+        return !deepEquals(this.state, nextState);
+      }
+
       render() {
-        let configs = Object.assign({}, this.props, this.state, {
-          onChange: this.handleChange,
-        });
+        let configs = Object.assign(
+          {
+            onChange: this.handleChange,
+            formData: this.formData,
+          },
+          this.props,
+          this.state
+        );
         return <FormComponent {...configs} />;
       }
     }
