@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import { toArray, toError, toRefSchema, fetchRefSchema } from "../utils";
+import { toArray, toError } from "../utils";
+import { extractRefSchema } from "json-rules-engine-simplified/lib/utils";
 
 const hasField = (field, schema) => {
   let separator = field.indexOf(".");
@@ -7,16 +8,8 @@ const hasField = (field, schema) => {
     return schema.properties[field] !== undefined;
   } else {
     let parentField = field.substr(0, separator);
-    let refSch = toRefSchema(parentField, schema);
-    if (refSch) {
-      let refSchema = fetchRefSchema(refSch, schema);
-      return refSchema
-        ? hasField(field.substr(separator + 1), refSchema)
-        : false;
-    } else {
-      toError(`Failed to find ${refSch} for ${field}`);
-      return false;
-    }
+    let refSchema = extractRefSchema(parentField, schema);
+    return refSchema ? hasField(field.substr(separator + 1), refSchema) : false;
   }
 };
 
