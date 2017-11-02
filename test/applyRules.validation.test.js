@@ -1,6 +1,7 @@
 import applyRules from "../src";
 import Engine from "json-rules-engine-simplified";
 import sinon from "sinon";
+import { testInProd } from "./utils";
 
 let SCHEMA = {
   properties: {
@@ -10,35 +11,49 @@ let SCHEMA = {
   },
 };
 
+const formWithRules = rules => applyRules(SCHEMA, {}, rules, Engine);
+
 test("validation on creation", () => {
-  expect(() => applyRules(SCHEMA, {}, [{}], Engine)).toThrow();
-  expect(() =>
-    applyRules(SCHEMA, {}, [{ conditions: "some" }], Engine)
-  ).toThrow();
+  expect(() => formWithRules([{}])).toThrow();
+  expect(() => formWithRules([{ conditions: "some" }])).toThrow();
 });
 
 test("validation with PropTypes", () => {
   let consoleSpy = sinon.spy(console, "error");
-
-  applyRules(
-    SCHEMA,
-    {},
-    [{ conditions: { lastName: "empty" }, order: "1", event: { type: "1" } }],
-    Engine
-  );
+  formWithRules([
+    { conditions: { lastName: "empty" }, order: "1", event: { type: "1" } },
+  ]);
   expect(consoleSpy.calledOnce).toEqual(true);
-  applyRules(
-    SCHEMA,
-    {},
-    [{ conditions: { lastName: "empty" }, order: 1, event: { type: 1 } }],
-    Engine
-  );
+  formWithRules([
+    { conditions: { lastName: "empty" }, order: 1, event: { type: 1 } },
+  ]);
   expect(consoleSpy.calledTwice).toEqual(true);
-  applyRules(
-    SCHEMA,
-    {},
-    [{ conditions: { lastName: "empty" }, order: 1, event: { type: "1" } }],
-    Engine
-  );
+  formWithRules([
+    { conditions: { lastName: "empty" }, order: 1, event: { type: "1" } },
+  ]);
   expect(consoleSpy.calledTwice).toEqual(true);
+  consoleSpy.restore();
+});
+
+test("validation PropTypes ignored in prod", () => {
+  let consoleSpy = sinon.spy(console, "error");
+  testInProd(() =>
+    formWithRules([
+      { conditions: { lastName: "empty" }, order: "1", event: { type: "1" } },
+    ])
+  );
+  expect(consoleSpy.calledOnce).toEqual(false);
+  testInProd(() =>
+    formWithRules([
+      { conditions: { lastName: "empty" }, order: 1, event: { type: 1 } },
+    ])
+  );
+  expect(consoleSpy.calledTwice).toEqual(false);
+  testInProd(() =>
+    formWithRules([
+      { conditions: { lastName: "empty" }, order: 1, event: { type: "1" } },
+    ])
+  );
+  expect(consoleSpy.calledTwice).toEqual(false);
+  consoleSpy.restore();
 });

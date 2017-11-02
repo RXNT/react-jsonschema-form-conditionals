@@ -32,10 +32,7 @@ const RULES = [
 test("Re render on rule change", () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
   const spy = sinon.spy(ResForm.prototype, "render");
-  const changed = sinon.spy(() => {});
-  const wrapper = mount(
-    <ResForm formData={{ firstName: "A" }} onChange={changed} />
-  );
+  const wrapper = mount(<ResForm formData={{ firstName: "A" }} />);
 
   expect(spy.calledOnce).toEqual(true);
 
@@ -45,7 +42,23 @@ test("Re render on rule change", () => {
     .simulate("change", { target: { value: "" } });
 
   return new Promise(resolve => setTimeout(resolve, 500)).then(() => {
-    expect(changed.calledOnce).toEqual(true);
     expect(spy.calledTwice).toEqual(true);
+  });
+});
+
+test("OnChange propagated", () => {
+  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
+  const changed = sinon.spy(() => {});
+  const wrapper = mount(
+    <ResForm formData={{ firstName: "A" }} onChange={changed} />
+  );
+
+  wrapper
+    .find("#root_firstName")
+    .find("input")
+    .simulate("change", { target: { value: "" } });
+
+  return new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+    expect(changed.calledOnce).toEqual(true);
   });
 });

@@ -44,11 +44,11 @@ test("put without order as last ", () => {
       order: 0,
     },
     {
-      conditions: "C",
-      order: 2,
+      conditions: "D",
     },
     {
-      conditions: "D",
+      conditions: "C",
+      order: 2,
     },
     {
       conditions: "E",
