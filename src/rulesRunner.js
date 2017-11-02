@@ -2,13 +2,7 @@ import execute from "./actions";
 import deepcopy from "deepcopy";
 import { deepEquals } from "react-jsonschema-form/lib/utils";
 
-function doRunRules(
-  engine,
-  formData,
-  schema,
-  uiSchema = {},
-  extraActions = {}
-) {
+function doRunRules(engine, formData, schema, uiSchema, extraActions = {}) {
   let schemaCopy = deepcopy(schema);
   let uiSchemaCopy = deepcopy(uiSchema);
   let formDataCopy = deepcopy(formData);
@@ -31,16 +25,9 @@ function doRunRules(
 export function normRules(rules) {
   return rules.sort(function(a, b) {
     if (a.order === undefined) {
-      if (b.order !== undefined) {
-        return 1;
-      } else {
-        return 0;
-      }
+      return b.order === undefined ? 0 : 1;
     }
-    if (b.order === undefined) {
-      return -1;
-    }
-    return a.order - b.order;
+    return b.order === undefined ? -1 : a.order - b.order;
   });
 }
 

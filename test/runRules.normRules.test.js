@@ -47,6 +47,16 @@ test("put without order as last ", () => {
       conditions: "C",
       order: 2,
     },
+    {
+      conditions: "D",
+    },
+    {
+      conditions: "E",
+    },
+    {
+      conditions: "F",
+      order: 3,
+    },
   ];
 
   let orderedRules = [
@@ -59,7 +69,17 @@ test("put without order as last ", () => {
       order: 2,
     },
     {
+      conditions: "F",
+      order: 3,
+    },
+    {
       conditions: "A",
+    },
+    {
+      conditions: "D",
+    },
+    {
+      conditions: "E",
     },
   ];
 

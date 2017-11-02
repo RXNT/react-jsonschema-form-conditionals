@@ -1,5 +1,4 @@
 import { extractRefSchema } from "json-rules-engine-simplified/lib/utils";
-export const OBJECT = "object";
 
 export const isDevelopment = () => {
   return process.env.NODE_ENV !== "production";
