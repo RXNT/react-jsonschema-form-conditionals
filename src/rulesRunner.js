@@ -9,7 +9,7 @@ function doRunRules(engine, formData, schema, uiSchema, extraActions = {}) {
 
   let res = engine.run(formData).then(events => {
     events.forEach(event =>
-      execute(event, formDataCopy, schemaCopy, uiSchemaCopy, extraActions)
+      execute(event, schemaCopy, uiSchemaCopy, formDataCopy, extraActions)
     );
   });
 

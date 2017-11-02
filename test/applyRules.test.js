@@ -24,29 +24,47 @@ const RULES = [
     },
     event: {
       type: "remove",
-      field: ["lastName", "name"],
+      params: {
+        field: ["lastName", "name"],
+      },
     },
   },
 ];
 
 test("Re render on rule change", () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const spy = sinon.spy(ResForm.prototype, "render");
+
+  const renderSpy = sinon.spy(ResForm.prototype, "render");
+  const shouldComponentUpdateSpy = sinon.spy(
+    ResForm.prototype,
+    "shouldComponentUpdate"
+  );
+  const handleChangeSpy = sinon.spy(ResForm.prototype, "handleChange");
+  const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
+  const setStateSpy = sinon.spy(ResForm.prototype, "setState");
+
   const wrapper = mount(<ResForm formData={{ firstName: "A" }} />);
 
-  expect(spy.calledOnce).toEqual(true);
+  expect(renderSpy.calledOnce).toEqual(true);
+  expect(updateConfSpy.calledOnce).toEqual(true);
 
   wrapper
     .find("#root_firstName")
     .find("input")
     .simulate("change", { target: { value: "" } });
+  expect(renderSpy.calledOnce).toEqual(true);
 
-  return new Promise(resolve => setTimeout(resolve, 500)).then(() => {
-    expect(spy.calledTwice).toEqual(true);
+  return new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
+    expect(handleChangeSpy.calledOnce).toEqual(true);
+    expect(setStateSpy.calledOnce).toEqual(true);
+    expect(shouldComponentUpdateSpy.calledOnce).toEqual(true);
+
+    expect(updateConfSpy.calledTwice).toEqual(true);
+    expect(renderSpy.calledTwice).toEqual(true);
   });
 });
 
-test("OnChange propagated", () => {
+test("onChange called with corrected schema", () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
   const changed = sinon.spy(() => {});
   const wrapper = mount(
@@ -59,6 +77,14 @@ test("OnChange propagated", () => {
     .simulate("change", { target: { value: "" } });
 
   return new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+    const expSchema = {
+      type: "object",
+      properties: {
+        firstName: { type: "string" },
+      },
+    };
+
     expect(changed.calledOnce).toEqual(true);
+    expect(changed.getCall(0).args[0].schema).toEqual(expSchema);
   });
 });

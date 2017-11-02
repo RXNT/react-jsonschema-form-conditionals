@@ -26,29 +26,37 @@ const RULES = [
     },
     event: {
       type: "remove",
-      field: ["lastName", "name"],
+      params: {
+        field: ["lastName", "name"],
+      },
     },
   },
 ];
 
 test("NO re render on same data", () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const spy = sinon.spy(ResForm.prototype, "render");
+  const renderSpy = sinon.spy(ResForm.prototype, "render");
   const wrapper = shallow(<ResForm formData={{ firstName: "A" }} />);
 
-  expect(spy.calledOnce).toEqual(true);
+  expect(renderSpy.calledOnce).toEqual(true);
 
   wrapper.setProps({ formData: { firstName: "A" } });
-  expect(spy.calledOnce).toEqual(true);
+  expect(renderSpy.calledOnce).toEqual(true);
 });
 
 test("Re render on formData change", () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const spy = sinon.spy(ResForm.prototype, "render");
+  const renderSpy = sinon.spy(ResForm.prototype, "render");
   const wrapper = shallow(<ResForm formData={{ firstName: "A" }} />);
 
-  wrapper.setProps({ formData: {} });
-  expect(spy.calledTwice).toEqual(true);
+  return new Promise(resolve => setTimeout(resolve, 500))
+    .then(() => {
+      wrapper.setProps({ formData: { firstName: "An" } });
+      return new Promise(resolve => setTimeout(resolve, 500));
+    })
+    .then(() => {
+      expect(renderSpy.calledTwice).toEqual(true);
+    });
 });
 
 test("Re render on non formData change change", () => {

@@ -41,64 +41,75 @@ export default function applyRules(
       constructor(props) {
         super(props);
 
-        this.state = { schema, uiSchema };
+        this.handleChange = this.handleChange.bind(this);
+        this.updateConf = this.updateConf.bind(this);
 
-        this.updateSchema(this.props.formData);
+        this.shouldUpdate = false;
+        this.formData = this.props.formData;
+        this.state = { schema, uiSchema };
+        this.updateConf(this.formData);
       }
 
       componentWillReceiveProps(nextProps) {
-        if (
-          nextProps !== this.props &&
-          !deepEquals(nextProps.formData, this.formData)
-        ) {
-          this.updateSchema(nextProps.formData);
-          this.propsChanged = true;
-        } else if (
-          !deepEquals(
-            nextProps,
-            Object.assign({}, this.props, { formData: nextProps.formData })
-          )
-        ) {
-          this.propsChanged = true;
+        let formDataChanged =
+          nextProps.formData && !deepEquals(nextProps.formData, this.formData);
+        if (formDataChanged) {
+          this.updateConf(nextProps.formData);
+          this.shouldUpdate = true;
+        } else {
+          this.shouldUpdate =
+            this.shouldUpdate ||
+            !deepEquals(
+              nextProps,
+              Object.assign({}, this.props, { formData: nextProps.formData })
+            );
         }
       }
 
-      updateSchema = formData => {
+      updateConf(formData) {
         this.formData = formData;
         return runRules(formData).then(conf => {
-          this.setState(conf);
+          let dataChanged = !deepEquals(this.formData, conf.formData);
+          this.formData = conf.formData;
+
+          let newState = { schema: conf.schema, uiSchema: conf.uiSchema };
+          if (dataChanged || !deepEquals(newState, this.state)) {
+            this.shouldUpdate = true;
+            this.setState(newState);
+          }
+
           return conf;
         });
-      };
+      }
 
-      handleChange = state => {
-        let { formData } = state;
-        let updTask = this.updateSchema(formData);
-        if (this.props.onChange) {
-          updTask.then(conf =>
-            this.props.onChange(Object.assign({}, state, conf))
-          );
+      handleChange(change) {
+        let { formData } = change;
+        let updTask = this.updateConf(formData);
+
+        let { onChange } = this.props;
+        if (onChange) {
+          updTask.then(conf => {
+            let updChange = Object.assign({}, change, conf);
+            onChange(updChange);
+          });
         }
-      };
+      }
 
-      shouldComponentUpdate(nextProps, nextState) {
-        if (this.propsChanged) {
-          this.propsChanged = false;
+      shouldComponentUpdate() {
+        if (this.shouldUpdate) {
+          this.shouldUpdate = false;
           return true;
         }
-        return !deepEquals(this.state, nextState);
+        return false;
       }
 
       render() {
-        let configs = Object.assign(
-          {
-            onChange: this.handleChange,
-            formData: this.formData,
-          },
-          this.props,
-          this.state
-        );
-        return <FormComponent {...configs} />;
+        // Assignment order is important
+        let formConf = Object.assign({}, this.props, this.state, {
+          onChange: this.handleChange,
+          formData: this.formData,
+        });
+        return <FormComponent {...formConf} />;
       }
     }
 

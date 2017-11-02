@@ -15,6 +15,8 @@ let invalidAction = {
 };
 
 test("No error in production", () => {
-  expect(() => execute(invalidAction, {}, schema)).toThrow();
-  expect(testInProd(() => execute(invalidAction, {}, schema))).toBeUndefined();
+  expect(() => execute(invalidAction, schema, {}, {})).toThrow();
+  expect(
+    testInProd(() => execute(invalidAction, schema, {}, {}))
+  ).toBeUndefined();
 });
