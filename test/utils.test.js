@@ -1,5 +1,11 @@
-import { findRelSchemaAndField, isDevelopment, toError } from "../src/utils";
+import {
+  findRelSchemaAndField,
+  isDevelopment,
+  toError,
+  activeField,
+} from "../src/utils";
 import { testInProd } from "./utils";
+import selectn from "selectn";
 
 let addressSchema = {
   properties: {
@@ -93,4 +99,23 @@ test("invalid field", () => {
   expect(
     testInProd(() => findRelSchemaAndField("lastName.protocol", schema))
   ).toEqual({ field: "lastName.protocol", schema });
+});
+
+test("active field", () => {
+  expect(activeField({ a: "A" }, { a: "B" })).toEqual("a");
+  expect(
+    activeField({ a: { b: "A", c: "A" } }, { a: { b: "B", c: "A" } })
+  ).toEqual("a.b");
+  expect(activeField({ a: { b: "A" } }, { a: { b: "A", c: "A" } })).toEqual(
+    "a.c"
+  );
+  expect(activeField({}, { a: { b: "C" } })).toEqual("a.b");
+  expect(activeField({ a: [{ b: "A" }] }, { a: [{ b: "C" }] })).toEqual(
+    undefined
+  );
+  expect(activeField({}, { a: [{ b: "C" }] })).toEqual(undefined);
+});
+
+test("selectn", () => {
+  expect(selectn("firstName", { firstName: {} })).toEqual({});
 });

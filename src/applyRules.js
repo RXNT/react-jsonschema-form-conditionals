@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import selectn from "selectn";
 import { deepEquals } from "react-jsonschema-form/lib/utils";
-import { isDevelopment } from "./utils";
+import { activeField, isDevelopment } from "./utils";
 import rulesRunner from "./rulesRunner";
 
 export default function applyRules(
@@ -67,10 +68,18 @@ export default function applyRules(
       }
 
       updateConf(formData) {
+        let currentField = activeField(this.formData, formData);
         this.formData = formData;
         return runRules(formData).then(conf => {
           let dataChanged = !deepEquals(this.formData, conf.formData);
           this.formData = conf.formData;
+
+          let fieldUiSchema = currentField
+            ? selectn(currentField, conf.uiSchema)
+            : undefined;
+          if (fieldUiSchema) {
+            fieldUiSchema["ui:autofocus"] = true;
+          }
 
           let newState = { schema: conf.schema, uiSchema: conf.uiSchema };
           if (dataChanged || !deepEquals(newState, this.state)) {

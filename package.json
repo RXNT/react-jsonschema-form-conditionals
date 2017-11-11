@@ -50,7 +50,8 @@
     "react-jsonschema-form": "^1.0.0"
   },
   "dependencies": {
-    "deepcopy": "^0.6.3"
+    "deepcopy": "^0.6.3",
+    "selectn": "^1.1.2"
   },
   "devDependencies": {
     "atob": "^2.0.3",
