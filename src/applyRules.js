@@ -74,15 +74,15 @@ export default function applyRules(
           let dataChanged = !deepEquals(this.formData, conf.formData);
           this.formData = conf.formData;
 
-          let fieldUiSchema = currentField
-            ? selectn(currentField, conf.uiSchema)
-            : undefined;
-          if (fieldUiSchema) {
-            fieldUiSchema["ui:autofocus"] = true;
-          }
-
           let newState = { schema: conf.schema, uiSchema: conf.uiSchema };
           if (dataChanged || !deepEquals(newState, this.state)) {
+            let fieldUiSchema = currentField
+              ? selectn(currentField, conf.uiSchema)
+              : undefined;
+            if (fieldUiSchema) {
+              fieldUiSchema["ui:autofocus"] = true;
+            }
+
             this.shouldUpdate = true;
             this.setState(newState);
           }

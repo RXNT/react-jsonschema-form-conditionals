@@ -21,8 +21,18 @@ let uiSchema = {
   lastName: {},
 };
 
-test("autofocus added", () => {
-  let ResForm = applyRules(schema, uiSchema, [], Engine)(Form);
+test("autofocus added only on relevant changes", () => {
+  let ResForm = applyRules(
+    schema,
+    uiSchema,
+    [
+      {
+        conditions: { firstName: { is: "An" } },
+        event: { type: "remove", params: { field: "lastName" } },
+      },
+    ],
+    Engine
+  )(Form);
 
   const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
 
@@ -41,5 +51,28 @@ test("autofocus added", () => {
     })
     .then(conf => {
       expect(conf.uiSchema.firstName).toEqual({ "ui:autofocus": true });
+    });
+});
+
+test("autofocus ignored on irrelevant changes", () => {
+  let ResForm = applyRules(schema, uiSchema, [], Engine)(Form);
+
+  const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
+
+  const wrapper = mount(<ResForm formData={{ firstName: "A" }} />);
+  expect(updateConfSpy.calledOnce).toEqual(true);
+
+  wrapper
+    .find("#root_firstName")
+    .find("input")
+    .simulate("change", { target: { value: "An" } });
+
+  return new Promise(resolve => setTimeout(resolve, 500))
+    .then(() => {
+      expect(updateConfSpy.calledTwice).toEqual(true);
+      return updateConfSpy.returnValues[1];
+    })
+    .then(conf => {
+      expect(conf.uiSchema.firstName).toEqual({});
     });
 });
