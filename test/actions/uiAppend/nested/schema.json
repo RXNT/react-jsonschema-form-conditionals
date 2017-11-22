@@ -1,0 +1,258 @@
+{
+  "schema": {
+    "required": [],
+    "type": "object",
+    "properties": {
+      "vitals": {
+        "required": [],
+        "type": "object",
+        "properties": {
+          "weight": {
+            "title": "Weight",
+            "type": "object",
+            "properties": {
+              "value": {
+                "title": "Weight",
+                "type": "number"
+              },
+              "measure": {
+                "type": "string",
+                "default": "Lbs",
+                "enum": [
+                  "Lbs",
+                  "Kgs"
+                ]
+              }
+            }
+          },
+          "height": {
+            "title": "Height",
+            "type": "object",
+            "properties": {
+              "value": {
+                "title": "Height",
+                "type": "number"
+              },
+              "measure": {
+                "type": "string",
+                "default": "In",
+                "enum": [
+                  "In",
+                  "ft",
+                  "cms"
+                ]
+              }
+            }
+          },
+          "bmi": {
+            "type": "number",
+            "title": "BMI"
+          },
+          "oximetry": {
+            "type": "number",
+            "title": "Oxygen"
+          },
+          "fiO2": {
+            "type": "number",
+            "title": "FiO2"
+          },
+          "flow": {
+            "type": "number",
+            "title": "Flow"
+          },
+          "temperature": {
+            "title": "Temperature",
+            "type": "object",
+            "properties": {
+              "value": {
+                "title": "Temperature",
+                "type": "number"
+              },
+              "measure": {
+                "type": "string",
+                "default": "F",
+                "enum": [
+                  "F",
+                  "C"
+                ]
+              }
+            }
+          },
+          "headCircum": {
+            "title": "Head Circum",
+            "type": "object",
+            "properties": {
+              "value": {
+                "title": "Head Circum",
+                "type": "number"
+              },
+              "measure": {
+                "type": "string",
+                "default": "In",
+                "enum": [
+                  "In",
+                  "cms"
+                ]
+              }
+            }
+          },
+          "heartRate": {
+            "type": "number",
+            "title": "Heart Rate"
+          },
+          "glucose": {
+            "type": "number",
+            "title": "Glucose"
+          },
+          "respirationRate": {
+            "title": "Respiration Rate",
+            "type": "object",
+            "properties": {
+              "value": {
+                "title": "Respiration Rate",
+                "type": "number"
+              },
+              "measure": {
+                "type": "string",
+                "default": "Normal",
+                "enum": [
+                  "Normal",
+                  "Shallow"
+                ]
+              }
+            }
+          },
+          "bloodPressure": {
+            "required": [],
+            "type": "object",
+            "properties": {
+              "standing": {
+                "required": [],
+                "type": "object",
+                "properties": {
+                  "systolic": {
+                    "type": "number",
+                    "title": "Systolic"
+                  },
+                  "dystolic": {
+                    "type": "number",
+                    "title": "Dystolic"
+                  },
+                  "location": {
+                    "type": "string",
+                    "title": "Location",
+                    "enum": [
+                      "Right Upper Arm",
+                      "Right Thigh",
+                      "Right Hand",
+                      "Right Arm",
+                      "Left Upper Arm",
+                      "Left Thigh",
+                      "Left Hand",
+                      "Left Arm",
+                      "Other"
+                    ]
+                  },
+                  "pulse": {
+                    "type": "number",
+                    "title": "Pulse"
+                  },
+                  "pulseRhythm": {
+                    "type": "string",
+                    "title": "Pulse Rhythm",
+                    "enum": [
+                      "Regular",
+                      "Irregular"
+                    ]
+                  }
+                }
+              },
+              "sitting": {
+                "required": [],
+                "type": "object",
+                "properties": {
+                  "systolic": {
+                    "type": "number",
+                    "title": "Systolic"
+                  },
+                  "dystolic": {
+                    "type": "number",
+                    "title": "Dystolic"
+                  },
+                  "location": {
+                    "type": "string",
+                    "title": "Location",
+                    "enum": [
+                      "Right Upper Arm",
+                      "Right Thigh",
+                      "Right Hand",
+                      "Right Arm",
+                      "Left Upper Arm",
+                      "Left Thigh",
+                      "Left Hand",
+                      "Left Arm",
+                      "Other"
+                    ]
+                  },
+                  "pulse": {
+                    "type": "number",
+                    "title": "Pulse"
+                  },
+                  "pulseRhythm": {
+                    "type": "string",
+                    "title": "Pulse Rhythm",
+                    "enum": [
+                      "Regular",
+                      "Irregular"
+                    ]
+                  }
+                }
+              },
+              "supine": {
+                "required": [],
+                "type": "object",
+                "properties": {
+                  "systolic": {
+                    "type": "number",
+                    "title": "Systolic"
+                  },
+                  "dystolic": {
+                    "type": "number",
+                    "title": "Dystolic"
+                  },
+                  "location": {
+                    "type": "string",
+                    "title": "Location",
+                    "enum": [
+                      "Right Upper Arm",
+                      "Right Thigh",
+                      "Right Hand",
+                      "Right Arm",
+                      "Left Upper Arm",
+                      "Left Thigh",
+                      "Left Hand",
+                      "Left Arm",
+                      "Other"
+                    ]
+                  },
+                  "pulse": {
+                    "type": "number",
+                    "title": "Pulse"
+                  },
+                  "pulseRhythm": {
+                    "type": "string",
+                    "title": "Pulse Rhythm",
+                    "enum": [
+                      "Regular",
+                      "Irregular"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

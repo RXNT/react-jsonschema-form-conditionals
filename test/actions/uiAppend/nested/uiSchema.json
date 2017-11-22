@@ -1,0 +1,156 @@
+{
+  "uiSchema": {
+    "vitals": {
+      "classNames": "col-md-12",
+      "ui:order": [
+        "weight",
+        "height",
+        "bmi",
+        "oximetry",
+        "fiO2",
+        "flow",
+        "temperature",
+        "headCircum",
+        "heartRate",
+        "glucose",
+        "respirationRate",
+        "bloodPressure"
+      ],
+      "weight": {
+        "classNames": "col-md-4",
+        "value": {
+          "classNames": "custom-field-label col-md-8"
+        },
+        "measure": {
+          "classNames": "custom-field-label col-md-4",
+          "ui:options": {
+            "label": false
+          }
+        }
+      },
+      "height": {
+        "classNames": "col-md-4",
+        "value": {
+          "classNames": "custom-field-label col-md-8"
+        },
+        "measure": {
+          "classNames": "custom-field-label col-md-4",
+          "ui:options": {
+            "label": false
+          }
+        }
+      },
+      "bmi": {
+        "classNames": "custom-field-label col-md-4"
+      },
+      "oximetry": {
+        "classNames": "custom-field-label col-md-4"
+      },
+      "fiO2": {
+        "classNames": "custom-field-label col-md-4"
+      },
+      "flow": {
+        "classNames": "custom-field-label col-md-4"
+      },
+      "temperature": {
+        "classNames": "col-md-4",
+        "value": {
+          "classNames": "custom-field-label col-md-8"
+        },
+        "measure": {
+          "classNames": "custom-field-label col-md-4",
+          "ui:options": {
+            "label": false
+          }
+        }
+      },
+      "headCircum": {
+        "classNames": "col-md-4",
+        "value": {
+          "classNames": "custom-field-label col-md-8"
+        },
+        "measure": {
+          "classNames": "custom-field-label col-md-4",
+          "ui:options": {
+            "label": false
+          }
+        }
+      },
+      "heartRate": {
+        "classNames": "custom-field-label col-md-4"
+      },
+      "glucose": {
+        "classNames": "custom-field-label col-md-4"
+      },
+      "respirationRate": {
+        "classNames": "col-md-4",
+        "value": {
+          "classNames": "custom-field-label col-md-8"
+        },
+        "measure": {
+          "classNames": "custom-field-label col-md-4",
+          "ui:options": {
+            "label": false
+          }
+        }
+      },
+      "bloodPressure": {
+        "classNames": "col-md-12",
+        "standing": {
+          "classNames": "col-md-12",
+          "systolic": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "dystolic": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "location": {
+            "classNames": "custom-field-label col-md-2"
+          },
+          "pulse": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "pulseRhythm": {
+            "classNames": "custom-field-label col-md-1"
+          }
+        },
+        "sitting": {
+          "classNames": "col-md-12",
+          "systolic": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "dystolic": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "location": {
+            "classNames": "custom-field-label col-md-2"
+          },
+          "pulse": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "pulseRhythm": {
+            "classNames": "custom-field-label col-md-1"
+          }
+        },
+        "supine": {
+          "classNames": "col-md-12",
+          "systolic": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "dystolic": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "location": {
+            "classNames": "custom-field-label col-md-2"
+          },
+          "pulse": {
+            "classNames": "custom-field-label col-md-3"
+          },
+          "pulseRhythm": {
+            "classNames": "custom-field-label col-md-1"
+          }
+        }
+      }
+    }
+  }
+}

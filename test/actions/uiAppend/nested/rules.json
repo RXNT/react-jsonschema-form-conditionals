@@ -1,0 +1,1229 @@
+{
+  "rules": [
+    {
+      "conditions": {
+        "vitals$bmi": {
+          "greater": 24.99
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bmi": {
+              "classNames": "has-error vitals-danger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bmi": {
+          "greater": 18.59,
+          "lessEq": 24.99
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bmi": {
+              "classNames": "has-success vitals-success"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bmi": {
+          "lessEq": 18.59
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bmi": {
+              "classNames": "has-warning vitals-warning"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$oximetry": {
+          "greater": 101
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "oximetry": {
+              "classNames": "has-error vitals-danger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$oximetry": {
+          "greater": 85,
+          "lessEq": 101
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "oximetry": {
+              "classNames": "has-success vitals-success"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$oximetry": {
+          "lessEq": 85
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "oximetry": {
+              "classNames": "has-warning vitals-warning"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$fiO2": {
+          "greater": 45
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "fiO2": {
+              "classNames": "has-error vitals-danger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$fiO2": {
+          "greater": 0,
+          "lessEq": 45
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "fiO2": {
+              "classNames": "has-success vitals-success"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$fiO2": {
+          "lessEq": 0
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "fiO2": {
+              "classNames": "has-warning vitals-warning"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$flow": {
+          "greater": 6
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "flow": {
+              "classNames": "has-error vitals-danger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$flow": {
+          "greater": 4,
+          "lessEq": 6
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "flow": {
+              "classNames": "has-success vitals-success"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$flow": {
+          "lessEq": 4
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "flow": {
+              "classNames": "has-warning vitals-warning"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$heartRate": {
+          "greater": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "heartRate": {
+              "classNames": "has-error vitals-danger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$heartRate": {
+          "greater": 60,
+          "lessEq": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "heartRate": {
+              "classNames": "has-success vitals-success"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$heartRate": {
+          "lessEq": 60
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "heartRate": {
+              "classNames": "has-warning vitals-warning"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$glucose": {
+          "greater": 500
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "glucose": {
+              "classNames": "has-error vitals-danger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$glucose": {
+          "greater": 45,
+          "lessEq": 500
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "glucose": {
+              "classNames": "has-success vitals-success"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$glucose": {
+          "lessEq": 45
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "glucose": {
+              "classNames": "has-warning vitals-warning"
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$respirationRate$value": {
+          "greater": 18
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "respirationRate": {
+              "value": {
+                "classNames": "has-error vitals-danger"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$respirationRate$value": {
+          "greater": 12,
+          "lessEq": 18
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "respirationRate": {
+              "value": {
+                "classNames": "has-success vitals-success"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$respirationRate$value": {
+          "lessEq": 12
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "respirationRate": {
+              "value": {
+                "classNames": "has-warning vitals-warning"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$temperature$value": {
+          "greater": 99.1
+        },
+        "vitals$temperature$measure": {
+          "is": "F"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "temperature": {
+              "value": {
+                "classNames": "has-error vitals-danger"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$temperature$value": {
+          "greater": 97.8,
+          "lessEq": 99.1
+        },
+        "vitals$temperature$measure": {
+          "is": "F"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "temperature": {
+              "value": {
+                "classNames": "has-success vitals-success"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$temperature$value": {
+          "lessEq": 97.8
+        },
+        "vitals$temperature$measure": {
+          "is": "F"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "temperature": {
+              "value": {
+                "classNames": "has-warning vitals-warning"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$temperature$value": {
+          "greater": 37.27777777777778
+        },
+        "vitals$temperature$measure": {
+          "is": "C"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "temperature": {
+              "value": {
+                "classNames": "has-error vitals-danger"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$temperature$value": {
+          "greater": 36.55555555555556,
+          "lessEq": 37.27777777777778
+        },
+        "vitals$temperature$measure": {
+          "is": "C"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "temperature": {
+              "value": {
+                "classNames": "has-success vitals-success"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$temperature$value": {
+          "lessEq": 36.55555555555556
+        },
+        "vitals$temperature$measure": {
+          "is": "C"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "temperature": {
+              "value": {
+                "classNames": "has-warning vitals-warning"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$headCircum$value": {
+          "greater": 55
+        },
+        "vitals$headCircum$measure": {
+          "is": "In"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "headCircum": {
+              "value": {
+                "classNames": "has-error vitals-danger"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$headCircum$value": {
+          "greater": 25,
+          "lessEq": 55
+        },
+        "vitals$headCircum$measure": {
+          "is": "In"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "headCircum": {
+              "value": {
+                "classNames": "has-success vitals-success"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$headCircum$value": {
+          "lessEq": 25
+        },
+        "vitals$headCircum$measure": {
+          "is": "In"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "headCircum": {
+              "value": {
+                "classNames": "has-warning vitals-warning"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$headCircum$value": {
+          "greater": 139.7
+        },
+        "vitals$headCircum$measure": {
+          "is": "cms"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "headCircum": {
+              "value": {
+                "classNames": "has-error vitals-danger"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$headCircum$value": {
+          "greater": 63.5,
+          "lessEq": 139.7
+        },
+        "vitals$headCircum$measure": {
+          "is": "cms"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "headCircum": {
+              "value": {
+                "classNames": "has-success vitals-success"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$headCircum$value": {
+          "lessEq": 63.5
+        },
+        "vitals$headCircum$measure": {
+          "is": "cms"
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "headCircum": {
+              "value": {
+                "classNames": "has-warning vitals-warning"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$systolic": {
+          "greater": 139
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "systolic": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$systolic": {
+          "greater": 120,
+          "lessEq": 139
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "systolic": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$systolic": {
+          "lessEq": 120
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "systolic": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$dystolic": {
+          "greater": 89
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "dystolic": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$dystolic": {
+          "greater": 80,
+          "lessEq": 89
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "dystolic": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$dystolic": {
+          "lessEq": 80
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "dystolic": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$pulse": {
+          "greater": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "pulse": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$pulse": {
+          "greater": 60,
+          "lessEq": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "pulse": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$standing$pulse": {
+          "lessEq": 60
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "standing": {
+                "pulse": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$systolic": {
+          "greater": 139
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "systolic": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$systolic": {
+          "greater": 120,
+          "lessEq": 139
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "systolic": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$systolic": {
+          "lessEq": 120
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "systolic": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$dystolic": {
+          "greater": 89
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "dystolic": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$dystolic": {
+          "greater": 80,
+          "lessEq": 89
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "dystolic": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$dystolic": {
+          "lessEq": 80
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "dystolic": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$pulse": {
+          "greater": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "pulse": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$pulse": {
+          "greater": 60,
+          "lessEq": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "pulse": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$sitting$pulse": {
+          "lessEq": 60
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "sitting": {
+                "pulse": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$systolic": {
+          "greater": 139
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "systolic": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$systolic": {
+          "greater": 120,
+          "lessEq": 139
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "systolic": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$systolic": {
+          "lessEq": 120
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "systolic": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$dystolic": {
+          "greater": 89
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "dystolic": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$dystolic": {
+          "greater": 80,
+          "lessEq": 89
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "dystolic": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$dystolic": {
+          "lessEq": 80
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "dystolic": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$pulse": {
+          "greater": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "pulse": {
+                  "classNames": "has-error vitals-danger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$pulse": {
+          "greater": 60,
+          "lessEq": 100
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "pulse": {
+                  "classNames": "has-success vitals-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$bloodPressure$supine$pulse": {
+          "lessEq": 60
+        }
+      },
+      "event": {
+        "type": "uiAppend",
+        "params": {
+          "vitals": {
+            "bloodPressure": {
+              "supine": {
+                "pulse": {
+                  "classNames": "has-warning vitals-warning"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "conditions": {
+        "vitals$weight$value": "exists",
+        "vitals$weight$measure": "exists",
+        "vitals$height$value": "exists",
+        "vitals$height$measure": "exists"
+      },
+      "event": {
+        "type": "calculateBMI"
+      }
+    }
+  ]
+}
