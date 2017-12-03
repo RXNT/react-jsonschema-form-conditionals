@@ -14,7 +14,7 @@ const conf = {
         enum: ["In", "ft", "cms"],
       },
       weight: {
-        type: "integer",
+        type: "number",
         title: "Weight",
       },
       weightMeasure: {
@@ -23,11 +23,11 @@ const conf = {
         enum: ["Lbs", "Kgs"],
       },
       bmi: {
-        type: "integer",
+        type: "number",
         title: "BMI",
       },
       oxygen: {
-        type: "integer",
+        type: "number",
         title: "Oxygen",
       },
     },
@@ -53,12 +53,6 @@ const conf = {
     oxygen: {
       classNames: "col-md-9",
     },
-  },
-  formData: {
-    height: 181,
-    heightMeasure: "cms",
-    weight: 117,
-    weightMeasure: "Kgs",
   },
   rules: [
     {

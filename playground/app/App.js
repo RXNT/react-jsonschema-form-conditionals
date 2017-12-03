@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "react-jsonschema-form";
 import applyRules from "../../src/applyRules";
-import conf from "./conf/simpleSum";
+import conf from "./conf";
 
 let { schema, uiSchema, rules, rulesEngine, extraActions, formData } = conf;
 
