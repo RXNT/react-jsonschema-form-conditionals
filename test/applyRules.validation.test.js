@@ -11,28 +11,51 @@ let SCHEMA = {
   },
 };
 
-const formWithRules = rules => applyRules(SCHEMA, {}, rules, Engine);
+const formWithRules = rules => {
+  try {
+    applyRules(SCHEMA, {}, rules, Engine);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 test("validation on creation", () => {
-  expect(() => formWithRules([{}])).toThrow();
-  expect(() => formWithRules([{ conditions: "some" }])).toThrow();
+  expect(() => applyRules(SCHEMA, {}, [{}], Engine)).toThrow();
+  expect(() =>
+    applyRules(SCHEMA, {}, [{ conditions: "some" }], Engine)
+  ).toThrow();
 });
 
 test("validation with PropTypes", () => {
-  let consoleSpy = sinon.spy(console, "error");
+  let consoleErrorSpy = sinon.spy(console, "error");
+  // order is a string
   formWithRules([
-    { conditions: { lastName: "empty" }, order: "1", event: { type: "1" } },
+    {
+      conditions: { lastName: "empty" },
+      order: "1",
+      event: { type: "remove", params: { field: "name" } },
+    },
   ]);
-  expect(consoleSpy.calledOnce).toEqual(true);
+  // type is a number
+  expect(consoleErrorSpy.calledOnce).toEqual(true);
   formWithRules([
-    { conditions: { lastName: "empty" }, order: 1, event: { type: 1 } },
+    {
+      conditions: { lastName: "empty" },
+      order: 1,
+      event: { type: 1, params: { field: "name" } },
+    },
   ]);
-  expect(consoleSpy.calledTwice).toEqual(true);
+  expect(consoleErrorSpy.calledTwice).toEqual(true);
+  // Everything is fine, console log was not called
   formWithRules([
-    { conditions: { lastName: "empty" }, order: 1, event: { type: "1" } },
+    {
+      conditions: { lastName: "empty" },
+      order: 1,
+      event: { type: "remove", params: { field: "name" } },
+    },
   ]);
-  expect(consoleSpy.calledTwice).toEqual(true);
-  consoleSpy.restore();
+  expect(consoleErrorSpy.calledTwice).toEqual(true);
+  consoleErrorSpy.restore();
 });
 
 test("validation PropTypes ignored in prod", () => {

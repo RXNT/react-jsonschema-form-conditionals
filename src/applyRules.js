@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { deepEquals } from "react-jsonschema-form/lib/utils";
-import { isDevelopment } from "./utils";
+import { isDevelopment, toError } from "./utils";
 import rulesRunner from "./rulesRunner";
+
+import { DEFAULT_ACTIONS } from "./actions";
+import validateAction from "./actions/validateAction";
 
 export default function applyRules(
   schema,
@@ -32,6 +35,19 @@ export default function applyRules(
       "props",
       "react-jsonschema-form-manager"
     );
+
+    rules.map(({ event: { type, params } }) => {
+      // Find associated action
+      let action = extraActions[type]
+        ? extraActions[type]
+        : DEFAULT_ACTIONS[type];
+      if (action === undefined) {
+        toError(`Rule contains invalid action "${type}"`);
+        return;
+      }
+
+      validateAction(action, params, schema, uiSchema);
+    });
   }
 
   const runRules = rulesRunner(schema, uiSchema, rules, Engine, extraActions);

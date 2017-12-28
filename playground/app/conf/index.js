@@ -58,6 +58,15 @@ const conf = {
     {
       conditions: {
         height: { greater: 0 },
+      },
+      event: {
+        type: "remove",
+        params: { field: ["bmi", "heightMeasurem"] },
+      },
+    },
+    {
+      conditions: {
+        height: { greater: 0 },
         heightMeasure: { not: "empty" },
         weight: { greater: 0 },
         weightMeasure: { not: "empty" },
