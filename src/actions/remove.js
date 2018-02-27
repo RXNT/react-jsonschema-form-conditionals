@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 function doRemove({ field, schema }, uiSchema) {
   let requiredIndex = schema.required ? schema.required.indexOf(field) : -1;
   if (requiredIndex !== -1) {
-    schema.required.splice(requiredIndex);
+    schema.required.splice(requiredIndex, 1);
   }
   delete schema.properties[field];
   delete uiSchema[field];
