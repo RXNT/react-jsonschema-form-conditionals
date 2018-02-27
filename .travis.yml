@@ -2,7 +2,7 @@ sudo: false
 language:
 - node_js
 node_js:
-- "6"
+- "8"
 env:
 - ACTION="run lint"
 - ACTION="run cs-check"
