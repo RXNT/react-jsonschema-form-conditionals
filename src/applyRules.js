@@ -21,9 +21,16 @@ export default function applyRules(
         PropTypes.shape({
           conditions: PropTypes.object.isRequired,
           order: PropTypes.number,
-          event: PropTypes.shape({
-            type: PropTypes.string.isRequired,
-          }),
+          event: PropTypes.oneOfType([
+            PropTypes.shape({
+              type: PropTypes.string.isRequired,
+            }),
+            PropTypes.arrayOf(
+              PropTypes.shape({
+                type: PropTypes.string.isRequired,
+              })
+            ),
+          ]),
         })
       ).isRequired,
       extraActions: PropTypes.object,
@@ -36,18 +43,20 @@ export default function applyRules(
       "react-jsonschema-form-manager"
     );
 
-    rules.map(({ event: { type, params } }) => {
-      // Find associated action
-      let action = extraActions[type]
-        ? extraActions[type]
-        : DEFAULT_ACTIONS[type];
-      if (action === undefined) {
-        toError(`Rule contains invalid action "${type}"`);
-        return;
-      }
+    rules
+      .reduce((agg, { event }) => agg.concat(event), [])
+      .forEach(({ type, params }) => {
+        // Find associated action
+        let action = extraActions[type]
+          ? extraActions[type]
+          : DEFAULT_ACTIONS[type];
+        if (action === undefined) {
+          toError(`Rule contains invalid action "${type}"`);
+          return;
+        }
 
-      validateAction(action, params, schema, uiSchema);
-    });
+        validateAction(action, params, schema, uiSchema);
+      });
   }
 
   const runRules = rulesRunner(schema, uiSchema, rules, Engine, extraActions);

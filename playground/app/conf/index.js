@@ -61,7 +61,7 @@ const conf = {
       },
       event: {
         type: "remove",
-        params: { field: ["bmi", "heightMeasurem"] },
+        params: { field: ["bmi", "heightMeasure"] },
       },
     },
     {
