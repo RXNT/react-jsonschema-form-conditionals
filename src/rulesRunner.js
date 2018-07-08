@@ -35,10 +35,10 @@ export default function rulesRunner(
   schema,
   uiSchema,
   rules,
-  Engine,
+  engine,
   extraActions
 ) {
-  let engine = new Engine([], schema);
+  engine = typeof engine === "function" ? new engine([], schema) : engine;
   normRules(rules).forEach(rule => engine.addRule(rule));
 
   return formData => {
