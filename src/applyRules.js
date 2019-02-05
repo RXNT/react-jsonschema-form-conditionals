@@ -77,7 +77,7 @@ export default function applyRules(
 
       componentWillReceiveProps(nextProps) {
         let formDataChanged =
-          nextProps.formData && !deepEquals(nextProps.formData, this.formData);
+          nextProps.formData !== undefined && !deepEquals(nextProps.formData, this.formData);
         if (formDataChanged) {
           this.updateConf(nextProps.formData);
           this.shouldUpdate = true;
