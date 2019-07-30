@@ -59,8 +59,6 @@ export default function applyRules(
       });
   }
 
-  const runRules = rulesRunner(schema, uiSchema, rules, Engine, extraActions);
-
   return FormComponent => {
     class FormWithConditionals extends Component {
       constructor(props) {
@@ -93,6 +91,13 @@ export default function applyRules(
 
       updateConf(formData) {
         this.formData = formData;
+        const runRules = rulesRunner(
+          this.state.schema,
+          this.state.uiSchema,
+          rules,
+          Engine,
+          extraActions
+        );
         return runRules(formData).then(conf => {
           let dataChanged = !deepEquals(this.formData, conf.formData);
           this.formData = conf.formData;
