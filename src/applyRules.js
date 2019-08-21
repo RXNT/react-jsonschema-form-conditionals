@@ -92,8 +92,8 @@ export default function applyRules(
       updateConf(formData) {
         this.formData = formData;
         const runRules = rulesRunner(
-          this.state.schema,
-          this.state.uiSchema,
+          schema,
+          uiSchema,
           rules,
           Engine,
           extraActions
