@@ -1,10 +1,10 @@
-import React from "react";
-import Form from "react-jsonschema-form";
-import Engine from "json-rules-engine-simplified";
-import applyRules from "../src";
-import sinon from "sinon";
+import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { mount, configure } from "enzyme";
+import Engine from "json-rules-engine-simplified";
+import React from "react";
+import sinon from "sinon";
+import applyRules from "../src";
+import FormWithConditionals from "../src/FormWithConditionals";
 
 configure({ adapter: new Adapter() });
 
@@ -35,8 +35,8 @@ const EXTRA_ACTIONS = {
 };
 
 test("formData has calculated field specified", () => {
-  let ResForm = applyRules(SCHEMA, {}, RULES, Engine, EXTRA_ACTIONS)(Form);
-  const renderSpy = sinon.spy(ResForm.prototype, "render");
+  let ResForm = applyRules(SCHEMA, {}, RULES, Engine, EXTRA_ACTIONS)();
+  const renderSpy = sinon.spy(FormWithConditionals.prototype, "render");
 
   mount(<ResForm formData={{ a: 1, b: 2 }} />);
   expect(renderSpy.calledOnce).toEqual(true);

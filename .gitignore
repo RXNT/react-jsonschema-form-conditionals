@@ -2,8 +2,8 @@ coverage
 npm-debug.log
 node_modules
 build
-dist
-lib
+#dist
+#lib
 
 
 # Numerous always-ignore extensions

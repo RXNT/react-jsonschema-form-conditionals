@@ -1,6 +1,10 @@
-import Form from "react-jsonschema-form";
+import { configure, mount } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
 import Engine from "json-rules-engine-simplified";
+import React from "react";
 import applyRules from "../../src";
+
+configure({ adapter: new Adapter() });
 
 let schema = {
   type: "object",
@@ -23,9 +27,10 @@ let invalidNickName = [
 ];
 
 test("validation happens on initial render", () => {
-  expect(() =>
-    applyRules(schema, uiSchema, invalidNickName, Engine)(Form)
-  ).toThrow();
+  expect(() => {
+    const Form = applyRules(schema, uiSchema, invalidNickName, Engine)();
+    mount(<Form />);
+  }).toThrow();
 });
 
 let invalidAction = [
@@ -36,7 +41,8 @@ let invalidAction = [
 ];
 
 test("validation triggered on invalid action", () => {
-  expect(() =>
-    applyRules(schema, uiSchema, invalidAction, Engine)(Form)
-  ).toThrow();
+  expect(() => {
+    const Form = applyRules(schema, uiSchema, invalidAction, Engine)();
+    mount(<Form />);
+  }).toThrow();
 });

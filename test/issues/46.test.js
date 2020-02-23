@@ -5,6 +5,7 @@ import applyRules from "../../src";
 import sinon from "sinon";
 import Adapter from "enzyme-adapter-react-16";
 import { mount, configure } from "enzyme";
+import FormWithConditionals from "../../src/FormWithConditionals";
 
 configure({ adapter: new Adapter() });
 
@@ -34,7 +35,7 @@ test("no exception on formData undefined", () => {
     Engine
   )(Form);
 
-  const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
+  const updateConfSpy = sinon.spy(FormWithConditionals.prototype, "updateConf");
 
   mount(<ResForm formData={undefined} />);
   expect(updateConfSpy.calledOnce).toEqual(true);

@@ -1,10 +1,11 @@
-import React from "react";
-import Form from "react-jsonschema-form";
-import Engine from "json-rules-engine-simplified";
-import applyRules from "../src";
-import sinon from "sinon";
+import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { shallow, configure } from "enzyme";
+import Engine from "json-rules-engine-simplified";
+import React from "react";
+import sinon from "sinon";
+import applyRules from "../src";
+import FormWithConditionals from "../src/FormWithConditionals";
+import { tick } from "./utils";
 
 configure({ adapter: new Adapter() });
 
@@ -33,37 +34,41 @@ const RULES = [
   },
 ];
 
-test("NO re render on same data", () => {
-  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const renderSpy = sinon.spy(ResForm.prototype, "render");
-  const wrapper = shallow(<ResForm formData={{ firstName: "A" }} />);
+test("NO re render on same data", async () => {
+  let ResForm = applyRules(schema, {}, RULES, Engine)();
+  const renderSpy = sinon.spy(FormWithConditionals.prototype, "render");
+  const wrapper = mount(<ResForm formData={{ firstName: "A" }} />);
+  await tick();
 
   expect(renderSpy.calledOnce).toEqual(true);
 
   wrapper.setProps({ formData: { firstName: "A" } });
+
+  await tick(1000);
+  console.log(renderSpy.callCount);
   expect(renderSpy.calledOnce).toEqual(true);
+  renderSpy.restore();
 });
 
-test("Re render on formData change", () => {
-  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const renderSpy = sinon.spy(ResForm.prototype, "render");
-  const wrapper = shallow(<ResForm formData={{ firstName: "A" }} />);
+test("Re render on formData change", async () => {
+  let ResForm = applyRules(schema, {}, RULES, Engine)();
+  const renderSpy = sinon.spy(FormWithConditionals.prototype, "render");
+  const wrapper = mount(<ResForm formData={{ firstName: "A" }} />);
 
-  return new Promise(resolve => setTimeout(resolve, 500))
-    .then(() => {
-      wrapper.setProps({ formData: { firstName: "An" } });
-      return new Promise(resolve => setTimeout(resolve, 500));
-    })
-    .then(() => {
-      expect(renderSpy.calledTwice).toEqual(true);
-    });
+  await tick();
+  wrapper.setProps({ formData: { firstName: "An" } });
+
+  await tick();
+  expect(renderSpy.calledTwice).toEqual(true);
+  renderSpy.restore();
 });
 
 test("Re render on non formData change change", () => {
-  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const spy = sinon.spy(ResForm.prototype, "render");
-  const wrapper = shallow(<ResForm formData={{ firstName: "A" }} some="A" />);
+  let ResForm = applyRules(schema, {}, RULES, Engine)();
+  const spy = sinon.spy(FormWithConditionals.prototype, "render");
+  const wrapper = mount(<ResForm formData={{ firstName: "A" }} some="A" />);
 
   wrapper.setProps({ formData: { firstName: "A" }, some: "B" });
   expect(spy.calledTwice).toEqual(true);
+  spy.restore();
 });

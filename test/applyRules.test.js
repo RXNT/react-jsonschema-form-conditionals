@@ -1,10 +1,10 @@
-import React from "react";
-import Form from "react-jsonschema-form";
-import Engine from "json-rules-engine-simplified";
-import applyRules from "../src";
-import sinon from "sinon";
+import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { mount, configure } from "enzyme";
+import Engine from "json-rules-engine-simplified";
+import React from "react";
+import sinon from "sinon";
+import applyRules from "../src";
+import FormWithConditionals from "../src/FormWithConditionals";
 
 configure({ adapter: new Adapter() });
 
@@ -32,16 +32,19 @@ const RULES = [
 ];
 
 test("Re render on rule change", () => {
-  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
+  let ResForm = applyRules(schema, {}, RULES, Engine)();
 
-  const renderSpy = sinon.spy(ResForm.prototype, "render");
+  const renderSpy = sinon.spy(FormWithConditionals.prototype, "render");
   const shouldComponentUpdateSpy = sinon.spy(
-    ResForm.prototype,
+    FormWithConditionals.prototype,
     "shouldComponentUpdate"
   );
-  const handleChangeSpy = sinon.spy(ResForm.prototype, "handleChange");
-  const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
-  const setStateSpy = sinon.spy(ResForm.prototype, "setState");
+  const handleChangeSpy = sinon.spy(
+    FormWithConditionals.prototype,
+    "handleChange"
+  );
+  const updateConfSpy = sinon.spy(FormWithConditionals.prototype, "updateConf");
+  const setStateSpy = sinon.spy(FormWithConditionals.prototype, "setState");
 
   const wrapper = mount(<ResForm formData={{ firstName: "A" }} />);
 
@@ -65,7 +68,7 @@ test("Re render on rule change", () => {
 });
 
 test("onChange called with corrected schema", () => {
-  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
+  let ResForm = applyRules(schema, {}, RULES, Engine)();
   const changed = sinon.spy(() => {});
   const wrapper = mount(
     <ResForm formData={{ firstName: "A" }} onChange={changed} />
@@ -84,6 +87,7 @@ test("onChange called with corrected schema", () => {
       },
     };
 
+    expect(changed.called).toEqual(true);
     expect(changed.calledOnce).toEqual(true);
     expect(changed.getCall(0).args[0].schema).toEqual(expSchema);
   });

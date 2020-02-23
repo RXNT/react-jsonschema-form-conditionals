@@ -1,4 +1,4 @@
-import rulesRuner from "../src/rulesRunner";
+import rulesRunner from "../src/rulesRunner";
 import Engine from "json-rules-engine-simplified";
 
 let SCHEMA = {
@@ -27,7 +27,7 @@ test("executes single action", () => {
     },
   ];
 
-  let runRules = rulesRuner(SCHEMA, {}, rules, Engine);
+  let runRules = rulesRunner(SCHEMA, {}, rules, Engine);
 
   return runRules({}).then(({ schema }) => {
     let expectedSchema = {
@@ -66,7 +66,7 @@ test("executes multiple actions", () => {
     },
   ];
 
-  let runRules = rulesRuner(SCHEMA, {}, rules, Engine);
+  let runRules = rulesRunner(SCHEMA, {}, rules, Engine);
 
   return runRules({}).then(({ schema, uiSchema }) => {
     let expectedSchema = {
@@ -106,7 +106,7 @@ test("ignored if no formData defined", () => {
     },
   ];
 
-  let runRules = rulesRuner(SCHEMA, {}, rules, Engine);
+  let runRules = rulesRunner(SCHEMA, {}, rules, Engine);
 
   return Promise.all([
     runRules(undefined),

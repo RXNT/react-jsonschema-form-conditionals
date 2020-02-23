@@ -1,7 +1,12 @@
+import { configure, mount } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import React from "react";
 import applyRules from "../src";
 import Engine from "json-rules-engine-simplified";
 import sinon from "sinon";
 import { testInProd } from "./utils";
+
+configure({ adapter: new Adapter() });
 
 let SCHEMA = {
   properties: {
@@ -12,18 +17,19 @@ let SCHEMA = {
 };
 
 const formWithRules = rules => {
-  try {
-    applyRules(SCHEMA, {}, rules, Engine);
-  } catch (error) {
-    console.log(error);
-  }
+  const Form = applyRules(SCHEMA, {}, rules, Engine)();
+  return mount(<Form />);
 };
 
 test("validation on creation", () => {
-  expect(() => applyRules(SCHEMA, {}, [{}], Engine)).toThrow();
-  expect(() =>
-    applyRules(SCHEMA, {}, [{ conditions: "some" }], Engine)
-  ).toThrow();
+  expect(() => {
+    const Form = applyRules(SCHEMA, {}, [{}], Engine)();
+    return mount(<Form />);
+  }).toThrow(/Rule contains invalid action "undefined"/);
+  expect(() => {
+    const Form = applyRules(SCHEMA, {}, [{ conditions: "some" }], Engine)();
+    return mount(<Form />);
+  }).toThrow(/Rule contains invalid action "undefined"/);
 });
 
 test("validation with PropTypes", () => {
@@ -37,15 +43,19 @@ test("validation with PropTypes", () => {
     },
   ]);
   // type is a number
-  expect(consoleErrorSpy.calledOnce).toEqual(true);
-  formWithRules([
-    {
-      conditions: { lastName: "empty" },
-      order: 1,
-      event: { type: 1, params: { field: "name" } },
-    },
-  ]);
-  expect(consoleErrorSpy.calledTwice).toEqual(true);
+  expect(consoleErrorSpy.called).toBe(true);
+  consoleErrorSpy.reset();
+  expect(() => {
+    formWithRules([
+      {
+        conditions: { lastName: "empty" },
+        order: 1,
+        event: { type: 1, params: { field: "name" } },
+      },
+    ]);
+  }).toThrow();
+  expect(consoleErrorSpy.called).toBe(true);
+  consoleErrorSpy.reset();
   // Everything is fine, console log was not called
   formWithRules([
     {
@@ -54,7 +64,7 @@ test("validation with PropTypes", () => {
       event: { type: "remove", params: { field: "name" } },
     },
   ]);
-  expect(consoleErrorSpy.calledTwice).toEqual(true);
+  expect(consoleErrorSpy.called).toBe(false);
   consoleErrorSpy.restore();
 });
 
