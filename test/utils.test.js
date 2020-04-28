@@ -64,7 +64,9 @@ test("find rel schema with ref object schema", () => {
 });
 
 test("find rel schema with ref array object schema", () => {
-  let { definitions: { address } } = schema;
+  let {
+    definitions: { address },
+  } = schema;
   expect(findRelSchemaAndField("houses", schema)).toEqual({
     field: "houses",
     schema,

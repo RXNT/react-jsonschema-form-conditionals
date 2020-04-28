@@ -108,15 +108,18 @@ test("ignored if no formData defined", () => {
 
   let runRules = rulesRuner(SCHEMA, {}, rules, Engine);
 
-  return Promise.all([
-    runRules(undefined),
-    runRules(null),
-  ]).then(([withUndef, withNull]) => {
-    expect(withNull).toEqual({ schema: SCHEMA, uiSchema: {}, formData: null });
-    expect(withUndef).toEqual({
-      schema: SCHEMA,
-      uiSchema: {},
-      formData: undefined,
-    });
-  });
+  return Promise.all([runRules(undefined), runRules(null)]).then(
+    ([withUndef, withNull]) => {
+      expect(withNull).toEqual({
+        schema: SCHEMA,
+        uiSchema: {},
+        formData: null,
+      });
+      expect(withUndef).toEqual({
+        schema: SCHEMA,
+        uiSchema: {},
+        formData: undefined,
+      });
+    }
+  );
 });
