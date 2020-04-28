@@ -1,6 +1,10 @@
 ![Node.js CI](https://github.com/ivarprudnikov/rjsf-conditionals/workflows/Node.js%20CI/badge.svg)
 
+[![npm version](https://badge.fury.io/js/rjsf-conditionals.svg)](https://badge.fury.io/js/rjsf-conditionals)
+
 # Form with conditionals
+
+**It's a fork of https://github.com/RxNT/react-jsonschema-form-conditionals#readme to support `@rjsf/core v2`**
 
 This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with
 conditional logic, which allow to have more complicated logic expressed and controlled with JSON schema.

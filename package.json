@@ -2,8 +2,11 @@
   "name": "rjsf-conditionals",
   "description": "Extension of @rjsf/core with conditional field support",
   "private": false,
-  "author": "mavarazy@gmail.com",
-  "version": "0.3.15",
+  "contributors": [
+    "mavarazy <mavarazy@gmail.com>",
+    "Aivaras Prudnikovas <ivar.prudnikov@gmail.com>"
+  ],
+  "version": "1.0.0-alpha.1",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
