@@ -39,7 +39,7 @@ const EXTRA_ACTIONS = {
   },
 };
 
-test("formData has calculated field specified [enzyme]", () => {
+test.skip("formData has calculated field specified [enzyme]", () => {
   const ResForm = applyRules(SCHEMA, {}, RULES, Engine, EXTRA_ACTIONS)(Form);
   const renderSpy = sinon.spy(ResForm.prototype, "render");
 
@@ -58,7 +58,7 @@ test("formData has calculated field specified [enzyme]", () => {
   });
 });
 
-test("extra action calculates field value [testing library]", async () => {
+test.skip("extra action calculates field value [testing library]", async () => {
   const ResForm = applyRules(SCHEMA, {}, RULES, Engine, EXTRA_ACTIONS)(Form);
   const { container } = render(<ResForm formData={{ a: 1, b: 2 }} />);
   const a = container.querySelector("[id='root_a']");
