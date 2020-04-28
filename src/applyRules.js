@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { deepEquals } from "@rjsf/core/lib/utils";
+const { utils } = require("@rjsf/core");
+const { deepEquals } = utils;
 import { isDevelopment, toError } from "./utils";
 import rulesRunner from "./rulesRunner";
 
@@ -61,7 +62,7 @@ export default function applyRules(
 
   const runRules = rulesRunner(schema, uiSchema, rules, Engine, extraActions);
 
-  return FormComponent => {
+  return (FormComponent) => {
     class FormWithConditionals extends Component {
       constructor(props) {
         super(props);
@@ -93,7 +94,7 @@ export default function applyRules(
 
       updateConf(formData) {
         this.formData = formData;
-        return runRules(formData).then(conf => {
+        return runRules(formData).then((conf) => {
           let dataChanged = !deepEquals(this.formData, conf.formData);
           this.formData = conf.formData;
 
@@ -114,7 +115,7 @@ export default function applyRules(
 
         let { onChange } = this.props;
         if (onChange) {
-          updTask.then(conf => {
+          updTask.then((conf) => {
             let updChange = Object.assign({}, change, conf);
             onChange(updChange);
           });

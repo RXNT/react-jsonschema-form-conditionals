@@ -1,4 +1,5 @@
-import { deepEquals } from "@rjsf/core/lib/utils";
+const { utils } = require("@rjsf/core");
+const { deepEquals } = utils;
 
 test("Deep equal on large filed", () => {
   let a = {

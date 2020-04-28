@@ -1,6 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: path.join(__dirname, "playground/app"),
@@ -14,7 +14,8 @@ module.exports = {
             "process.env": {
                 NODE_ENV: JSON.stringify("production")
             }
-        })
+        }),
+        new MiniCssExtractPlugin()
     ],
     resolve: {
       modules: [
@@ -36,7 +37,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract("css-loader"),
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
                 include: [
                     path.join(__dirname, "playground"),
                     path.join(__dirname, "node_modules"),
