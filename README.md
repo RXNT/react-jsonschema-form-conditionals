@@ -1,6 +1,3 @@
-[![Build Status](https://travis-ci.com/ivarprudnikov/rjsf-conditionals.svg?branch=master)](https://travis-ci.org/RxNT/rjsf-conditionals)
-[![Coverage Status](https://coveralls.io/repos/github/ivarprudnikov/rjsf-conditionals/badge.svg?branch=master)](https://coveralls.io/github/ivarprudnikov/rjsf-conditionals?branch=master)
-[![npm version](https://badge.fury.io/js/rjsf-conditionals.svg)](https://badge.fury.io/js/rjsf-conditionals)
 # Form with conditionals
 
 This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with

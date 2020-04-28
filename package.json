@@ -71,7 +71,6 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.4.0",
     "babel-loader": "^8.1.0",
-    "coveralls": "^3.0.0",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "enzyme": "^3.11.0",
