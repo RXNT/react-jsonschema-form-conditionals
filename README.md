@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/RxNT/react-jsonschema-form-conditionals.svg?branch=master)](https://travis-ci.org/RxNT/react-jsonschema-form-conditionals)
-[![Coverage Status](https://coveralls.io/repos/github/RxNT/react-jsonschema-form-conditionals/badge.svg?branch=master)](https://coveralls.io/github/RxNT/react-jsonschema-form-conditionals?branch=master)
-[![npm version](https://badge.fury.io/js/react-jsonschema-form-conditionals.svg)](https://badge.fury.io/js/react-jsonschema-form-conditionals)
+[![Build Status](https://travis-ci.com/ivarprudnikov/rjsf-conditionals.svg?branch=master)](https://travis-ci.org/RxNT/rjsf-conditionals)
+[![Coverage Status](https://coveralls.io/repos/github/ivarprudnikov/rjsf-conditionals/badge.svg?branch=master)](https://coveralls.io/github/ivarprudnikov/rjsf-conditionals?branch=master)
+[![npm version](https://badge.fury.io/js/rjsf-conditionals.svg)](https://badge.fury.io/js/rjsf-conditionals)
 # Form with conditionals
 
 This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with
@@ -23,18 +23,18 @@ without imposing additional limitations.
 
 ## Installation
 
-Install `react-jsonschema-form-conditionals` by running:
+Install `rjsf-conditionals` by running:
 
 ```bash
-npm install --s react-jsonschema-form-conditionals
+npm i rjsf-conditionals
 ```
 
 ## Usage
 
-The simplest example of using `react-jsonschema-form-conditionals`
+The simplest example of using `rjsf-conditionals`
 
 ```jsx
-import applyRules from 'react-jsonschema-form-conditionals';
+import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
 
@@ -56,7 +56,7 @@ To show case uses for this library we'll be using simple registration schema exa
 
 ```jsx
 
-import applyRules from 'react-jsonschema-form-conditionals';
+import applyRules from 'rjsf-conditionals';
 import Form from "react-jsonschema-form";
 
 let schema = {
@@ -153,7 +153,7 @@ For example:
 To use [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified), you can do following:
 ```js
 
-import applyRules from 'react-jsonschema-form-conditionals';
+import applyRules from 'rjsf-conditionals';
 import Form from "react-jsonschema-form";
 
 import Engine from 'json-rules-engine-simplified';
@@ -172,7 +172,7 @@ To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
 
 ```js
 
-import applyRules from 'react-jsonschema-form-conditionals';
+import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine';
 import Form from "react-jsonschema-form";
 
@@ -473,7 +473,7 @@ We also want to trigger it only when `password` is `empty`.
 This is how we can do this:
 
 ```js
-import applyRules from 'react-jsonschema-form-conditionals';
+import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
 
@@ -523,7 +523,7 @@ In case you need to calculate value, based on other field values, you can also d
 Let's say we want to have schema with `a`, `b` and `sum` fields
 
 ```js
-import applyRules from 'react-jsonschema-form-conditionals';
+import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
 
@@ -732,8 +732,8 @@ ReactDOM.render(
 
 ## Contribute
 
-- Issue Tracker: github.com/RxNT/react-jsonschema-form-conditionals/issues
-- Source Code: github.com/RxNT/react-jsonschema-form-conditionals
+- Issue Tracker: https://github.com/ivarprudnikov/rjsf-conditionals/issues
+- Source Code: https://github.com/ivarprudnikov/rjsf-conditionals
 
 ## Support
 
@@ -743,10 +743,3 @@ If you are having issues, please let us know.
 
 The project is licensed under the Apache-2.0 license.
 
-
-## Migration
-
-### Migration to 0.4.x
-
-The only significant change is signature of `applyRules` call. In 0.4.0 `schema`, `uiSchema`, `rules`, `Engine` and `extraActions` all consider to be constant that is why, they moved to `applyRules` call.
-This helps improve performance on large schemas.

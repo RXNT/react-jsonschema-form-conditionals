@@ -42,7 +42,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",
