@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/ivarprudnikov/rjsf-conditionals/workflows/Node.js%20CI/badge.svg)
+
 # Form with conditionals
 
 This project extends [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form) with
