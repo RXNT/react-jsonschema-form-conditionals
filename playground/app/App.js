@@ -14,5 +14,9 @@ let FormToDisplay = applyRules(
 )(Form);
 
 export default function () {
-  return <FormToDisplay formData={formData} />;
+  return (
+    <div className="container">
+      <FormToDisplay formData={formData} />
+    </div>
+  );
 }

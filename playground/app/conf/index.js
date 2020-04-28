@@ -2,6 +2,7 @@ import Engine from "json-rules-engine-simplified";
 
 const conf = {
   schema: {
+    title: "Calculate BMI",
     type: "object",
     properties: {
       height: {
@@ -34,30 +35,30 @@ const conf = {
   },
   uiSchema: {
     height: {
-      classNames: "col-md-9",
+      classNames: "col-md-3",
       "ui:autofocus": true,
     },
     heightMeasure: {
       classNames: "col-md-3",
     },
     weight: {
-      classNames: "col-md-9",
+      classNames: "col-md-3",
     },
     weightMeasure: {
       classNames: "col-md-3",
     },
     bmi: {
-      classNames: "col-md-9",
+      classNames: "col-md-3",
       "ui:disabled": true,
     },
     oxygen: {
-      classNames: "col-md-9",
+      classNames: "col-md-3",
     },
   },
   rules: [
     {
       conditions: {
-        height: { greater: 0 },
+        height: { less: 0 },
       },
       event: {
         type: "remove",
