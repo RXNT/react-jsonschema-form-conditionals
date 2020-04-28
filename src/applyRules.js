@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { deepEquals } from "react-jsonschema-form/lib/utils";
+import { deepEquals } from "@rjsf/core/lib/utils";
 import { isDevelopment, toError } from "./utils";
 import rulesRunner from "./rulesRunner";
 

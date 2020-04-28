@@ -47,13 +47,14 @@
   "peerDependencies": {
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
-    "react-jsonschema-form": "^1.0.0"
+    "@rjsf/core": "^2.0.0"
   },
   "dependencies": {
     "deepcopy": "^0.6.3",
     "selectn": "^1.1.2"
   },
   "devDependencies": {
+    "@rjsf/core": "^2.0.0",
     "atob": "^2.0.3",
     "babel-cli": "^6.0.0",
     "babel-core": "^6.0.0",
@@ -92,7 +93,6 @@
     "prettier": "^1.6.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-jsonschema-form": "^1.0.0",
     "react-test-renderer": "^16.0.0",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",
@@ -114,10 +114,11 @@
   "keywords": [
     "react",
     "form",
+    "rjsf",
     "json-schema",
     "conditional",
     "predicate"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://github.com/RxNT/react-jsonschema-form-conditionals#readme"
+  "homepage": "https://github.com/ivarprudnikov/rjsf-conditionals#readme"
 }

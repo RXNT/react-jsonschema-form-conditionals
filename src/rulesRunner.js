@@ -1,6 +1,6 @@
 import execute from "./actions";
 import deepcopy from "deepcopy";
-import { deepEquals } from "react-jsonschema-form/lib/utils";
+import { deepEquals } from "@rjsf/core/lib/utils";
 
 function doRunRules(engine, formData, schema, uiSchema, extraActions = {}) {
   let schemaCopy = deepcopy(schema);
@@ -46,24 +46,20 @@ export default function rulesRunner(
       return Promise.resolve({ schema, uiSchema, formData });
     }
 
-    return doRunRules(
-      engine,
-      formData,
-      schema,
-      uiSchema,
-      extraActions
-    ).then(conf => {
-      if (deepEquals(conf.formData, formData)) {
-        return conf;
-      } else {
-        return doRunRules(
-          engine,
-          conf.formData,
-          schema,
-          uiSchema,
-          extraActions
-        );
+    return doRunRules(engine, formData, schema, uiSchema, extraActions).then(
+      conf => {
+        if (deepEquals(conf.formData, formData)) {
+          return conf;
+        } else {
+          return doRunRules(
+            engine,
+            conf.formData,
+            schema,
+            uiSchema,
+            extraActions
+          );
+        }
       }
-    });
+    );
   };
 }
