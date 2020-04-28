@@ -1,7 +1,8 @@
 import deepcopy from "deepcopy";
 import require from "../../src/actions/require";
 import validateAction from "../../src/actions/validateAction";
-import { testInProd } from "../utils";
+import { isDevelopmentMock } from "../../src/env";
+jest.mock("../../src/env");
 
 let origUiSchema = {
   title: {},
@@ -47,10 +48,9 @@ test("require validates fields", () => {
   expect(() =>
     validateAction(require, { field: ["totle"] }, origSchema, origUiSchema)
   ).toThrow();
+  isDevelopmentMock.mockReturnValueOnce(false);
   expect(
-    testInProd(() =>
-      validateAction(require, { field: ["totle"] }, origSchema, origUiSchema)
-    )
+    validateAction(require, { field: ["totle"] }, origSchema, origUiSchema)
   ).toBeUndefined();
   expect(
     validateAction(require, { field: ["title"] }, origSchema, origUiSchema)

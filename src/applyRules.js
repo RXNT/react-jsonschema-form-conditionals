@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 const { utils } = require("@rjsf/core");
 const { deepEquals } = utils;
-import { isDevelopment, toError } from "./utils";
+import { toError } from "./utils";
 import rulesRunner from "./rulesRunner";
 
 import { DEFAULT_ACTIONS } from "./actions";
 import validateAction from "./actions/validateAction";
+import env from "./env";
 
 export default function applyRules(
   schema,
@@ -15,7 +16,7 @@ export default function applyRules(
   Engine,
   extraActions = {}
 ) {
-  if (isDevelopment()) {
+  if (env.isDevelopment()) {
     const propTypes = {
       Engine: PropTypes.func.isRequired,
       rules: PropTypes.arrayOf(
@@ -41,7 +42,7 @@ export default function applyRules(
       propTypes,
       { rules, Engine, extraActions },
       "props",
-      "react-jsonschema-form-manager"
+      "rjsf-conditionals"
     );
 
     rules
@@ -76,7 +77,7 @@ export default function applyRules(
         this.updateConf(formData);
       }
 
-      componentWillReceiveProps(nextProps) {
+      UNSAFE_componentWillReceiveProps(nextProps) {
         let formDataChanged =
           nextProps.formData && !deepEquals(nextProps.formData, this.formData);
         if (formDataChanged) {
@@ -95,16 +96,15 @@ export default function applyRules(
       updateConf(formData) {
         this.formData = formData;
         return runRules(formData).then((conf) => {
-          let dataChanged = !deepEquals(this.formData, conf.formData);
           this.formData = conf.formData;
-
           let newState = { schema: conf.schema, uiSchema: conf.uiSchema };
-          let confChanged = !deepEquals(newState, this.state);
-          if (dataChanged || confChanged) {
+          if (
+            !deepEquals(this.formData, conf.formData) ||
+            !deepEquals(newState, this.state)
+          ) {
             this.shouldUpdate = true;
             this.setState(newState);
           }
-
           return conf;
         });
       }

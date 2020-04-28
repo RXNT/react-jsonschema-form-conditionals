@@ -1,5 +1,10 @@
 import { validateFields } from "../../src/actions/validateAction";
-import { testInProd } from "./../utils";
+import { isDevelopmentMock } from "../../src/env";
+jest.mock("../../src/env");
+
+beforeEach(() => {
+  isDevelopmentMock.mockReturnValue(true);
+});
 
 function checkValidParams(fetchFunction, params, schema, uiSchema) {
   let validator = validateFields("fakeAction", fetchFunction);
@@ -12,9 +17,8 @@ function checkInValidParams(fetchFunction, params, schema, uiSchema) {
   let validator = validateFields("fakeAction", fetchFunction);
   return test("field inValid params on schema", () => {
     expect(() => validator(params, schema, uiSchema)).toThrow();
-    expect(
-      testInProd(() => validator(params, schema, uiSchema))
-    ).toBeUndefined();
+    isDevelopmentMock.mockReturnValueOnce(false);
+    expect(validator(params, schema, uiSchema)).toBeUndefined();
   });
 }
 
@@ -38,35 +42,27 @@ checkInValidParams(() => ["lastname"], {}, schema);
 test("validate field construction", () => {
   expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
   expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
-  expect(
-    testInProd(() => validateFields("fakeAction", () => "a"))
-  ).not.toBeUndefined();
   expect(() => validateFields("fakeAction")).toThrow();
   expect(() => validateFields("fakeAction", null)).toThrow();
-  expect(
-    testInProd(() => validateFields("fakeAction", undefined))
-  ).toBeUndefined();
-  expect(testInProd(() => validateFields("fakeAction"))).toBeUndefined();
-  expect(testInProd(() => validateFields("fakeAction", null))).toBeUndefined();
-  expect(
-    testInProd(() => validateFields("fakeAction", undefined))
-  ).toBeUndefined();
+
+  isDevelopmentMock.mockReturnValue(false);
+  expect(validateFields("fakeAction", () => "a")).not.toBeUndefined();
+  expect(validateFields("fakeAction", undefined)).toBeUndefined();
+  expect(validateFields("fakeAction")).toBeUndefined();
+  expect(validateFields("fakeAction", null)).toBeUndefined();
+  expect(validateFields("fakeAction", undefined)).toBeUndefined();
 });
 
 test("validate field checks for a function", () => {
   expect(validateFields("fakeAction", [])).not.toBeUndefined();
   expect(validateFields("fakeAction", () => [])).not.toBeUndefined();
-  expect(
-    testInProd(() => validateFields("fakeAction", () => "a"))
-  ).not.toBeUndefined();
   expect(() => validateFields("fakeAction")).toThrow();
   expect(() => validateFields("fakeAction", null)).toThrow();
-  expect(
-    testInProd(() => validateFields("fakeAction", undefined))
-  ).toBeUndefined();
-  expect(testInProd(() => validateFields("fakeAction"))).toBeUndefined();
-  expect(testInProd(() => validateFields("fakeAction", null))).toBeUndefined();
-  expect(
-    testInProd(() => validateFields("fakeAction", undefined))
-  ).toBeUndefined();
+
+  isDevelopmentMock.mockReturnValue(false);
+  expect(validateFields("fakeAction", () => "a")).not.toBeUndefined();
+  expect(validateFields("fakeAction", undefined)).toBeUndefined();
+  expect(validateFields("fakeAction")).toBeUndefined();
+  expect(validateFields("fakeAction", null)).toBeUndefined();
+  expect(validateFields("fakeAction", undefined)).toBeUndefined();
 });

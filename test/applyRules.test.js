@@ -47,7 +47,8 @@ test("Re render on rule change", () => {
 
   expect(renderSpy.calledOnce).toEqual(true);
   expect(updateConfSpy.calledOnce).toEqual(true);
-
+  expect(handleChangeSpy.notCalled).toEqual(true);
+  expect(setStateSpy.notCalled).toEqual(true);
   wrapper
     .find("#root_firstName")
     .find("input")
@@ -56,7 +57,7 @@ test("Re render on rule change", () => {
 
   return new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
     expect(handleChangeSpy.calledOnce).toEqual(true);
-    expect(setStateSpy.calledOnce).toEqual(true);
+    expect(setStateSpy.callCount).toEqual(1);
     expect(shouldComponentUpdateSpy.calledOnce).toEqual(true);
 
     expect(updateConfSpy.calledTwice).toEqual(true);

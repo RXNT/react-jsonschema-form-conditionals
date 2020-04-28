@@ -1,10 +1,15 @@
 import uiOverride from "../../src/actions/uiOverride";
 import uiAppend from "../../src/actions/uiAppend";
-import { testInProd } from "../utils";
 import validateAction from "../../src/actions/validateAction";
 import uiReplace from "../../src/actions/uiReplace";
 import remove from "../../src/actions/remove";
 import require from "../../src/actions/require";
+import { isDevelopmentMock } from "../../src/env";
+jest.mock("../../src/env");
+
+afterEach(() => {
+  isDevelopmentMock.mockClear();
+});
 
 let origUiSchema = {
   "ui:order": ["firstName"],
@@ -24,47 +29,51 @@ let origSchema = {
   },
 };
 
-function invalidParams(action, invalidParams) {
-  return test(`${action.name} invalid params for detected`, () => {
+function testInvalidParams(action, invalidParams) {
+  return test(`${action.name} params ${JSON.stringify(
+    invalidParams
+  )} should be invalid`, () => {
+    isDevelopmentMock.mockReturnValue(true);
     expect(() =>
       validateAction(action, invalidParams, origSchema, origUiSchema)
     ).toThrow();
+    isDevelopmentMock.mockReturnValue(false);
     expect(
-      testInProd(() =>
-        validateAction(action, invalidParams, origSchema, origUiSchema)
-      )
+      validateAction(action, invalidParams, origSchema, origUiSchema)
     ).toBeUndefined();
   });
 }
 
-function validParams(action, validParams) {
-  return test(`${action.name} valid params for detected`, () => {
+function testValidParams(action, validParams) {
+  return test(`${action.name} params ${JSON.stringify(
+    validParams
+  )} should be valid`, () => {
+    isDevelopmentMock.mockReturnValue(true);
     expect(
       validateAction(action, validParams, origSchema, origUiSchema)
     ).toBeUndefined();
+    isDevelopmentMock.mockReturnValue(false);
     expect(
-      testInProd(() =>
-        validateAction(action, validParams, origSchema, origUiSchema)
-      )
+      validateAction(action, validParams, origSchema, origUiSchema)
     ).toBeUndefined();
   });
 }
 
-invalidParams(uiAppend, { firstname: { classNames: "col-md-12" } });
-validParams(uiAppend, { firstName: "col-md-12" });
+testInvalidParams(uiAppend, { firstname: { classNames: "col-md-12" } });
+testValidParams(uiAppend, { firstName: "col-md-12" });
 
-invalidParams(uiOverride, { firstname: { classNames: "col-md-12" } });
-validParams(uiOverride, { firstName: { classNames: "col-md-12" } });
+testInvalidParams(uiOverride, { firstname: { classNames: "col-md-12" } });
+testValidParams(uiOverride, { firstName: { classNames: "col-md-12" } });
 
-invalidParams(uiReplace, { firstname: { classNames: "col-md-12" } });
-validParams(uiReplace, { firstName: { classNames: "col-md-12" } });
+testInvalidParams(uiReplace, { firstname: { classNames: "col-md-12" } });
+testValidParams(uiReplace, { firstName: { classNames: "col-md-12" } });
 
-invalidParams(remove, { field: "firstname" });
-invalidParams(remove, { field: ["firstname"] });
-validParams(remove, { field: "firstName" });
-validParams(remove, { field: ["firstName"] });
+testInvalidParams(remove, { field: "firstname" });
+testInvalidParams(remove, { field: ["firstname"] });
+testValidParams(remove, { field: "firstName" });
+testValidParams(remove, { field: ["firstName"] });
 
-invalidParams(require, { field: "firstname" });
-invalidParams(require, { field: ["firstname"] });
-validParams(require, { field: "firstName" });
-validParams(require, { field: ["firstName"] });
+testInvalidParams(require, { field: "firstname" });
+testInvalidParams(require, { field: ["firstname"] });
+testValidParams(require, { field: "firstName" });
+testValidParams(require, { field: ["firstName"] });

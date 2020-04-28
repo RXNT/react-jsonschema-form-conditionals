@@ -1,8 +1,5 @@
 import { extractRefSchema } from "json-rules-engine-simplified/lib/utils";
-
-export const isDevelopment = () => {
-  return process.env.NODE_ENV !== "production";
-};
+import env from "./env";
 
 export const toArray = (field) => {
   if (Array.isArray(field)) {
@@ -13,7 +10,7 @@ export const toArray = (field) => {
 };
 
 export const toError = (message) => {
-  if (isDevelopment()) {
+  if (env.isDevelopment()) {
     throw new ReferenceError(message);
   } else {
     console.error(message);
@@ -31,7 +28,12 @@ export const findRelSchemaAndField = (field, schema) => {
   }
 
   let parentField = field.substr(0, separator);
-  let refSchema = extractRefSchema(parentField, schema);
+  let refSchema;
+  try {
+    refSchema = extractRefSchema(parentField, schema);
+  } catch (e) {
+    refSchema = null;
+  }
   if (refSchema) {
     return findRelSchemaAndField(field.substr(separator + 1), refSchema);
   }

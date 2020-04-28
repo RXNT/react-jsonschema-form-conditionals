@@ -1,6 +1,7 @@
-import { findRelSchemaAndField, isDevelopment, toError } from "../src/utils";
-import { testInProd } from "./utils";
+import { findRelSchemaAndField, toError } from "../src/utils";
 import selectn from "selectn";
+import envMock, { isDevelopmentMock } from "../src/env";
+jest.mock("../src/env");
 
 let addressSchema = {
   properties: {
@@ -32,13 +33,17 @@ let schema = {
 };
 
 test("isProduction", () => {
-  expect(isDevelopment()).toBeTruthy();
-  expect(testInProd(() => isDevelopment())).toBeFalsy();
+  expect(envMock.isDevelopment()).toBeTruthy();
+  expect(isDevelopmentMock).toHaveBeenCalledTimes(1);
+  isDevelopmentMock.mockReturnValueOnce(false);
+  expect(envMock.isDevelopment()).toBeFalsy();
+  expect(isDevelopmentMock).toHaveBeenCalledTimes(2);
 });
 
 test("error throws exception", () => {
   expect(() => toError("Yes")).toThrow();
-  expect(testInProd(() => toError("Yes"))).toBeUndefined();
+  isDevelopmentMock.mockReturnValueOnce(false);
+  expect(toError("Yes")).toBeUndefined();
 });
 
 test("find rel schema with plain schema", () => {
@@ -79,23 +84,29 @@ test("find rel schema with ref array object schema", () => {
 
 test("fail to find rel schema", () => {
   expect(() => findRelSchemaAndField("email.host", schema)).toThrow();
-  expect(
-    testInProd(() => findRelSchemaAndField("email.host", schema))
-  ).toEqual({ field: "email.host", schema });
+  isDevelopmentMock.mockReturnValueOnce(false);
+  expect(findRelSchemaAndField("email.host", schema)).toEqual({
+    field: "email.host",
+    schema,
+  });
 });
 
 test("fail to find rel schema field", () => {
   expect(() => findRelSchemaAndField("email.protocol", schema)).toThrow();
-  expect(
-    testInProd(() => findRelSchemaAndField("email.protocol", schema))
-  ).toEqual({ field: "email.protocol", schema });
+  isDevelopmentMock.mockReturnValueOnce(false);
+  expect(findRelSchemaAndField("email.protocol", schema)).toEqual({
+    field: "email.protocol",
+    schema,
+  });
 });
 
 test("invalid field", () => {
   expect(() => findRelSchemaAndField("lastName.protocol", schema)).toThrow();
-  expect(
-    testInProd(() => findRelSchemaAndField("lastName.protocol", schema))
-  ).toEqual({ field: "lastName.protocol", schema });
+  isDevelopmentMock.mockReturnValueOnce(false);
+  expect(findRelSchemaAndField("lastName.protocol", schema)).toEqual({
+    field: "lastName.protocol",
+    schema,
+  });
 });
 
 test("selectn", () => {

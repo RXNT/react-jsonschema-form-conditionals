@@ -1,7 +1,8 @@
 import applyRules from "../src";
 import Engine from "json-rules-engine-simplified";
 import sinon from "sinon";
-import { testInProd } from "./utils";
+import { isDevelopmentMock } from "../src/env";
+jest.mock("../src/env");
 
 let SCHEMA = {
   properties: {
@@ -60,23 +61,20 @@ test("validation with PropTypes", () => {
 
 test("validation PropTypes ignored in prod", () => {
   let consoleSpy = sinon.spy(console, "error");
-  testInProd(() =>
-    formWithRules([
-      { conditions: { lastName: "empty" }, order: "1", event: { type: "1" } },
-    ])
-  );
+  isDevelopmentMock.mockReturnValueOnce(false);
+  formWithRules([
+    { conditions: { lastName: "empty" }, order: "1", event: { type: "1" } },
+  ]);
   expect(consoleSpy.calledOnce).toEqual(false);
-  testInProd(() =>
-    formWithRules([
-      { conditions: { lastName: "empty" }, order: 1, event: { type: 1 } },
-    ])
-  );
+  isDevelopmentMock.mockReturnValueOnce(false);
+  formWithRules([
+    { conditions: { lastName: "empty" }, order: 1, event: { type: 1 } },
+  ]);
   expect(consoleSpy.calledTwice).toEqual(false);
-  testInProd(() =>
-    formWithRules([
-      { conditions: { lastName: "empty" }, order: 1, event: { type: "1" } },
-    ])
-  );
+  isDevelopmentMock.mockReturnValueOnce(false);
+  formWithRules([
+    { conditions: { lastName: "empty" }, order: 1, event: { type: "1" } },
+  ]);
   expect(consoleSpy.calledTwice).toEqual(false);
   consoleSpy.restore();
 });

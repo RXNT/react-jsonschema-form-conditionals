@@ -1,7 +1,8 @@
 import deepcopy from "deepcopy";
 import remove from "../../src/actions/remove";
 import validateAction from "../../src/actions/validateAction";
-import { testInProd } from "../utils";
+import { isDevelopmentMock } from "../../src/env";
+jest.mock("../../src/env");
 
 let origSchema = {
   properties: {
@@ -72,10 +73,9 @@ test("remove validates fields", () => {
   expect(() =>
     validateAction(remove, { field: ["totle"] }, origSchema, origUiSchema)
   ).toThrow();
+  isDevelopmentMock.mockReturnValueOnce(false);
   expect(
-    testInProd(() =>
-      validateAction(remove, { field: ["totle"] }, origSchema, origUiSchema)
-    )
+    validateAction(remove, { field: ["totle"] }, origSchema, origUiSchema)
   ).toBeUndefined();
   expect(
     validateAction(remove, { field: ["title"] }, origSchema, origUiSchema)
