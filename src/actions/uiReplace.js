@@ -11,12 +11,12 @@ import PropTypes from "prop-types";
  * @returns {{schema: *, uiSchema: *}}
  */
 export default function uiReplace(params, schema, uiSchema) {
-  Object.keys(params).forEach(f => {
+  Object.keys(params).forEach((f) => {
     uiSchema[f] = params[f];
   });
 }
 
 uiReplace.propTypes = PropTypes.object.isRequired;
-uiReplace.validate = validateFields("uiReplace", function(params) {
+uiReplace.validate = validateFields("uiReplace", function (params) {
   return Object.keys(params);
 });

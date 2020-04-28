@@ -27,7 +27,7 @@ function doRemove({ field, schema }, uiSchema) {
  */
 export default function remove({ field }, schema, uiSchema) {
   let fieldArr = toArray(field);
-  fieldArr.forEach(field =>
+  fieldArr.forEach((field) =>
     doRemove(
       findRelSchemaAndField(field, schema),
       findRelUiSchema(field, uiSchema)
@@ -42,6 +42,6 @@ remove.propTypes = {
   ]).isRequired,
 };
 
-remove.validate = validateFields("remove", function({ field }) {
+remove.validate = validateFields("remove", function ({ field }) {
   return field;
 });

@@ -12,15 +12,15 @@ import PropTypes from "prop-types";
  * @returns {{schema: *, uiSchema: *}}
  */
 function doAppend(uiSchema, params) {
-  Object.keys(params).forEach(field => {
+  Object.keys(params).forEach((field) => {
     let appendVal = params[field];
     let fieldUiSchema = uiSchema[field];
     if (!fieldUiSchema) {
       uiSchema[field] = appendVal;
     } else if (Array.isArray(fieldUiSchema)) {
       toArray(appendVal)
-        .filter(v => !fieldUiSchema.includes(v))
-        .forEach(v => fieldUiSchema.push(v));
+        .filter((v) => !fieldUiSchema.includes(v))
+        .forEach((v) => fieldUiSchema.push(v));
     } else if (typeof appendVal === "object" && !Array.isArray(appendVal)) {
       doAppend(fieldUiSchema, appendVal);
     } else if (typeof fieldUiSchema === "string") {
@@ -38,6 +38,6 @@ export default function uiAppend(params, schema, uiSchema) {
 }
 
 uiAppend.propTypes = PropTypes.object.isRequired;
-uiAppend.validate = validateFields("uiAppend", function(params) {
+uiAppend.validate = validateFields("uiAppend", function (params) {
   return Object.keys(params);
 });

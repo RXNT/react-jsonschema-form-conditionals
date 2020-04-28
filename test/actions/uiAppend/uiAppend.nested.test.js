@@ -14,7 +14,7 @@ test("updates uiSchema only of target field", () => {
     {}
   )({
     vitals: { bloodPressure: { sitting: { pulse: 100 } } },
-  }).then(res => {
+  }).then((res) => {
     let expectedUiSchema = deepCopy(uiSchema);
     expectedUiSchema.vitals.bloodPressure.sitting.pulse.classNames =
       "custom-field-label col-md-3 has-success vitals-success";

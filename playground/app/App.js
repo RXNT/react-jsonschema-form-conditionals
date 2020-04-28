@@ -13,6 +13,6 @@ let FormToDisplay = applyRules(
   extraActions
 )(Form);
 
-export default function() {
+export default function () {
   return <FormToDisplay formData={formData} />;
 }

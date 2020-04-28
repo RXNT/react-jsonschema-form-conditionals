@@ -41,7 +41,7 @@ test("formData has calculated field specified", () => {
   mount(<ResForm formData={{ a: 1, b: 2 }} />);
   expect(renderSpy.calledOnce).toEqual(true);
 
-  return new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
+  return new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
     expect(renderSpy.calledTwice).toEqual(true);
   });
 });

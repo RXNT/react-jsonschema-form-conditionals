@@ -11,7 +11,7 @@ let SCHEMA = {
   },
 };
 
-const formWithRules = rules => {
+const formWithRules = (rules) => {
   try {
     applyRules(SCHEMA, {}, rules, Engine);
   } catch (error) {

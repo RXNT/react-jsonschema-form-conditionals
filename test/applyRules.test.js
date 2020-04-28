@@ -54,7 +54,7 @@ test("Re render on rule change", () => {
     .simulate("change", { target: { value: "" } });
   expect(renderSpy.calledOnce).toEqual(true);
 
-  return new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
+  return new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
     expect(handleChangeSpy.calledOnce).toEqual(true);
     expect(setStateSpy.calledOnce).toEqual(true);
     expect(shouldComponentUpdateSpy.calledOnce).toEqual(true);
@@ -76,7 +76,7 @@ test("onChange called with corrected schema", () => {
     .find("input")
     .simulate("change", { target: { value: "" } });
 
-  return new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+  return new Promise((resolve) => setTimeout(resolve, 500)).then(() => {
     const expSchema = {
       type: "object",
       properties: {

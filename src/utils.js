@@ -4,7 +4,7 @@ export const isDevelopment = () => {
   return process.env.NODE_ENV !== "production";
 };
 
-export const toArray = field => {
+export const toArray = (field) => {
   if (Array.isArray(field)) {
     return field;
   } else {
@@ -12,7 +12,7 @@ export const toArray = field => {
   }
 };
 
-export const toError = message => {
+export const toError = (message) => {
   if (isDevelopment()) {
     throw new ReferenceError(message);
   } else {

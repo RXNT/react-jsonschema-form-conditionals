@@ -49,10 +49,10 @@ test("Re render on formData change", () => {
   const renderSpy = sinon.spy(ResForm.prototype, "render");
   const wrapper = shallow(<ResForm formData={{ firstName: "A" }} />);
 
-  return new Promise(resolve => setTimeout(resolve, 500))
+  return new Promise((resolve) => setTimeout(resolve, 500))
     .then(() => {
       wrapper.setProps({ formData: { firstName: "An" } });
-      return new Promise(resolve => setTimeout(resolve, 500));
+      return new Promise((resolve) => setTimeout(resolve, 500));
     })
     .then(() => {
       expect(renderSpy.calledTwice).toEqual(true);

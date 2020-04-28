@@ -16,8 +16,8 @@ function populateField(field, val, formData) {
 }
 
 const extraActions = {
-  populate: function({ options }, schema, uiSchema, formData) {
-    Object.keys(options).forEach(field =>
+  populate: function ({ options }, schema, uiSchema, formData) {
+    Object.keys(options).forEach((field) =>
       populateField(field, options[field], formData)
     );
   },

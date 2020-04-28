@@ -179,7 +179,7 @@ const conf = {
     },
   ],
   extraActions: {
-    calculateBMI: function({ field }, schema, uiSchema, formData) {
+    calculateBMI: function ({ field }, schema, uiSchema, formData) {
       let weightKilo = formData.weight;
       switch (formData.weightMeasure) {
         case "Lbs":

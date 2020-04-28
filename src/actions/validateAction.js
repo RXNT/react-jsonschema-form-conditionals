@@ -21,14 +21,14 @@ export const validateFields = (action, fetchFields) => {
   return (params, schema) => {
     let relFields = toArray(fetchFields(params));
     relFields
-      .filter(field => !hasField(field, schema))
-      .forEach(field =>
+      .filter((field) => !hasField(field, schema))
+      .forEach((field) =>
         toError(`Field "${field}" is missing from schema on "${action}"`)
       );
   };
 };
 
-export default function(action, params, schema, uiSchema) {
+export default function (action, params, schema, uiSchema) {
   if (action.propTypes !== undefined && action.propTypes !== null) {
     PropTypes.checkPropTypes(action.propTypes, params, "prop", action);
   }

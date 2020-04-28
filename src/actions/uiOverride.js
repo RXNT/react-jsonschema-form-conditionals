@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
  * @returns {{schema: *, uiSchema: *}}
  */
 function doOverride(uiSchema, params) {
-  Object.keys(params).forEach(field => {
+  Object.keys(params).forEach((field) => {
     let appendVal = params[field];
     let fieldUiSchema = uiSchema[field];
     if (!fieldUiSchema) {
@@ -29,6 +29,6 @@ export default function uiOverride(params, schema, uiSchema) {
 }
 
 uiOverride.propTypes = PropTypes.object.isRequired;
-uiOverride.validate = validateFields("uiOverride", function(params) {
+uiOverride.validate = validateFields("uiOverride", function (params) {
   return Object.keys(params);
 });

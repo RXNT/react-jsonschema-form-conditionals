@@ -22,7 +22,7 @@ function doRequire({ field, schema }) {
  */
 export default function require({ field }, schema) {
   let fieldArr = toArray(field);
-  toArray(fieldArr).forEach(field =>
+  toArray(fieldArr).forEach((field) =>
     doRequire(findRelSchemaAndField(field, schema))
   );
 }
@@ -34,6 +34,6 @@ require.propTypes = {
   ]).isRequired,
 };
 
-require.validate = validateFields("require", function({ field }) {
+require.validate = validateFields("require", function ({ field }) {
   return field;
 });
