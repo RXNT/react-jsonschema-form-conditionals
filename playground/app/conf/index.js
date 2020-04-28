@@ -1,6 +1,12 @@
 import Engine from "json-rules-engine-simplified";
 
 const conf = {
+  formData: {
+    height: 174,
+    heightMeasure: "cms",
+    weight: 74,
+    weightMeasure: "Kgs",
+  },
   schema: {
     title: "Calculate BMI",
     type: "object",
