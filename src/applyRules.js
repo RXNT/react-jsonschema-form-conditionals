@@ -1,15 +1,16 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-const { utils } = require("@rjsf/core");
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { toError } from './utils';
+import rulesRunner from './rulesRunner';
+
+import { DEFAULT_ACTIONS } from './actions';
+import validateAction from './actions/validateAction';
+import env from './env';
+
+const { utils } = require('@rjsf/core');
 const { deepEquals } = utils;
-import { toError } from "./utils";
-import rulesRunner from "./rulesRunner";
 
-import { DEFAULT_ACTIONS } from "./actions";
-import validateAction from "./actions/validateAction";
-import env from "./env";
-
-export default function applyRules(
+export default function applyRules (
   schema,
   uiSchema,
   rules,
@@ -25,24 +26,24 @@ export default function applyRules(
           order: PropTypes.number,
           event: PropTypes.oneOfType([
             PropTypes.shape({
-              type: PropTypes.string.isRequired,
+              type: PropTypes.string.isRequired
             }),
             PropTypes.arrayOf(
               PropTypes.shape({
-                type: PropTypes.string.isRequired,
+                type: PropTypes.string.isRequired
               })
-            ),
-          ]),
+            )
+          ])
         })
       ).isRequired,
-      extraActions: PropTypes.object,
+      extraActions: PropTypes.object
     };
 
     PropTypes.checkPropTypes(
       propTypes,
       { rules, Engine, extraActions },
-      "props",
-      "rjsf-conditionals"
+      'props',
+      'rjsf-conditionals'
     );
 
     rules
@@ -65,7 +66,7 @@ export default function applyRules(
 
   return (FormComponent) => {
     class FormWithConditionals extends Component {
-      constructor(props) {
+      constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.updateConf = this.updateConf.bind(this);
@@ -75,6 +76,7 @@ export default function applyRules(
       componentDidMount () {
         this.updateConf(this.props.formData || {});
       }
+
       componentDidUpdate (prevProps, prevState, snapshot) {
         const prevData = prevProps.formData || {};
         const newData = this.props.formData || {};
@@ -83,7 +85,7 @@ export default function applyRules(
         }
       }
 
-      updateConf(formData) {
+      updateConf (formData) {
         return runRules(formData).then((conf) => {
           let newState = { schema: conf.schema, uiSchema: conf.uiSchema, formData: conf.formData };
           if (!deepEquals(newState, this.state)) {
@@ -93,19 +95,24 @@ export default function applyRules(
         });
       }
 
-      handleChange(change) {
+      handleChange (change) {
         let { formData } = change;
-        let updTask = this.updateConf(formData);
         let { onChange } = this.props;
-        if (onChange) {
-          updTask.then((conf) => {
-            let updChange = Object.assign({}, change, conf);
-            onChange(updChange);
-          });
+        if (!deepEquals(formData, this.state.formData)) {
+          this.setState(this.state.formData);
+          let updTask = this.updateConf(formData);
+          if (onChange) {
+            updTask.then((conf) => {
+              let updChange = Object.assign({}, change, conf);
+              onChange(updChange);
+            });
+          }
+        } else {
+          onChange && onChange(change);
         }
       }
 
-      render() {
+      render () {
         // Assignment order is important
         let formConf = Object.assign({}, this.props, this.state, {
           onChange: this.handleChange
