@@ -91,7 +91,7 @@
     "jest": "^25.4.0",
     "jest-cli": "^25.4.0",
     "jsdom": "^16.2.2",
-    "json-rules-engine": "^2.0.2",
+    "json-rules-engine": "^5.0.3",
     "json-rules-engine-simplified": "^0.1.17",
     "lint-staged": "^10.1.7",
     "mini-css-extract-plugin": "^0.9.0",
