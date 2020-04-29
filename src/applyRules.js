@@ -67,42 +67,26 @@ export default function applyRules(
     class FormWithConditionals extends Component {
       constructor(props) {
         super(props);
-
         this.handleChange = this.handleChange.bind(this);
         this.updateConf = this.updateConf.bind(this);
-        let { formData = {} } = this.props;
-
-        this.shouldUpdate = false;
-        this.state = { schema, uiSchema };
-        this.updateConf(formData);
+        this.state = { schema: schema, uiSchema: uiSchema, formData: {} };
       }
 
-      UNSAFE_componentWillReceiveProps(nextProps) {
-        let formDataChanged =
-          nextProps.formData && !deepEquals(nextProps.formData, this.formData);
-        if (formDataChanged) {
-          this.updateConf(nextProps.formData);
-          this.shouldUpdate = true;
-        } else {
-          this.shouldUpdate =
-            this.shouldUpdate ||
-            !deepEquals(
-              nextProps,
-              Object.assign({}, this.props, { formData: nextProps.formData })
-            );
+      componentDidMount () {
+        this.updateConf(this.props.formData || {});
+      }
+      componentDidUpdate (prevProps, prevState, snapshot) {
+        const prevData = prevProps.formData || {};
+        const newData = this.props.formData || {};
+        if (!deepEquals(prevData, newData)) {
+          this.updateConf(newData);
         }
       }
 
       updateConf(formData) {
-        this.formData = formData;
         return runRules(formData).then((conf) => {
-          this.formData = conf.formData;
-          let newState = { schema: conf.schema, uiSchema: conf.uiSchema };
-          if (
-            !deepEquals(this.formData, conf.formData) ||
-            !deepEquals(newState, this.state)
-          ) {
-            this.shouldUpdate = true;
+          let newState = { schema: conf.schema, uiSchema: conf.uiSchema, formData: conf.formData };
+          if (!deepEquals(newState, this.state)) {
             this.setState(newState);
           }
           return conf;
@@ -112,7 +96,6 @@ export default function applyRules(
       handleChange(change) {
         let { formData } = change;
         let updTask = this.updateConf(formData);
-
         let { onChange } = this.props;
         if (onChange) {
           updTask.then((conf) => {
@@ -122,19 +105,10 @@ export default function applyRules(
         }
       }
 
-      shouldComponentUpdate() {
-        if (this.shouldUpdate) {
-          this.shouldUpdate = false;
-          return true;
-        }
-        return false;
-      }
-
       render() {
         // Assignment order is important
         let formConf = Object.assign({}, this.props, this.state, {
-          onChange: this.handleChange,
-          formData: this.formData,
+          onChange: this.handleChange
         });
         return <FormComponent {...formConf} />;
       }
