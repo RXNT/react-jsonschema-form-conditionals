@@ -41,18 +41,15 @@ import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine-simplified';
 import Form from "react-jsonschema-form";
 
-...
+// ...
 
 const rules = [{
-    ...
+    // ...
 }];
 
 let FormWithConditionals = applyRules(schema, uiSchema, rules, Engine)(Form);
 
-ReactDOM.render(
-  <FormWithConditionals .../>,
-  document.querySelector('#app')
-);
+ReactDOM.render(<FormWithConditionals />, document.querySelector('#app'));
 ```
 
 To show case uses for this library we'll be using simple registration schema example
@@ -60,7 +57,7 @@ To show case uses for this library we'll be using simple registration schema exa
 ```jsx
 
 import applyRules from 'rjsf-conditionals';
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 
 let schema = {
   definitions: {
@@ -157,7 +154,7 @@ To use [Simplified Json Rules Engine](https://github.com/RxNT/json-rules-engine-
 ```js
 
 import applyRules from 'rjsf-conditionals';
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 
 import Engine from 'json-rules-engine-simplified';
 
@@ -177,7 +174,7 @@ To use [Json Rules Engine](https://github.com/RxNT/json-rules-engine-simplified)
 
 import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine';
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 
 // ...
 
@@ -478,7 +475,7 @@ This is how we can do this:
 ```js
 import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine-simplified';
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 
 ...
 
@@ -528,7 +525,7 @@ Let's say we want to have schema with `a`, `b` and `sum` fields
 ```js
 import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine-simplified';
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 
 ...
 
