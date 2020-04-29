@@ -3,6 +3,7 @@ var webpack = require("webpack");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+    mode: 'production',
     entry: path.join(__dirname, "playground/app"),
     output: {
         path: path.join(__dirname, "build"),
@@ -25,7 +26,7 @@ module.exports = {
       extensions: [".js", ".jsx", ".css"],
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 loader: "babel-loader",
