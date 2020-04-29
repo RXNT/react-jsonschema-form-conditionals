@@ -5,6 +5,8 @@ import applyRules from "../src";
 import sinon from "sinon";
 import Adapter from "enzyme-adapter-react-16";
 import { shallow, configure } from "enzyme";
+import { render } from '@testing-library/react';
+import { waitFor } from '@testing-library/dom';
 
 configure({ adapter: new Adapter() });
 
@@ -33,30 +35,40 @@ const RULES = [
   },
 ];
 
-test("NO re render on same data", () => {
+test("NO re render on same data", async () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const renderSpy = sinon.spy(ResForm.prototype, "render");
-  const wrapper = shallow(<ResForm formData={{ firstName: "A" }} />);
+  const handleChangeSpy = sinon.spy(ResForm.prototype, "handleChange");
+  const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
+  const setStateSpy = sinon.spy(ResForm.prototype, "setState");
 
-  expect(renderSpy.calledOnce).toEqual(true);
+  const { rerender } = render(<ResForm formData={{ firstName: "A" }} />);
 
-  wrapper.setProps({ formData: { firstName: "A" } });
-  expect(renderSpy.calledOnce).toEqual(true);
+  expect(updateConfSpy.calledOnce).toEqual(true);
+  await waitFor(() => expect(setStateSpy.callCount).toEqual(1));
+  expect(handleChangeSpy.notCalled).toEqual(true);
+
+  rerender(<ResForm formData={{ firstName: "A" }} />);
+  expect(updateConfSpy.callCount).toEqual(1);
+  expect(setStateSpy.callCount).toEqual(1);
+  expect(handleChangeSpy.notCalled).toEqual(true);
 });
 
-test("Re render on formData change", () => {
+test("Re render on formData change", async () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const renderSpy = sinon.spy(ResForm.prototype, "render");
-  const wrapper = shallow(<ResForm formData={{ firstName: "A" }} />);
+  const handleChangeSpy = sinon.spy(ResForm.prototype, "handleChange");
+  const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
+  const setStateSpy = sinon.spy(ResForm.prototype, "setState");
 
-  return new Promise((resolve) => setTimeout(resolve, 500))
-    .then(() => {
-      wrapper.setProps({ formData: { firstName: "An" } });
-      return new Promise((resolve) => setTimeout(resolve, 500));
-    })
-    .then(() => {
-      expect(renderSpy.calledTwice).toEqual(true);
-    });
+  const { rerender } = render(<ResForm formData={{ firstName: "A" }} />);
+
+  expect(updateConfSpy.calledOnce).toEqual(true);
+  await waitFor(() => expect(setStateSpy.callCount).toEqual(1));
+  expect(handleChangeSpy.notCalled).toEqual(true);
+
+  rerender(<ResForm formData={{ firstName: "An" }} />);
+  expect(updateConfSpy.callCount).toEqual(2);
+  await waitFor(() => expect(setStateSpy.callCount).toEqual(2));
+  expect(handleChangeSpy.notCalled).toEqual(true);
 });
 
 test("Re render on non formData change change", () => {

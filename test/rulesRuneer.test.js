@@ -1,109 +1,109 @@
-import rulesRuner from "../src/rulesRunner";
-import Engine from "json-rules-engine-simplified";
+import rulesRuner from '../src/rulesRunner';
+import Engine from 'json-rules-engine-simplified';
 
 let SCHEMA = {
   properties: {
-    firstName: { type: "string" },
-    lastName: { type: "string" },
-    name: { type: "string" },
-  },
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
+    name: { type: 'string' }
+  }
 };
 
-test("executes single action", () => {
+test('executes single action', () => {
   let rules = [
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "remove",
-        params: { field: "firstName" },
-      },
+        type: 'remove',
+        params: { field: 'firstName' }
+      }
     },
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "require",
-        params: { field: "name" },
-      },
-    },
+        type: 'require',
+        params: { field: 'name' }
+      }
+    }
   ];
 
   let runRules = rulesRuner(SCHEMA, {}, rules, Engine);
 
   return runRules({}).then(({ schema }) => {
     let expectedSchema = {
-      required: ["name"],
+      required: ['name'],
       properties: {
         lastName: schema.properties.lastName,
-        name: schema.properties.name,
-      },
+        name: schema.properties.name
+      }
     };
     expect(schema).toEqual(expectedSchema);
   });
 });
 
-test("executes multiple actions", () => {
+test('executes multiple actions', () => {
   let rules = [
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "remove",
-        params: { field: "firstName" },
-      },
+        type: 'remove',
+        params: { field: 'firstName' }
+      }
     },
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "require",
-        params: { field: ["name"] },
-      },
+        type: 'require',
+        params: { field: ['name'] }
+      }
     },
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "uiReplace",
-        params: { name: { classNames: "col-md-5" } },
-      },
-    },
+        type: 'uiReplace',
+        params: { name: { classNames: 'col-md-5' } }
+      }
+    }
   ];
 
   let runRules = rulesRuner(SCHEMA, {}, rules, Engine);
 
   return runRules({}).then(({ schema, uiSchema }) => {
     let expectedSchema = {
-      required: ["name"],
+      required: ['name'],
       properties: {
         lastName: schema.properties.lastName,
-        name: schema.properties.name,
-      },
+        name: schema.properties.name
+      }
     };
     expect(schema).toEqual(expectedSchema);
-    expect(uiSchema).toEqual({ name: { classNames: "col-md-5" } });
+    expect(uiSchema).toEqual({ name: { classNames: 'col-md-5' } });
   });
 });
 
-test("ignored if no formData defined", () => {
+test('ignored if no formData defined', () => {
   let rules = [
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "remove",
-        params: { field: "firstName" },
-      },
+        type: 'remove',
+        params: { field: 'firstName' }
+      }
     },
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "require",
-        params: { field: ["name"] },
-      },
+        type: 'require',
+        params: { field: ['name'] }
+      }
     },
     {
-      conditions: { lastName: "empty" },
+      conditions: { lastName: 'empty' },
       event: {
-        type: "uiReplace",
-        params: { name: { classNames: "col-md-5" } },
-      },
-    },
+        type: 'uiReplace',
+        params: { name: { classNames: 'col-md-5' } }
+      }
+    }
   ];
 
   let runRules = rulesRuner(SCHEMA, {}, rules, Engine);
@@ -113,13 +113,47 @@ test("ignored if no formData defined", () => {
       expect(withNull).toEqual({
         schema: SCHEMA,
         uiSchema: {},
-        formData: null,
+        formData: null
       });
       expect(withUndef).toEqual({
         schema: SCHEMA,
         uiSchema: {},
-        formData: undefined,
+        formData: undefined
       });
     }
   );
+});
+
+test('extra actions get evaluated', async () => {
+
+  const SCHEMA = {
+    type: 'object',
+    properties: {
+      a: { type: 'number' },
+      b: { type: 'number' },
+      sum: { type: 'number' }
+    }
+  };
+
+  const RULES = [
+    {
+      conditions: {
+        a: { greater: 0 }
+      },
+      event: {
+        type: 'sum'
+      }
+    }
+  ];
+
+  const EXTRA_ACTIONS = {
+    sum: (params, schema, uiSchema, formData) => {
+      formData.sum = formData.a + formData.b;
+    }
+  };
+
+  let runRules = rulesRuner(SCHEMA, {}, RULES, Engine, EXTRA_ACTIONS);
+
+  const { formData } = await runRules({ a: 1, b: 2 });
+  expect(formData.sum).toEqual(3);
 });

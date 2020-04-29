@@ -5,6 +5,8 @@ import applyRules from "../src";
 import sinon from "sinon";
 import Adapter from "enzyme-adapter-react-16";
 import { mount, configure } from "enzyme";
+import { fireEvent, render } from '@testing-library/react';
+import { waitFor } from '@testing-library/dom';
 
 configure({ adapter: new Adapter() });
 
@@ -31,37 +33,34 @@ const RULES = [
   },
 ];
 
-test("Re render on rule change", () => {
+test("Re render on rule change", async () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
 
-  const renderSpy = sinon.spy(ResForm.prototype, "render");
-  const shouldComponentUpdateSpy = sinon.spy(
-    ResForm.prototype,
-    "shouldComponentUpdate"
-  );
   const handleChangeSpy = sinon.spy(ResForm.prototype, "handleChange");
   const updateConfSpy = sinon.spy(ResForm.prototype, "updateConf");
   const setStateSpy = sinon.spy(ResForm.prototype, "setState");
 
-  const wrapper = mount(<ResForm formData={{ firstName: "A" }} />);
+  const { container } = render(<ResForm formData={{ firstName: "A" }} />);
 
-  expect(renderSpy.calledOnce).toEqual(true);
   expect(updateConfSpy.calledOnce).toEqual(true);
-  expect(handleChangeSpy.notCalled).toEqual(true);
-  expect(setStateSpy.notCalled).toEqual(true);
-  wrapper
-    .find("#root_firstName")
-    .find("input")
-    .simulate("change", { target: { value: "" } });
-  expect(renderSpy.calledOnce).toEqual(true);
-
-  return new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
-    expect(handleChangeSpy.calledOnce).toEqual(true);
+  await waitFor(() => {
+    // componentDidMount called updateConfSpy which will update state
     expect(setStateSpy.callCount).toEqual(1);
-    expect(shouldComponentUpdateSpy.calledOnce).toEqual(true);
+  });
+  expect(handleChangeSpy.notCalled).toEqual(true);
 
-    expect(updateConfSpy.calledTwice).toEqual(true);
-    expect(renderSpy.calledTwice).toEqual(true);
+  const firstNameInput = container.querySelector("[id='root_firstName']");
+  expect(firstNameInput).not.toBeNull();
+  expect(firstNameInput.value).toEqual("A");
+
+  fireEvent.change(firstNameInput, { target: { value: '' } });
+
+  await waitFor(() => {
+    expect(handleChangeSpy.callCount).toEqual(1);
+  });
+  expect(updateConfSpy.callCount).toEqual(2);
+  await waitFor(() => {
+    expect(setStateSpy.callCount).toEqual(2);
   });
 });
 
