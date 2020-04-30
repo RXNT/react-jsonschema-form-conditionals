@@ -157,3 +157,29 @@ test('extra actions get evaluated', async () => {
   const { formData } = await runRules({ a: 1, b: 2 });
   expect(formData.sum).toEqual(3);
 });
+
+test('remove part of schema', async () => {
+
+  const SCHEMA = {
+    type: 'object',
+    properties: {
+      a: { type: 'object' },
+      b: { type: 'object' }
+    }
+  };
+
+  const RULES = [
+    {
+      conditions: { a: 'empty' },
+      event: {
+        type: 'remove',
+        params: { field: 'b' }
+      }
+    }
+  ];
+
+  let runRules = rulesRuner(SCHEMA, {}, RULES, Engine);
+
+  const { schema } = await runRules({ a: {}, b: {} });
+  expect(schema.properties).toStrictEqual({ a: { type: 'object' } });
+});
