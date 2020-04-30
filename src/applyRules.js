@@ -63,6 +63,7 @@ export default function applyRules (
   }
 
   const runRules = rulesRunner(schema, uiSchema, rules, Engine, extraActions);
+  const DEFAULT_FORM_DATA = {};
 
   return (FormComponent) => {
     class FormWithConditionals extends Component {
@@ -70,45 +71,91 @@ export default function applyRules (
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.updateConf = this.updateConf.bind(this);
-        this.state = { schema: schema, uiSchema: uiSchema, formData: {} };
+        this.state = { schema: schema, uiSchema: uiSchema, formData: DEFAULT_FORM_DATA };
+        this.updateConfigPromiseChain = null;
       }
 
+      /**
+       * Evaluate rules when mounted
+       */
       componentDidMount () {
-        this.updateConf(this.props.formData || {});
+        this.updateConf(this.props.formData || DEFAULT_FORM_DATA);
       }
 
+      /**
+       * Re-evaluate rules when form data prop changes
+       * schema and uiSchema is not taken into account
+       */
       componentDidUpdate (prevProps, prevState, snapshot) {
-        const prevData = prevProps.formData || {};
-        const newData = this.props.formData || {};
+        const prevData = prevProps.formData || DEFAULT_FORM_DATA;
+        const newData = this.props.formData || DEFAULT_FORM_DATA;
         if (!deepEquals(prevData, newData)) {
           this.updateConf(newData);
         }
       }
 
-      updateConf (formData) {
-        return runRules(formData).then((conf) => {
-          let newState = { schema: conf.schema, uiSchema: conf.uiSchema, formData: conf.formData };
-          if (!deepEquals(newState, this.state)) {
-            this.setState(newState);
+      /**
+       * Evaluate rules with given form data
+       * which in turn can mutate schema, uiSchema, formData
+       *
+       * Run every update in sequence after previous promise
+       * finishes
+       *
+       * @param formData {Object}
+       * @param [changeHandler] {Function}
+       * @return {Promise<Object>}
+       */
+      updateConf (formData, changeHandler) {
+
+        const rulesRunnerHandler = (newValues) => {
+          if (!deepEquals(newValues, this.state)) {
+            this.setState(newValues);
           }
-          return conf;
-        });
+          changeHandler && changeHandler(newValues);
+          return newValues;
+        };
+
+        if (this.updateConfigPromiseChain === null) {
+          // if no updates in progress
+          this.updateConfigPromiseChain = runRules(formData)
+            .then((newValues) => rulesRunnerHandler(newValues))
+            // clear promise chain when all finish
+            .finally(() => this.updateConfigPromiseChain = null);
+        } else {
+          // wait for rest of promises to finish
+          this.updateConfigPromiseChain.then((valuesFromPrevRunner) => {
+            // double check if necessary to run again
+            if (!deepEquals(valuesFromPrevRunner.formData, formData)) {
+              return runRules(formData).then((newValues) => rulesRunnerHandler(newValues));
+            } else {
+              // otherwise invoke change handler
+              // and return previous result
+              changeHandler && changeHandler(valuesFromPrevRunner);
+              return valuesFromPrevRunner;
+            }
+          });
+        }
+
+        return this.updateConfigPromiseChain;
       }
 
-      handleChange (change) {
-        let { formData } = change;
-        let { onChange } = this.props;
+      /**
+       * Evaluate form data changes after user input
+       * https://react-jsonschema-form.readthedocs.io/en/latest/#form-data-changes
+       * @param formChange {Object}
+       */
+      handleChange (formChange) {
+        const { formData } = formChange;
+        const { onChange } = this.props;
         if (!deepEquals(formData, this.state.formData)) {
-          this.setState(this.state.formData);
-          let updTask = this.updateConf(formData);
-          if (onChange) {
-            updTask.then((conf) => {
-              let updChange = Object.assign({}, change, conf);
+          this.updateConf(formData, (newValues) => {
+            if (onChange) {
+              let updChange = Object.assign({}, formChange, newValues);
               onChange(updChange);
-            });
-          }
+            }
+          });
         } else {
-          onChange && onChange(change);
+          onChange && onChange(formChange);
         }
       }
 

@@ -43,7 +43,7 @@ test("NO re render on same data", async () => {
 
   const { rerender } = render(<ResForm formData={{ firstName: "A" }} />);
 
-  expect(updateConfSpy.calledOnce).toEqual(true);
+  expect(updateConfSpy.callCount).toEqual(1);
   await waitFor(() => expect(setStateSpy.callCount).toEqual(1));
   expect(handleChangeSpy.notCalled).toEqual(true);
 
