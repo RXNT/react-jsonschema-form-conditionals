@@ -87,7 +87,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "exit-hook": "^2.2.0",
     "express": "^4.15.4",
-    "gh-pages": "^1.0.0",
+    "gh-pages": "^2.2.0",
     "has-flag": "^2.0.0",
     "html": "1.0.0",
     "husky": "^4.2.5",
