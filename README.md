@@ -1,6 +1,7 @@
-![Node.js CI](https://github.com/ivarprudnikov/rjsf-conditionals/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/ivarprudnikov/rjsf-conditionals/workflows/Node.js%20CI/badge.svg) [![npm version](https://badge.fury.io/js/rjsf-conditionals.svg)](https://badge.fury.io/js/rjsf-conditionals)
 
-[![npm version](https://badge.fury.io/js/rjsf-conditionals.svg)](https://badge.fury.io/js/rjsf-conditionals)
+[> SIMPLE DEMO PAGE](https://ivarprudnikov.github.io/rjsf-conditionals/)
+-----------
 
 # Form with conditionals
 
