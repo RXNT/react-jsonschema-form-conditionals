@@ -13,15 +13,17 @@
     "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel ./src --out-dir ./dist/cjs --ignore \"node_modules,*/__mocks__\"",
     "build:es": "cross-env NODE_ENV=production BABEL_ENV=es babel ./src --out-dir ./dist/es --ignore \"node_modules,*/__mocks__\"",
     "build:es:lib": "cross-env NODE_ENV=production BABEL_ENV=es babel ./src --out-dir ./lib --ignore \"node_modules,*/__mocks__\"",
-    "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js --optimize-minimize && cp playground/index.prod.html build/index.html",
     "cs-check": "prettier -l $npm_package_prettierOptions '{playground,src,test}/**/*.js'",
     "cs-format": "prettier $npm_package_prettierOptions '{playground,src,test}/**/*.js' --write",
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
     "prepush": "npm test",
-    "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "start": "webpack-dev-server",
-    "tdd": "jest --watchAll",
+
+    "playground:build": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.playground.prod.js --mode production",
+    "playground:run:dev": "webpack-dev-server --config webpack.playground.dev.js --mode development",
+    "playground:run:dist": "npm run playground:build && http-server build --port 8080",
+
+    "start": "npm run playground:run:dev",
     "test": "jest"
   },
   "jest": {
@@ -77,6 +79,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.4.0",
     "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
     "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
     "enzyme": "^3.11.0",
@@ -90,6 +93,8 @@
     "gh-pages": "^2.2.0",
     "has-flag": "^2.0.0",
     "html": "1.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "http-server": "^0.12.3",
     "husky": "^4.2.5",
     "jest": "^25.4.0",
     "jest-cli": "^25.4.0",
@@ -98,6 +103,7 @@
     "json-rules-engine-simplified": "^0.1.17",
     "lint-staged": "^10.1.7",
     "mini-css-extract-plugin": "^0.9.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "prettier": "^2.0.5",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -108,10 +114,10 @@
     "rimraf": "^3.0.2",
     "sinon": "^9.0.2",
     "style-loader": "^1.2.0",
+    "terser-webpack-plugin": "^3.0.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
-    "webpack-hot-middleware": "^2.25.0"
+    "webpack-dev-server": "^3.10.3"
   },
   "directories": {
     "test": "test"
