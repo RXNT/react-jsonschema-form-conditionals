@@ -41,24 +41,24 @@ const conf = {
   },
   uiSchema: {
     height: {
-      classNames: "col-md-3",
+      classNames: "col-md-6",
       "ui:autofocus": true,
     },
     heightMeasure: {
-      classNames: "col-md-3",
+      classNames: "col-md-6",
     },
     weight: {
-      classNames: "col-md-3",
+      classNames: "col-md-6",
     },
     weightMeasure: {
-      classNames: "col-md-3",
+      classNames: "col-md-6",
     },
     bmi: {
-      classNames: "col-md-3",
+      classNames: "col-md-6",
       "ui:disabled": true,
     },
     oxygen: {
-      classNames: "col-md-3",
+      classNames: "col-md-6",
     },
   },
   rules: [
@@ -205,8 +205,7 @@ const conf = {
       if (!uiSchema[field]) {
         uiSchema[field] = {};
       }
-      let bmi = (weightKilo / (heightMeters * heightMeters)).toFixed(2);
-      formData[field] = bmi;
+      formData[field] = weightKilo / (heightMeters * heightMeters);
     },
   },
   rulesEngine: Engine,
