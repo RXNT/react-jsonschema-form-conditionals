@@ -5,8 +5,8 @@ import applyRules from "../src";
 import sinon from "sinon";
 import Adapter from "enzyme-adapter-react-16";
 import { mount, configure } from "enzyme";
-import { fireEvent, render } from '@testing-library/react';
-import { waitFor } from '@testing-library/dom';
+import { fireEvent, render } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 configure({ adapter: new Adapter() });
 
@@ -53,7 +53,7 @@ test("Re render on rule change", async () => {
   expect(firstNameInput).not.toBeNull();
   expect(firstNameInput.value).toEqual("A");
 
-  fireEvent.change(firstNameInput, { target: { value: '' } });
+  fireEvent.change(firstNameInput, { target: { value: "" } });
 
   await waitFor(() => {
     expect(handleChangeSpy.callCount).toEqual(1);

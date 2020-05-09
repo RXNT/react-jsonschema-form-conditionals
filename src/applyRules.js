@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { toError } from './utils';
-import rulesRunner from './rulesRunner';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { toError } from "./utils";
+import rulesRunner from "./rulesRunner";
 
-import { DEFAULT_ACTIONS } from './actions';
-import validateAction from './actions/validateAction';
-import env from './env';
+import { DEFAULT_ACTIONS } from "./actions";
+import validateAction from "./actions/validateAction";
+import env from "./env";
 
-const { utils } = require('@rjsf/core');
+const { utils } = require("@rjsf/core");
 const { deepEquals } = utils;
 
-export default function applyRules (
+export default function applyRules(
   schema,
   uiSchema,
   rules,
@@ -26,24 +26,24 @@ export default function applyRules (
           order: PropTypes.number,
           event: PropTypes.oneOfType([
             PropTypes.shape({
-              type: PropTypes.string.isRequired
+              type: PropTypes.string.isRequired,
             }),
             PropTypes.arrayOf(
               PropTypes.shape({
-                type: PropTypes.string.isRequired
+                type: PropTypes.string.isRequired,
               })
-            )
-          ])
+            ),
+          ]),
         })
       ).isRequired,
-      extraActions: PropTypes.object
+      extraActions: PropTypes.object,
     };
 
     PropTypes.checkPropTypes(
       propTypes,
       { rules, Engine, extraActions },
-      'props',
-      'rjsf-conditionals'
+      "props",
+      "rjsf-conditionals"
     );
 
     rules
@@ -67,18 +67,22 @@ export default function applyRules (
 
   return (FormComponent) => {
     class FormWithConditionals extends Component {
-      constructor (props) {
+      constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.updateConf = this.updateConf.bind(this);
-        this.state = { schema: schema, uiSchema: uiSchema, formData: DEFAULT_FORM_DATA };
+        this.state = {
+          schema: schema,
+          uiSchema: uiSchema,
+          formData: DEFAULT_FORM_DATA,
+        };
         this.updateConfigPromiseChain = null;
       }
 
       /**
        * Evaluate rules when mounted
        */
-      componentDidMount () {
+      componentDidMount() {
         this.updateConf(this.props.formData || DEFAULT_FORM_DATA);
       }
 
@@ -86,7 +90,7 @@ export default function applyRules (
        * Re-evaluate rules when form data prop changes
        * schema and uiSchema is not taken into account
        */
-      componentDidUpdate (prevProps, prevState, snapshot) {
+      componentDidUpdate(prevProps, prevState, snapshot) {
         const prevData = prevProps.formData || DEFAULT_FORM_DATA;
         const newData = this.props.formData || DEFAULT_FORM_DATA;
         if (!deepEquals(prevData, newData)) {
@@ -105,8 +109,7 @@ export default function applyRules (
        * @param [changeHandler] {Function}
        * @return {Promise<Object>}
        */
-      updateConf (formData, changeHandler) {
-
+      updateConf(formData, changeHandler) {
         const rulesRunnerHandler = (newValues) => {
           if (!deepEquals(newValues, this.state)) {
             this.setState(newValues);
@@ -120,13 +123,15 @@ export default function applyRules (
           this.updateConfigPromiseChain = runRules(formData)
             .then((newValues) => rulesRunnerHandler(newValues))
             // clear promise chain when all finish
-            .finally(() => this.updateConfigPromiseChain = null);
+            .finally(() => (this.updateConfigPromiseChain = null));
         } else {
           // wait for rest of promises to finish
           this.updateConfigPromiseChain.then((valuesFromPrevRunner) => {
             // double check if necessary to run again
             if (!deepEquals(valuesFromPrevRunner.formData, formData)) {
-              return runRules(formData).then((newValues) => rulesRunnerHandler(newValues));
+              return runRules(formData).then((newValues) =>
+                rulesRunnerHandler(newValues)
+              );
             } else {
               // otherwise invoke change handler
               // and return previous result
@@ -144,7 +149,7 @@ export default function applyRules (
        * https://react-jsonschema-form.readthedocs.io/en/latest/#form-data-changes
        * @param formChange {Object}
        */
-      handleChange (formChange) {
+      handleChange(formChange) {
         const { formData } = formChange;
         const { onChange } = this.props;
         if (!deepEquals(formData, this.state.formData)) {
@@ -159,10 +164,10 @@ export default function applyRules (
         }
       }
 
-      render () {
+      render() {
         // Assignment order is important
         let formConf = Object.assign({}, this.props, this.state, {
-          onChange: this.handleChange
+          onChange: this.handleChange,
         });
         return <FormComponent {...formConf} />;
       }

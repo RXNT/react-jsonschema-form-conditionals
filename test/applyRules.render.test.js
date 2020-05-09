@@ -5,8 +5,8 @@ import applyRules from "../src";
 import sinon from "sinon";
 import Adapter from "enzyme-adapter-react-16";
 import { shallow, configure } from "enzyme";
-import { render } from '@testing-library/react';
-import { waitFor } from '@testing-library/dom';
+import { render } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 configure({ adapter: new Adapter() });
 
