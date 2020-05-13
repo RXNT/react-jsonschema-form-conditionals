@@ -4,7 +4,7 @@ import Engine from "json-rules-engine-simplified";
 import applyRules from "../src";
 import sinon from "sinon";
 import Adapter from "enzyme-adapter-react-16";
-import { mount, configure } from "enzyme";
+import { configure, mount } from "enzyme";
 import { fireEvent, render } from "@testing-library/react";
 import { waitFor } from "@testing-library/dom";
 
@@ -66,9 +66,9 @@ test("Re render on rule change", async () => {
 
 test("onChange called with corrected schema", () => {
   let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const changed = sinon.spy(() => {});
+  const onChangeSpy = sinon.spy(() => {});
   const wrapper = mount(
-    <ResForm formData={{ firstName: "A" }} onChange={changed} />
+    <ResForm formData={{ firstName: "A" }} onChange={onChangeSpy} />
   );
 
   wrapper
@@ -84,7 +84,39 @@ test("onChange called with corrected schema", () => {
       },
     };
 
-    expect(changed.calledOnce).toEqual(true);
-    expect(changed.getCall(0).args[0].schema).toEqual(expSchema);
+    expect(onChangeSpy.calledOnce).toEqual(true);
+    expect(onChangeSpy.getCall(0).args[0].schema).toEqual(expSchema);
   });
+});
+
+test("chain of changes processed", async () => {
+  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
+  const onChangeSpy = sinon.spy(() => {});
+  const { container } = render(
+    <ResForm formData={{ firstName: "first" }} onChange={onChangeSpy} />
+  );
+  await waitFor(() => expect(onChangeSpy.calledOnce));
+
+  const firstNameInput = container.querySelector("[id='root_firstName']");
+  expect(firstNameInput).not.toBeNull();
+  expect(firstNameInput.value).toEqual("first");
+  const chainOfChanges = ["fir", "fi", "f", ""];
+  chainOfChanges.forEach((inputValue) => {
+    fireEvent.change(firstNameInput, {
+      target: { value: inputValue },
+    });
+    fireEvent.blur(firstNameInput);
+  });
+  await waitFor(() => {
+    const lastCall = onChangeSpy.getCall(-1);
+    const formData = lastCall.args[0].formData || {};
+    expect(formData.firstName).toBeUndefined();
+  });
+
+  expect(onChangeSpy.getCall(-1).args[0].schema).toStrictEqual({
+    properties: { firstName: { type: "string" } },
+    type: "object",
+  });
+
+  expect(firstNameInput.value).toEqual("");
 });

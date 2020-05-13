@@ -71,12 +71,13 @@ export default function applyRules(
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.updateConf = this.updateConf.bind(this);
+        this.updateConfCount = 0;
+        this.updateConfHandler = null;
         this.state = {
           schema: schema,
           uiSchema: uiSchema,
           formData: DEFAULT_FORM_DATA,
         };
-        this.updateConfigPromiseChain = null;
       }
 
       /**
@@ -107,41 +108,26 @@ export default function applyRules(
        *
        * @param formData {Object}
        * @param [changeHandler] {Function}
-       * @return {Promise<Object>}
        */
       updateConf(formData, changeHandler) {
-        const rulesRunnerHandler = (newValues) => {
-          if (!deepEquals(newValues, this.state)) {
-            this.setState(newValues);
-          }
-          changeHandler && changeHandler(newValues);
-          return newValues;
-        };
+        this.updateConfCount += 1;
 
-        if (this.updateConfigPromiseChain === null) {
-          // if no updates in progress
-          this.updateConfigPromiseChain = runRules(formData)
-            .then((newValues) => rulesRunnerHandler(newValues))
-            // clear promise chain when all finish
-            .finally(() => (this.updateConfigPromiseChain = null));
-        } else {
-          // wait for rest of promises to finish
-          this.updateConfigPromiseChain.then((valuesFromPrevRunner) => {
-            // double check if necessary to run again
-            if (!deepEquals(valuesFromPrevRunner.formData, formData)) {
-              return runRules(formData).then((newValues) =>
-                rulesRunnerHandler(newValues)
-              );
-            } else {
-              // otherwise invoke change handler
-              // and return previous result
-              changeHandler && changeHandler(valuesFromPrevRunner);
-              return valuesFromPrevRunner;
-            }
-          });
+        // make sure last handler wins
+        if (changeHandler != null) {
+          this.updateConfHandler = changeHandler;
         }
 
-        return this.updateConfigPromiseChain;
+        runRules(formData).then((values) => {
+          this.updateConfCount -= 1;
+          if (this.updateConfCount < 1) {
+            if (!deepEquals(values, this.state)) {
+              this.setState(values);
+            }
+            const maybeHandler = this.updateConfHandler;
+            this.updateConfHandler = null;
+            maybeHandler && maybeHandler(values);
+          }
+        });
       }
 
       /**
