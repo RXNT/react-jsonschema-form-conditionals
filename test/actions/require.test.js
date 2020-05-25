@@ -1,5 +1,5 @@
 import deepcopy from "deepcopy";
-import require from "../../src/actions/require";
+import requireFn from "../../src/actions/require";
 import validateAction from "../../src/actions/validateAction";
 import { isDevelopmentMock } from "../../src/env";
 jest.mock("../../src/env");
@@ -21,7 +21,7 @@ test("add required section", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
 
-  require({ field: "firstName" }, schema);
+  requireFn({ field: "firstName" }, schema);
 
   let schemaWithTitleReq = {
     required: ["title", "firstName"],
@@ -38,7 +38,7 @@ test("ignores already required field", () => {
   let schema = deepcopy(origSchema);
   let uiSchema = deepcopy(origUiSchema);
 
-  require({ field: ["title"] }, schema);
+  requireFn({ field: ["title"] }, schema);
 
   expect(schema).toEqual(origSchema);
   expect(uiSchema).toEqual(origUiSchema);
@@ -46,13 +46,13 @@ test("ignores already required field", () => {
 
 test("require validates fields", () => {
   expect(() =>
-    validateAction(require, { field: ["totle"] }, origSchema, origUiSchema)
+    validateAction(requireFn, { field: ["totle"] }, origSchema, origUiSchema)
   ).toThrow();
   isDevelopmentMock.mockReturnValueOnce(false);
   expect(
-    validateAction(require, { field: ["totle"] }, origSchema, origUiSchema)
+    validateAction(requireFn, { field: ["totle"] }, origSchema, origUiSchema)
   ).toBeUndefined();
   expect(
-    validateAction(require, { field: ["title"] }, origSchema, origUiSchema)
+    validateAction(requireFn, { field: ["title"] }, origSchema, origUiSchema)
   ).toBeUndefined();
 });

@@ -20,20 +20,20 @@ function doRequire({ field, schema }) {
  * @param uiSchema
  * @returns {{schema: *, uiSchema: *}}
  */
-export default function require({ field }, schema) {
+export default function requireFn({ field }, schema) {
   let fieldArr = toArray(field);
   toArray(fieldArr).forEach((field) =>
     doRequire(findRelSchemaAndField(field, schema))
   );
 }
 
-require.propTypes = {
+requireFn.propTypes = {
   field: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]).isRequired,
 };
 
-require.validate = validateFields("require", function ({ field }) {
+requireFn.validate = validateFields("require", function ({ field }) {
   return field;
 });

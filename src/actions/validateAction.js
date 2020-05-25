@@ -28,7 +28,7 @@ export const validateFields = (action, fetchFields) => {
   };
 };
 
-export default function (action, params, schema, uiSchema) {
+export default function validateAction(action, params, schema, uiSchema) {
   if (action.propTypes !== undefined && action.propTypes !== null) {
     PropTypes.checkPropTypes(action.propTypes, params, "prop", action);
   }

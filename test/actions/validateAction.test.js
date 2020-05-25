@@ -3,7 +3,7 @@ import uiAppend from "../../src/actions/uiAppend";
 import validateAction from "../../src/actions/validateAction";
 import uiReplace from "../../src/actions/uiReplace";
 import remove from "../../src/actions/remove";
-import require from "../../src/actions/require";
+import requireFn from "../../src/actions/require";
 import { isDevelopmentMock } from "../../src/env";
 jest.mock("../../src/env");
 
@@ -73,7 +73,7 @@ testInvalidParams(remove, { field: ["firstname"] });
 testValidParams(remove, { field: "firstName" });
 testValidParams(remove, { field: ["firstName"] });
 
-testInvalidParams(require, { field: "firstname" });
-testInvalidParams(require, { field: ["firstname"] });
-testValidParams(require, { field: "firstName" });
-testValidParams(require, { field: ["firstName"] });
+testInvalidParams(requireFn, { field: "firstname" });
+testInvalidParams(requireFn, { field: ["firstname"] });
+testValidParams(requireFn, { field: "firstName" });
+testValidParams(requireFn, { field: ["firstName"] });
