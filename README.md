@@ -40,7 +40,7 @@ The simplest example of using `rjsf-conditionals`
 ```jsx
 import applyRules from 'rjsf-conditionals';
 import Engine from 'json-rules-engine-simplified';
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 
 // ...
 
