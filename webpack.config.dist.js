@@ -1,13 +1,17 @@
-var webpack = require("webpack");
-var path = require("path");
+const webpack = require("webpack");
+const path = require("path");
 
 module.exports = {
+  // https://webpack.js.org/configuration/mode/
   mode: 'production',
+  // https://webpack.js.org/configuration/other-options/#cache
   cache: true,
+  // https://webpack.js.org/configuration/entry-context/
   context: __dirname + "/src",
   entry: {
     main: "./index.js"
   },
+  // https://webpack.js.org/concepts/output/
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: "/dist/",
@@ -15,14 +19,18 @@ module.exports = {
     library: "JSONSchemaForm",
     libraryTarget: "umd"
   },
+  // https://webpack.js.org/concepts/plugins/
   plugins: [
+    // https://webpack.js.org/plugins/define-plugin/
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production")
       }
     })
   ],
-  devtool: "source-map",
+  // https://webpack.js.org/configuration/devtool/
+  devtool: "cheap-source-map", // transformed code (lines only)
+  // https://webpack.js.org/configuration/externals/
   externals: {
     react: {
       root: "React",
@@ -38,7 +46,9 @@ module.exports = {
       umd: 'react-dom',
     }
   },
+  // https://webpack.js.org/configuration/module/
   module: {
+    // https://webpack.js.org/configuration/module/#modulerules
     rules: [
       {
         test: /\.js$/,
