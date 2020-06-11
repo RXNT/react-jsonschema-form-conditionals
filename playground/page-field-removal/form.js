@@ -1,7 +1,7 @@
 import Engine from "json-rules-engine-simplified";
 
 const conf = {
-  formData: { },
+  formData: {},
   schema: {
     type: "object",
     properties: {
@@ -14,26 +14,26 @@ const conf = {
   rules: [
     {
       conditions: {
-        username: 'falsey',
+        username: "falsey",
       },
       event: {
         type: "remove",
         params: {
-          field: ["password"]
-        }
+          field: ["password"],
+        },
       },
     },
     {
       conditions: {
-        username: 'truthy',
+        username: "truthy",
       },
       event: {
         type: "remove",
         params: {
-          field: ["message"]
-        }
+          field: ["message"],
+        },
       },
-    }
+    },
   ],
   extraActions: {},
   rulesEngine: Engine,

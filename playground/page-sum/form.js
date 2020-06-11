@@ -14,18 +14,18 @@ const conf = {
   rules: [
     {
       conditions: {
-        a: 'number',
-        b: 'number'
+        a: "number",
+        b: "number",
       },
       event: {
         type: "sum",
       },
-    }
+    },
   ],
   extraActions: {
     sum: (params, schema, uiSchema, formData) => {
       formData.sum = formData.a + formData.b;
-    }
+    },
   },
   rulesEngine: Engine,
 };

@@ -1,9 +1,9 @@
 import ReactDOM from "react-dom";
 import React from "react";
-import form from './form';
-import applyRules from '../../src/applyRules';
-import Form from '@rjsf/core';
-import SchemaFormConfigPreview from '../js/SchemaFormConfigPreview';
+import form from "./form";
+import applyRules from "../../src/applyRules";
+import Form from "@rjsf/core";
+import SchemaFormConfigPreview from "../js/SchemaFormConfigPreview";
 
 let { schema, uiSchema, rules, rulesEngine, extraActions, formData } = form;
 
@@ -43,7 +43,13 @@ function App() {
         </div>
 
         <div className="col-6">
-          <SchemaFormConfigPreview values={values} schema={schema} uiSchema={uiSchema} rules={rules} extraActions={extraActions} />
+          <SchemaFormConfigPreview
+            values={values}
+            schema={schema}
+            uiSchema={uiSchema}
+            rules={rules}
+            extraActions={extraActions}
+          />
         </div>
       </div>
     </div>
