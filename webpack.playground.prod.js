@@ -13,7 +13,11 @@ module.exports = {
   devtool: 'source-map',
 
   // https://webpack.js.org/concepts/entry-points/#multi-page-application
-  entry: path.join(__dirname, 'playground/app/index.js'),
+  entry: {
+    index: './playground/page-index/index.js',
+    sum: './playground/page-sum/index.js',
+    'field-removal': './playground/page-field-removal/index.js'
+  },
 
   // how to write the compiled files to disk
   // https://webpack.js.org/concepts/output/
@@ -47,7 +51,19 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(), // cleans output.path by default
     new HtmlWebpackPlugin({
-      template: './playground/tmpl.html'
+      template: './playground/page-index/tmpl.html',
+      chunks: ['index'],
+      filename: 'index.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: './playground/page-sum/tmpl.html',
+      chunks: ['sum'],
+      filename: 'sum.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: './playground/page-field-removal/tmpl.html',
+      chunks: ['field-removal'],
+      filename: 'field-removal.html'
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',

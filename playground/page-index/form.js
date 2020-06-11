@@ -32,11 +32,7 @@ const conf = {
       bmi: {
         type: "number",
         title: "BMI",
-      },
-      oxygen: {
-        type: "number",
-        title: "Oxygen",
-      },
+      }
     },
   },
   uiSchema: {
@@ -56,10 +52,7 @@ const conf = {
     bmi: {
       classNames: "col-md-6",
       "ui:disabled": true,
-    },
-    oxygen: {
-      classNames: "col-md-6",
-    },
+    }
   },
   rules: [
     {
