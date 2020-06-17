@@ -8,7 +8,15 @@ function doRunRules(engine, formData, schema, uiSchema, extraActions = {}) {
   let uiSchemaCopy = deepcopy(uiSchema);
   let formDataCopy = deepcopy(formData);
 
-  let res = engine.run(formData).then((events) => {
+  let res = engine.run(formData).then(result => {
+    let events;
+    if (Array.isArray(result)) {
+      events = result;
+    } else if (typeof result === 'object' && result.events && Array.isArray(result.events)) {
+      events = result.events;
+    } else {
+      throw new Error("Unrecognized result from rules engine");
+    }
     events.forEach((event) =>
       execute(event, schemaCopy, uiSchemaCopy, formDataCopy, extraActions)
     );
