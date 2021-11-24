@@ -47,10 +47,10 @@
   "peerDependencies": {
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
-    "react-jsonschema-form": "^1.0.0"
+    "@rjsf/core": "^3.1.0"
   },
   "dependencies": {
-    "deepcopy": "^0.6.3",
+    "deepcopy": "^2.1.0",
     "selectn": "^1.1.2"
   },
   "devDependencies": {

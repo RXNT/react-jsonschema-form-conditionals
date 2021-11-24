@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 import applyRules from "../../src/applyRules";
 import conf from "./conf";
 
