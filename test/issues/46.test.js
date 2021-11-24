@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/core";
 import Engine from "json-rules-engine-simplified";
 import applyRules from "../../src";
 import sinon from "sinon";

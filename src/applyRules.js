@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { deepEquals } from "react-jsonschema-form/lib/utils";
+import { deepEquals } from "@rjsf/core/lib/utils";
 import { isDevelopment, toError } from "./utils";
 import rulesRunner from "./rulesRunner";
 
@@ -73,6 +73,9 @@ export default function applyRules(
         this.shouldUpdate = false;
         this.state = { schema, uiSchema };
         this.updateConf(formData);
+
+        this.submit = this.submit.bind(this);
+        this.formComponent = null;
       }
 
       componentWillReceiveProps(nextProps) {
@@ -133,9 +136,18 @@ export default function applyRules(
         // Assignment order is important
         let formConf = Object.assign({}, this.props, this.state, {
           onChange: this.handleChange,
-          formData: this.formData,
+          formData: this.formData
         });
-        return <FormComponent {...formConf} />;
+        let refCallbackFn = formComponent => {
+          this.formComponent = formComponent;
+        };
+        return <FormComponent {...formConf} ref={refCallbackFn} />;
+      }
+
+      submit() {
+        if (this.formComponent) {
+          this.formComponent.submit();
+        }
       }
     }
 

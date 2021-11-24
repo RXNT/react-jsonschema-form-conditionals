@@ -1,6 +1,6 @@
 import execute from "./actions";
 import deepcopy from "deepcopy";
-import { deepEquals } from "react-jsonschema-form/lib/utils";
+import { deepEquals } from "@rjsf/core/lib/utils";
 
 function doRunRules(engine, formData, schema, uiSchema, extraActions = {}) {
   let schemaCopy = deepcopy(schema);
