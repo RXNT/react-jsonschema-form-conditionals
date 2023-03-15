@@ -11,7 +11,7 @@
     "cs-check": "prettier -l $npm_package_prettierOptions '{playground,src,test}/**/*.js'",
     "cs-format": "prettier $npm_package_prettierOptions '{playground,src,test}/**/*.js' --write",
     "dist": "npm run build:lib && npm run build:dist",
-    "lint": "eslint src test playground",
+    "lint": "eslint --fix src test playground",
     "precommit": "lint-staged",
     "prepush": "npm test",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
