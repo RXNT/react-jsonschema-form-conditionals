@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { deepEquals } from "react-jsonschema-form/lib/utils";
 import { isDevelopment, toError } from "./utils";
 import rulesRunner from "./rulesRunner";
 
@@ -68,14 +67,9 @@ export default function applyRules(
 
         this.handleChange = this.handleChange.bind(this);
         this.updateConf = this.updateConf.bind(this);
-        const { formData = {} } = this.props;
+        let { formData = {} } = this.props;
 
-        this.state = {
-          schema,
-          uiSchema,
-          formData
-        };
-
+        this.state = { schema, uiSchema, formData };
         this.updateConf(formData);
       }
 
@@ -85,18 +79,11 @@ export default function applyRules(
 
       updateConf(formData) {
         return runRules(formData).then(conf => {
-          let dataChanged = !deepEquals(formData, conf.formData);
+          const newConf = JSON.stringify(conf);
+          const oldConf = JSON.stringify(this.state);
 
-          let newState = {
-            schema: conf.schema,
-            uiSchema: conf.uiSchema,
-            formData
-          };
-          const { schema, uiSchema } = this.state;
-
-          let confChanged = !deepEquals(newState, { schema, uiSchema });
-          if (dataChanged || confChanged) {
-            this.setState(newState);
+          if (newConf !== oldConf) {
+            this.setState(conf);
           }
 
           return conf;

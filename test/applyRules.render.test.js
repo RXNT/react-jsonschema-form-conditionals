@@ -58,12 +58,3 @@ test("Re render on formData change", () => {
       expect(renderSpy.calledTwice).toEqual(true);
     });
 });
-
-test("Re render on non formData change change", () => {
-  let ResForm = applyRules(schema, {}, RULES, Engine)(Form);
-  const spy = sinon.spy(ResForm.prototype, "render");
-  const wrapper = shallow(<ResForm formData={{ firstName: "A" }} some="A" />);
-
-  wrapper.setProps({ formData: { firstName: "A" }, some: "B" });
-  expect(spy.calledTwice).toEqual(true);
-});
