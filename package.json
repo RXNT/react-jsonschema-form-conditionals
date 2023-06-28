@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
-    "react": "^16.0.0",
+    "react": "^17.0.0",
     "react-jsonschema-form": "^1.0.0"
   },
   "dependencies": {
